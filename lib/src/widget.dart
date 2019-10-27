@@ -7,23 +7,6 @@ import 'definitions.dart';
 
 typedef RefreshCallback = Future<void> Function();
 
-/// Describes state of CustomRefreshIndicator
-enum CustomRefreshIndicatorState {
-  /// Indicator should be idle
-  idle,
-
-  /// List is dragged
-  draging,
-
-  /// Indicator is dragged enough to be trigger `onRefresh` action
-  armed,
-
-  hiding,
-
-  /// `onRefresh` action is pending
-  loading,
-}
-
 class CustomRefreshIndicator extends StatefulWidget {
   static const armedFromValue = 1.0;
 
@@ -114,6 +97,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (_indicatorState == CustomRefreshIndicatorState.draging ||
         _indicatorState == CustomRefreshIndicatorState.armed) {
       if (notification.metrics.extentBefore > 0.0) {
+        debugPrint("CANCELED");
         _hide();
         return false;
       }
@@ -134,9 +118,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
     if (_positionController.value >= CustomRefreshIndicator.armedFromValue)
       _start();
-    else {
+    else
       _hide();
-    }
     return false;
   }
 
@@ -237,8 +220,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                   CustomRefreshIndicatorData(
                     value: _positionController.value,
                     loading: _loading,
-                    ready: _positionController.value >=
-                        CustomRefreshIndicator.armedFromValue,
                     direction: _axisDirection,
                     scrollingDirection: _userScrollingDirection,
                     indicatorState: _indicatorState,
