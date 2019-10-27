@@ -17,6 +17,7 @@ enum CustomRefreshIndicatorState {
   /// Indicator is dragged enough to be trigger `onRefresh` action
   armed,
 
+  /// hiding indicator when `onRefresh` action is done or indicator was canceled
   hiding,
 
   /// `onRefresh` action is pending
