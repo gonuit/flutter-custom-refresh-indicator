@@ -1,91 +1,76 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:example/indicators/inbox_indicator/inbox_indicator.dart';
+import 'package:example/indicators/blur_indicator.dart';
+import 'package:example/indicators/simple_indicator.dart';
+import 'package:example/screens/example_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+import 'indicators/inbox_indicator/inbox_indicator.dart';
 
-const _loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-    "Mauris tristique sit amet mauris eget vehicula. Cras dignissim dolor non "
-    "sagittis laoreet. Nunc faucibus placerat est. Etiam ut sem sed leo efficitur"
-    " tincidunt nec sed orci. Maecenas consectetur nunc nec dolor ornare mollis."
-    " Sed in sodales lacus. Etiam ac diam ac massa ultrices commodo. Quisque "
-    "sagittis justo in dolor viverra sodales. Aliquam consequat purus velit, "
-    "quis vehicula ligula lacinia vitae.";
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CustomRefreshIndicator demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(),
+      home: MainScreen(),
+      routes: {
+        '/example': (context) => ExampleIndicatorScreen(),
+      },
     );
   }
 }
 
-class MainPage extends StatelessWidget {
+class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Examples"),
+      ),
       body: SafeArea(
-        child: CustomRefreshIndicator(
-          leadingGlowVisible: false,
-          trailingGlowVisible: false,
-          indicatorBuilder: (context, data) => InboxIndicator(data: data),
-          onRefresh: () => Future.delayed(Duration(seconds: 2)),
-          child: ListView.separated(
-            padding: const EdgeInsets.all(15),
-            itemBuilder: (BuildContext context, int index) => Element(
-              label: "Mail ${index + 1}",
-              content: _loremIpsum,
+        child: ListView(
+          padding: const EdgeInsets.all(15),
+          children: <Widget>[
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Simple"),
+              ),
+              onPressed: () => Navigator.pushNamed(context, '/example',
+                  arguments: (context, data) => SimpleIndicatorContainer(
+                        data: data,
+                        child: SimpleIndicatorContent(
+                          data: data,
+                        ),
+                      )),
             ),
-            itemCount: 20,
-            separatorBuilder: (BuildContext context, int index) =>
-                SizedBox(height: 20),
-          ),
+            SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Letter"),
+              ),
+              onPressed: () => Navigator.pushNamed(context, '/example',
+                  arguments: (context, data) => InboxIndicator(data: data)),
+            ),
+            SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Blur"),
+              ),
+              onPressed: () => Navigator.pushNamed(context, '/example',
+                  arguments: (context, data) => BlurIndicator(data: data)),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-}
-
-class Element extends StatelessWidget {
-  final String label;
-  final String content;
-
-  Element({
-    @required this.label,
-    @required this.content,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.all(15),
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black12)],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 22, color: Colors.black),
-          ),
-          SizedBox(height: 5),
-          Text(
-            content,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
       ),
     );
   }

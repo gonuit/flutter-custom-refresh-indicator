@@ -38,16 +38,14 @@ class CustomRefreshIndicator extends StatefulWidget {
 
 class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with TickerProviderStateMixin {
-  bool _loading = false;
   bool _canStart = false;
   ScrollDirection _userScrollingDirection = ScrollDirection.forward;
   AxisDirection _axisDirection = AxisDirection.down;
-  final _controller = StreamController();
   double _dragOffset;
   CustomRefreshIndicatorState _indicatorState =
       CustomRefreshIndicatorState.idle;
 
-  AnimationController _positionController;
+  AnimationController _animationController;
 
   static const double _kPositionLimit = 1.5;
   static const double _kDragContainerExtentPercentage = 0.15;
@@ -56,7 +54,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void initState() {
     _dragOffset = 0;
 
-    _positionController = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
       upperBound: _kPositionLimit,
       lowerBound: 0,
@@ -67,8 +65,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   void dispose() {
-    _positionController.dispose();
-    _controller.close();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -97,14 +94,11 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (_indicatorState == CustomRefreshIndicatorState.draging ||
         _indicatorState == CustomRefreshIndicatorState.armed) {
       if (notification.metrics.extentBefore > 0.0) {
-        debugPrint("CANCELED");
         _hide();
-        return false;
+      } else {
+        _dragOffset -= notification.scrollDelta;
+        _checkDragOffset(notification.metrics.viewportDimension);
       }
-
-      _dragOffset -= notification.scrollDelta;
-      _checkDragOffset(notification.metrics.viewportDimension);
-      return false;
     }
     return false;
   }
@@ -116,7 +110,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
-    if (_positionController.value >= CustomRefreshIndicator.armedFromValue)
+    if (_animationController.value >= CustomRefreshIndicator.armedFromValue)
       _start();
     else
       _hide();
@@ -142,7 +136,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     }
 
     // triggers indicator update
-    _positionController.value = newValue.clamp(0.0, 1.5);
+    _animationController.value = newValue.clamp(0.0, 1.5);
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
@@ -164,34 +158,33 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _start() async {
     _dragOffset = 0;
 
-    setState(() {
-      _indicatorState = CustomRefreshIndicatorState.loading;
-      _loading = true;
-    });
-    _positionController.animateTo(1.0, duration: widget.armedToLoadingDuration);
+    _indicatorState = CustomRefreshIndicatorState.loading;
+    _animationController.animateTo(1.0,
+        duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
-    setState(() {
-      _loading = false;
-      _indicatorState = CustomRefreshIndicatorState.hiding;
-    });
-    await _positionController.animateTo(0.0,
+
+    if (!mounted) return;
+    _indicatorState = CustomRefreshIndicatorState.hiding;
+    await _animationController.animateTo(0.0,
         duration: widget.loadingToIdleDuration);
+
+    if (!mounted) return;
     setState(() {
       _indicatorState = CustomRefreshIndicatorState.idle;
     });
   }
 
   void _hide() async {
-    setState(() {
-      _indicatorState = CustomRefreshIndicatorState.hiding;
-      _dragOffset = 0;
-      _canStart = false;
-    });
-    await _positionController.animateTo(
+    _indicatorState = CustomRefreshIndicatorState.hiding;
+    _dragOffset = 0;
+    _canStart = false;
+    await _animationController.animateTo(
       0.0,
       duration: widget.dragingToIdleDuration,
       curve: Curves.ease,
     );
+
+    if (!mounted) return;
     setState(() {
       _indicatorState = CustomRefreshIndicatorState.idle;
     });
@@ -213,13 +206,12 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         children: <Widget>[
           child,
           AnimatedBuilder(
-              animation: _positionController,
+              animation: _animationController,
               builder: (context, snapshot) {
                 return widget.indicatorBuilder(
                   context,
                   CustomRefreshIndicatorData(
-                    value: _positionController.value,
-                    loading: _loading,
+                    value: _animationController.value,
                     direction: _axisDirection,
                     scrollingDirection: _userScrollingDirection,
                     indicatorState: _indicatorState,

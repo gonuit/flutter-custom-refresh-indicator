@@ -25,11 +25,9 @@ enum CustomRefreshIndicatorState {
 }
 
 class CustomRefreshIndicatorData {
-  final bool loading;
   final double value;
 
   CustomRefreshIndicatorData({
-    @required this.loading,
     @required this.value,
     @required this.direction,
     @required this.scrollingDirection,
