@@ -13,7 +13,7 @@
     - [`CustomRefreshIndicatorState`](#customrefreshindicatorstate)
       - [Props](#props-1)
 
-This package adds `CustomRefreshIndicator` widget that allows you to create whatever indicator you want.
+This package adds `CustomRefreshIndicator` widget that make it easy to implement custom refresh indicator.
 
 ## Examples:
 
