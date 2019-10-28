@@ -50,7 +50,7 @@ Object containig data provided by `CustomRefreshIndicator`.
 
 #### Props
 | prop                   | type           | 
-| :--- | :--- | :---| :--- |
+| :--- | :--- |
 | value                    | `double`        | 
 | direction         | `AxisDirection` | 
 | scrollingDirection         | `ScrollDirection`             | 
@@ -61,7 +61,7 @@ Enum which describes state of CustomRefreshIndicator.
 
 #### Props
 | value                   | description           | 
-| :--- | :--- | :---| :--- |
+| :--- | :--- |
 | idle                    | Indicator is idle        | 
 | draging         | user is draging indicator | 
 | armed         | Indicator is dragged enough to be trigger `onRefresh` action            | 
