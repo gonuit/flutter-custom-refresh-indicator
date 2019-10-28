@@ -4,8 +4,6 @@ import 'package:example/indicators/simple_indicator.dart';
 import 'package:example/screens/example_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'indicators/inbox_indicator/inbox_indicator.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -48,16 +46,6 @@ class MainScreen extends StatelessWidget {
                           data: data,
                         ),
                       )),
-            ),
-            SizedBox(height: 15),
-            RaisedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: Text("Letter"),
-              ),
-              onPressed: () => Navigator.pushNamed(context, '/example',
-                  arguments: (context, data) => InboxIndicator(data: data)),
             ),
             SizedBox(height: 15),
             RaisedButton(
