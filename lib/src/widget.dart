@@ -38,12 +38,16 @@ class CustomRefreshIndicator extends StatefulWidget {
 
 class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with TickerProviderStateMixin {
+  /// Whether custom refresh indicator can change [CustomRefreshIndicatorState] from `idle` to `draging`
   bool _canStart = false;
-  ScrollDirection _userScrollingDirection = ScrollDirection.forward;
-  AxisDirection _axisDirection = AxisDirection.down;
+
+  /// Direction in which user is scrolling
+  ScrollDirection _userScrollingDirection;
+
+  /// The direction in which list scrolls
+  AxisDirection _axisDirection;
   double _dragOffset;
-  CustomRefreshIndicatorState _indicatorState =
-      CustomRefreshIndicatorState.idle;
+  CustomRefreshIndicatorState _indicatorState;
 
   AnimationController _animationController;
 
@@ -53,6 +57,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   @override
   void initState() {
     _dragOffset = 0;
+    _canStart = false;
+    _indicatorState = CustomRefreshIndicatorState.idle;
+    _axisDirection = AxisDirection.down;
+    _userScrollingDirection = ScrollDirection.idle;
 
     _animationController = AnimationController(
       vsync: this,
@@ -191,35 +199,30 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final Widget child = NotificationListener<ScrollNotification>(
-      key: _key,
-      onNotification: _handleScrollNotification,
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: _handleGlowNotification,
-        child: widget.child,
-      ),
-    );
-
-    return Container(
-      child: Stack(
-        children: <Widget>[
-          child,
-          AnimatedBuilder(
+  Widget build(BuildContext context) => Container(
+        child: Stack(
+          children: <Widget>[
+            NotificationListener<ScrollNotification>(
+              key: _key,
+              onNotification: _handleScrollNotification,
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: _handleGlowNotification,
+                child: widget.child,
+              ),
+            ),
+            AnimatedBuilder(
               animation: _animationController,
-              builder: (context, snapshot) {
-                return widget.indicatorBuilder(
-                  context,
-                  CustomRefreshIndicatorData(
-                    value: _animationController.value,
-                    direction: _axisDirection,
-                    scrollingDirection: _userScrollingDirection,
-                    indicatorState: _indicatorState,
-                  ),
-                );
-              }),
-        ],
-      ),
-    );
-  }
+              builder: (context, snapshot) => widget.indicatorBuilder(
+                context,
+                CustomRefreshIndicatorData(
+                  value: _animationController.value,
+                  direction: _axisDirection,
+                  scrollingDirection: _userScrollingDirection,
+                  indicatorState: _indicatorState,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 }

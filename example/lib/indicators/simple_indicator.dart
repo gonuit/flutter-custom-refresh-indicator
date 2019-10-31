@@ -17,12 +17,13 @@ class SimpleIndicatorContent extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           InfiniteRatation(
-              running: isLoading,
-              child: Icon(
-                Icons.ac_unit,
-                color: Colors.blueAccent,
-                size: 30,
-              )),
+            running: isLoading,
+            child: Icon(
+              Icons.ac_unit,
+              color: Colors.blueAccent,
+              size: 30,
+            ),
+          ),
         ],
       ),
     );
