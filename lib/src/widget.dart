@@ -93,6 +93,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _canStart = notification.metrics.extentBefore == 0 &&
         _indicatorState == CustomRefreshIndicatorState.idle;
 
+    if (_canStart) _indicatorState = CustomRefreshIndicatorState.draging;
+
     _axisDirection = notification.metrics.axisDirection;
     return false;
   }
@@ -107,6 +109,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         _dragOffset -= notification.scrollDelta;
         _checkDragOffset(notification.metrics.viewportDimension);
       }
+      if (_indicatorState == CustomRefreshIndicatorState.armed &&
+          notification.dragDetails == null) {
+        _start();
+      }
     }
     return false;
   }
@@ -118,10 +124,13 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
-    if (_animationController.value >= CustomRefreshIndicator.armedFromValue)
-      _start();
-    else
+    if (_animationController.value >= CustomRefreshIndicator.armedFromValue) {
+      if (_indicatorState == CustomRefreshIndicatorState.armed) {
+        _start();
+      }
+    } else {
       _hide();
+    }
     return false;
   }
 
@@ -133,7 +142,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _checkDragOffset(double containerExtent) {
     if (_indicatorState == CustomRefreshIndicatorState.hiding ||
         _indicatorState == CustomRefreshIndicatorState.loading) return;
-
     double newValue =
         _dragOffset / (containerExtent * _kDragContainerExtentPercentage);
 
@@ -167,7 +175,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _dragOffset = 0;
 
     _indicatorState = CustomRefreshIndicatorState.loading;
-    _animationController.animateTo(1.0,
+    await _animationController.animateTo(1.0,
         duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
 
