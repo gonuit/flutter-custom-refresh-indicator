@@ -10,7 +10,7 @@ typedef CustomIndicatorBuilder = Widget Function(
 enum CustomRefreshIndicatorState {
   /// #### [CustomRefreshIndicator] is idle (There is no action)
   ///
-  /// (`CustomRefreshIndicatorData.value == 0`
+  /// (`CustomRefreshIndicatorData.value == 0`)
   idle,
 
   /// #### Whether user is draging [CustomRefreshIndicator]

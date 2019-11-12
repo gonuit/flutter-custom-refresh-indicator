@@ -11,7 +11,11 @@
     - [`CustomRefreshIndicatorData`](#customrefreshindicatordata)
       - [Props](#props)
     - [`CustomRefreshIndicatorState`](#customrefreshindicatorstate)
-      - [Props](#props-1)
+      - [`idle`](#idle)
+      - [`draging`](#draging)
+      - [`armed`](#armed)
+      - [`hiding`](#hiding)
+      - [`loading`](#loading)
 
 This package adds `CustomRefreshIndicator` widget that make it easy to implement custom refresh indicator.
 
@@ -49,21 +53,41 @@ This package adds `CustomRefreshIndicator` widget that make it easy to implement
 Object containig data provided by `CustomRefreshIndicator`.
 
 #### Props
-| prop                   | type           |  
-| :--- | :--- |
-| value                    | `double` |   
-| direction         | `AxisDirection` |   
-| scrollingDirection         | `ScrollDirection`             |   
-| indicatorState            | `CustomRefreshIndicatorState`            |   
+
+| prop               | type                          |
+|--------------------|-------------------------------|
+| value              | `double`                      |
+| direction          | `AxisDirection`               |
+| scrollingDirection | `ScrollDirection`             |
+| indicatorState     | `CustomRefreshIndicatorState` |
 
 ### `CustomRefreshIndicatorState`
 Enum which describes state of CustomRefreshIndicator.
 
-#### Props
-| value                   | description           |   
-| :--- | :--- |  
-| idle                    | Indicator is idle        |   
-| draging         | user is draging indicator |   
-| armed         | Indicator is dragged enough to be trigger `onRefresh` action            |   
-| hiding            | hiding indicator when `onRefresh` action is done or indicator was canceled            |   
-| loading            | `onRefresh` action is pending      |   
+#### `idle`
+  `CustomRefreshIndicator` is idle (There is no action)
+  
+  (`CustomRefreshIndicatorData.value == 0`)
+
+#### `draging`
+  Whether user is draging `CustomRefreshIndicator` ending the scroll **WILL NOT** result in `onRefresh` call  
+  
+  (`CustomRefreshIndicatorData.value < 1`)
+
+#### `armed`
+  `CustomRefreshIndicator` is armed ending the scroll **WILL** result in:
+  - `CustomRefreshIndicator.onRefresh` call
+  - change of status to `loading`
+  -  decreasing `CustomRefreshIndicatorData.value` to `1` in duration specified by `CustomRefreshIndicator.armedToLoadingDuration`)
+  
+  (`CustomRefreshIndicatorData.value >= 1`)
+
+#### `hiding`
+  `CustomRefreshIndicator` is hiding indicator when `onRefresh` future is resolved or indicator was canceled (scroll ended when [CustomRefreshIndicatorState] was equal to `dragging` so `value` was less than `1` or the user started scrolling through the list)
+  
+  (`CustomRefreshIndicatorData.value` decreases to `0` in duration specified by `CustomRefreshIndicator.dragingToIdleDuration`)
+
+#### `loading`
+  `CustomRefreshIndicator` is awaiting on `onRefresh` call result. When `onRefresh` will resolve `CustomRefreshIndicator` will change state from `loading` to `hiding` and decrease `CustomRefreshIndicatorData.value` from `1` to `0` in duration specified by `CustomRefreshIndicator.loadingToIdleDuration`
+  
+  (`CustomRefreshIndicatorData.value == 1`)
