@@ -10,3 +10,10 @@
   * inbox
   * simple
   * blur
+
+## [0.2.0] - Added support for BouncingScrollPhysics.
+
+* Added support for `BouncingScrollPhysics` - ios default sroll physics
+* Improved readme
+
+
