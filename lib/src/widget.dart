@@ -147,7 +147,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     }
 
     // triggers indicator update
-    _animationController.value = newValue.clamp(0.0, 1.5);
+    _animationController.value = newValue.clamp(0.0, _kPositionLimit);
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
@@ -221,7 +221,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                   value: _animationController.value,
                   direction: _axisDirection,
                   scrollingDirection: _userScrollingDirection,
-                  indicatorState: _indicatorState,
+                  state: _indicatorState,
                 ),
               ),
             ),

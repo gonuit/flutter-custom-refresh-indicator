@@ -1,6 +1,5 @@
 part of custom_refresh_indicator;
 
-
 typedef CustomIndicatorBuilder = Widget Function(
   BuildContext context,
   CustomRefreshIndicatorData data,
@@ -47,18 +46,42 @@ enum CustomRefreshIndicatorState {
   loading,
 }
 
-class CustomRefreshIndicatorData {
-  final double value;
+class CustomRefreshIndicatorData extends ChangeNotifier {
+  double _value;
+
+  /// Current indicator value / progress
+  double get value => _value;
 
   CustomRefreshIndicatorData({
-    @required this.value,
-    @required this.direction,
-    @required this.scrollingDirection,
-    @required this.indicatorState,
-  });
+    @required double value,
+    @required AxisDirection direction,
+    @required ScrollDirection scrollingDirection,
+    @required CustomRefreshIndicatorState state,
+  })  : _state = state,
+        _scrollingDirection = scrollingDirection,
+        _direction = direction,
+        _value = value;
+
+  @protected
+  @visibleForTesting
+  void updateAndNotify({
+    @required double value,
+    @required AxisDirection direction,
+    @required ScrollDirection scrollingDirection,
+    @required CustomRefreshIndicatorState state,
+  }) {
+    _value = value;
+    _direction = direction;
+    _scrollingDirection = scrollingDirection;
+    _state = state;
+
+    notifyListeners();
+  }
+
+  ScrollDirection _scrollingDirection;
 
   /// Direction in which user is scrolling
-  final ScrollDirection scrollingDirection;
+  ScrollDirection get scrollingDirection => _scrollingDirection;
 
   /// Scrolling is happening in the positive scroll offset direction.
   bool get isScrollingForward => scrollingDirection == ScrollDirection.forward;
@@ -68,6 +91,8 @@ class CustomRefreshIndicatorData {
 
   /// No scrolling is underway.
   bool get isScrollIdle => scrollingDirection == ScrollDirection.idle;
+
+  AxisDirection _direction;
 
   /// The direction in which list scrolls
   ///
@@ -79,7 +104,7 @@ class CustomRefreshIndicatorData {
   ///   // ***
   /// ```
   /// will have the direction of `AxisDirection.left`
-  final AxisDirection direction;
+  AxisDirection get direction => _direction;
 
   /// Whether list scrolls horrizontally
   ///
@@ -93,11 +118,13 @@ class CustomRefreshIndicatorData {
   bool get isVerticalDirection =>
       direction == AxisDirection.up || direction == AxisDirection.down;
 
+  CustomRefreshIndicatorState _state;
+
   /// Describes the state in which [CustomRefreshIndicator] is
-  final CustomRefreshIndicatorState indicatorState;
-  bool get isArmed => indicatorState == CustomRefreshIndicatorState.armed;
-  bool get isDraging => indicatorState == CustomRefreshIndicatorState.draging;
-  bool get isLoading => indicatorState == CustomRefreshIndicatorState.loading;
-  bool get isHiding => indicatorState == CustomRefreshIndicatorState.hiding;
-  bool get isIdle => indicatorState == CustomRefreshIndicatorState.idle;
+  CustomRefreshIndicatorState get state => _state;
+  bool get isArmed => _state == CustomRefreshIndicatorState.armed;
+  bool get isDraging => _state == CustomRefreshIndicatorState.draging;
+  bool get isLoading => _state == CustomRefreshIndicatorState.loading;
+  bool get isHiding => _state == CustomRefreshIndicatorState.hiding;
+  bool get isIdle => _state == CustomRefreshIndicatorState.idle;
 }

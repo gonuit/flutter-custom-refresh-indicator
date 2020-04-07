@@ -21,7 +21,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
           leadingGlowVisible: false,
           trailingGlowVisible: false,
           indicatorBuilder: ModalRoute.of(context).settings.arguments,
-          onRefresh: () => Future.delayed(Duration(seconds: 2)),
+          onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ListView.separated(
             padding: const EdgeInsets.all(15),
             itemBuilder: (BuildContext context, int index) => Element(
@@ -30,7 +30,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
             ),
             itemCount: 4,
             separatorBuilder: (BuildContext context, int index) =>
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
           ),
         ),
       ),
@@ -42,7 +42,7 @@ class Element extends StatelessWidget {
   final String label;
   final String content;
 
-  Element({
+  const Element({
     @required this.label,
     @required this.content,
   });
