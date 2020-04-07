@@ -1,9 +1,4 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
-import 'definitions.dart';
+part of custom_refresh_indicator;
 
 typedef RefreshCallback = Future<void> Function();
 

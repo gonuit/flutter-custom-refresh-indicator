@@ -1,5 +1,5 @@
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+part of custom_refresh_indicator;
+
 
 typedef CustomIndicatorBuilder = Widget Function(
   BuildContext context,

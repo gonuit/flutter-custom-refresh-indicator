@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
-
-import '../../definitions.dart';
+part of custom_refresh_indicator;
 
 class SimpleIndicatorContainer extends StatelessWidget {
   final CustomRefreshIndicatorData data;
   final Widget child;
-  final indicatorSize;
+  final double indicatorSize;
 
   static const _defaultIndicatorSize = 40.0;
 
-  SimpleIndicatorContainer({
+  const SimpleIndicatorContainer({
     @required this.data,
     @required this.child,
     this.indicatorSize = _defaultIndicatorSize,
@@ -18,7 +16,7 @@ class SimpleIndicatorContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final positionFromSide = -50 + (data.value * 110);
+    final double positionFromSide = -50 + (data.value * 110);
 
     return Positioned(
       top: data.direction == AxisDirection.down ? positionFromSide : null,
@@ -34,10 +32,11 @@ class SimpleIndicatorContainer extends StatelessWidget {
         child: Container(
           height: indicatorSize,
           width: indicatorSize,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadow(blurRadius: 5, color: Colors.black26)]),
+          decoration: const BoxDecoration(
+            color: Color(0xFFFFFFFF),
+            shape: BoxShape.circle,
+            boxShadow: [BoxShadow(blurRadius: 5, color: Color(0x42000000))],
+          ),
           child: child,
         ),
       ),
