@@ -1,4 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:example/indicators/custom_indicator.dart';
 import 'package:flutter/material.dart';
 
 const _loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
@@ -12,6 +13,8 @@ const _loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
 class ExampleIndicatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final CustomIndicator customIndicator =
+        ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text("Example"),
@@ -20,7 +23,8 @@ class ExampleIndicatorScreen extends StatelessWidget {
         child: CustomRefreshIndicator(
           leadingGlowVisible: false,
           trailingGlowVisible: false,
-          indicatorBuilder: ModalRoute.of(context).settings.arguments,
+          childTransformBuilder: customIndicator.childTransformBuilder,
+          indicatorBuilder: customIndicator.indicatorBuilder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ListView.separated(
             padding: const EdgeInsets.all(15),

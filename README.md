@@ -1,8 +1,8 @@
 # Flutter Custom Refresh Indicator
 
-This package adds `CustomRefreshIndicator` widget that make it easy to implement your own custom refresh indicator.
+This package provides `CustomRefreshIndicator` widget that make it easy to implement your own custom refresh indicator.
 
-## Example use:
+## Usage
 ```dart
 CustomRefreshIndicator(
   // Your custom indicator builder
@@ -22,15 +22,16 @@ CustomRefreshIndicator(
 )
 ```
 
-## Working examples:
+## Getting started
 
+## Examples
 ### Use of `SimpleIndicatorContainer` with `Icon` as child [LINK](example/lib/indicators/simple_indicator.dart)  
 ![simple_indicator](readme/simple_container.gif)
 
 ### Envelope indicator
 ![letter_indicator](readme/letter_indicator.gif)
 
-## Getting started
+
 
 ### `CustomRefreshIndicator`
 `CustomRefreshIndicator` has an absolute minimum functionality that allows you to create and set your own custom indicators.
@@ -49,18 +50,20 @@ CustomRefreshIndicator(
 
 
 ### `CustomRefreshIndicatorData`
-Object containig data provided by `CustomRefreshIndicator`.
+Contains data provided by `CustomRefreshIndicator` that could be usefull for your custom indicator implementation.
 
-#### Props
+### Arguments
 
-| prop               | type                          |
+| argument           | type                          |
 | :----------------- | :---------------------------- |
 | value              | `double`                      |
 | direction          | `AxisDirection`               |
 | scrollingDirection | `ScrollDirection`             |
-| indicatorState     | `CustomRefreshIndicatorState` |
+| indicatorState     | `IndicatorState` |
 
-### `CustomRefreshIndicatorState`
+#### value
+
+### `IndicatorState`
 Enum which describes state of CustomRefreshIndicator.
 
 #### `idle`
@@ -82,7 +85,7 @@ Enum which describes state of CustomRefreshIndicator.
   (`CustomRefreshIndicatorData.value >= 1`)
 
 #### `hiding`
-  CustomRefreshIndicator is hiding indicator when `onRefresh` future is resolved or indicator was canceled (scroll ended when [CustomRefreshIndicatorState] was equal to `dragging` so `value` was less than `1` or the user started scrolling through the list)
+  CustomRefreshIndicator is hiding indicator when `onRefresh` future is resolved or indicator was canceled (scroll ended when [IndicatorState] was equal to `dragging` so `value` was less than `1` or the user started scrolling through the list)
   
   (`CustomRefreshIndicatorData.value` decreases to `0` in duration specified by `CustomRefreshIndicator.dragingToIdleDuration`)
 

@@ -1,12 +1,18 @@
 part of custom_refresh_indicator;
 
-typedef CustomIndicatorBuilder = Widget Function(
+typedef IndicatorBuilder = Widget Function(
   BuildContext context,
-  CustomRefreshIndicatorData data,
+  IndicatorData indicatorData,
+);
+
+typedef ChildTransformBuilder = Widget Function(
+  BuildContext context,
+  Widget child,
+  IndicatorData indicatorData,
 );
 
 /// Describes state of CustomRefreshIndicator
-enum CustomRefreshIndicatorState {
+enum IndicatorState {
   /// #### [CustomRefreshIndicator] is idle (There is no action)
   ///
   /// (`CustomRefreshIndicatorData.value == 0`)
@@ -30,7 +36,7 @@ enum CustomRefreshIndicatorState {
 
   /// #### [CustomRefreshIndicator] is hiding indicator
   /// when `onRefresh` future is resolved or indicator was canceled
-  /// (scroll ended when [CustomRefreshIndicatorState] was equal to `dragging`
+  /// (scroll ended when [IndicatorState] was equal to `dragging`
   /// so `value` was less than `1` or the user started scrolling through the list)
   ///
   /// (`CustomRefreshIndicatorData.value` decreases to `0`
@@ -46,17 +52,17 @@ enum CustomRefreshIndicatorState {
   loading,
 }
 
-class CustomRefreshIndicatorData extends ChangeNotifier {
+class IndicatorData extends ChangeNotifier {
   double _value;
 
   /// Current indicator value / progress
   double get value => _value;
 
-  CustomRefreshIndicatorData({
+  IndicatorData({
     @required double value,
     @required AxisDirection direction,
     @required ScrollDirection scrollingDirection,
-    @required CustomRefreshIndicatorState state,
+    @required IndicatorState state,
   })  : _state = state,
         _scrollingDirection = scrollingDirection,
         _direction = direction,
@@ -68,7 +74,7 @@ class CustomRefreshIndicatorData extends ChangeNotifier {
     @required double value,
     @required AxisDirection direction,
     @required ScrollDirection scrollingDirection,
-    @required CustomRefreshIndicatorState state,
+    @required IndicatorState state,
   }) {
     _value = value;
     _direction = direction;
@@ -118,13 +124,13 @@ class CustomRefreshIndicatorData extends ChangeNotifier {
   bool get isVerticalDirection =>
       direction == AxisDirection.up || direction == AxisDirection.down;
 
-  CustomRefreshIndicatorState _state;
+  IndicatorState _state;
 
-  /// Describes the state in which [CustomRefreshIndicator] is
-  CustomRefreshIndicatorState get state => _state;
-  bool get isArmed => _state == CustomRefreshIndicatorState.armed;
-  bool get isDraging => _state == CustomRefreshIndicatorState.draging;
-  bool get isLoading => _state == CustomRefreshIndicatorState.loading;
-  bool get isHiding => _state == CustomRefreshIndicatorState.hiding;
-  bool get isIdle => _state == CustomRefreshIndicatorState.idle;
+  /// Describes current [CustomRefreshIndicator] state
+  IndicatorState get state => _state;
+  bool get isArmed => _state == IndicatorState.armed;
+  bool get isDraging => _state == IndicatorState.draging;
+  bool get isLoading => _state == IndicatorState.loading;
+  bool get isHiding => _state == IndicatorState.hiding;
+  bool get isIdle => _state == IndicatorState.idle;
 }

@@ -1,7 +1,8 @@
-import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/indicators/simple_indicator.dart';
 import 'package:example/screens/example_indicator_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'indicators/emoji_indicator.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,12 +42,33 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/example',
-                arguments: (context, data) => SimpleIndicatorContainer(
-                  data: data,
-                  child: SimpleIndicatorContent(
-                    data: data,
-                  ),
-                ),
+                arguments: simpleIndicator,
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Simple with list opacity"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/example',
+                arguments: simpleIndicatorWithOpacity,
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Emoji"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/example',
+                arguments: emojiIndicator,
               ),
             ),
           ],
