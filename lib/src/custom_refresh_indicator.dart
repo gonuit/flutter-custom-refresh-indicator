@@ -27,8 +27,8 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.trailingGlowVisible = true,
   })  : assert(child != null, 'child argument cannot be null'),
         assert(
-          indicatorBuilder != null && indicatorBuilder is IndicatorBuilder,
-          'indicatorBuilder argument cannot be null and must be of type CustomIndicatorBuilder',
+          indicatorBuilder != null || childTransformBuilder != null,
+          'indicatorBuilder or childTransformBuilder argument should be provided.',
         );
 
   @override
