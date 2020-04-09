@@ -30,10 +30,8 @@ class _ConfettiLayerState extends State<ConfettiLayer> {
       _loading = widget.data.isLoading;
 
       if (_loading) {
-        print("PLAY");
         _controller.play();
       } else {
-        print("STOP");
         _controller.stop();
       }
     }
@@ -59,7 +57,7 @@ class _ConfettiLayerState extends State<ConfettiLayer> {
   }
 }
 
-final emojiIndicator = CustomIndicator(
+final emojiIndicator = CustomIndicatorConfig(
   indicatorBuilder: (context, data) => PositionedIndicatorContainer(
     data: data,
     child: AnimatedBuilder(

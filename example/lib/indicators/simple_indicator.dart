@@ -47,7 +47,7 @@ class SimpleIndicatorContent extends StatelessWidget {
   }
 }
 
-final simpleIndicator = CustomIndicator(
+final simpleIndicator = CustomIndicatorConfig(
   indicatorBuilder: (context, data) => PositionedIndicatorContainer(
     data: data,
     child: SimpleIndicatorContent(
@@ -56,7 +56,7 @@ final simpleIndicator = CustomIndicator(
   ),
 );
 
-final simpleIndicatorWithOpacity = CustomIndicator(
+final simpleIndicatorWithOpacity = CustomIndicatorConfig(
   childTransformBuilder: (context, child, data) => AnimatedBuilder(
     child: child,
     animation: data,

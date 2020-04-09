@@ -1,10 +1,10 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 
-class CustomIndicator {
+class CustomIndicatorConfig {
   final IndicatorBuilder indicatorBuilder;
   final ChildTransformBuilder childTransformBuilder;
 
-  const CustomIndicator({
+  const CustomIndicatorConfig({
     this.indicatorBuilder,
     this.childTransformBuilder,
   });

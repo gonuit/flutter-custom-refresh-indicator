@@ -2,22 +2,27 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/indicators/custom_indicator.dart';
 import 'package:flutter/material.dart';
 
-const _loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-    "Mauris tristique sit amet mauris eget vehicula. Cras dignissim dolor non "
-    "sagittis laoreet. Nunc faucibus placerat est. Etiam ut sem sed leo efficitur"
-    " tincidunt nec sed orci. Maecenas consectetur nunc nec dolor ornare mollis."
-    " Sed in sodales lacus. Etiam ac diam ac massa ultrices commodo. Quisque "
-    "sagittis justo in dolor viverra sodales. Aliquam consequat purus velit, "
-    "quis vehicula ligula lacinia vitae.";
+const _backgroundColor = Color(0xFFf8f4fc);
 
 class ExampleIndicatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final CustomIndicator customIndicator =
+    final CustomIndicatorConfig customIndicator =
         ModalRoute.of(context).settings.arguments;
     return Scaffold(
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        title: Text("Example"),
+        iconTheme: IconThemeData(
+          color: const Color(0xff877162),
+        ),
+        backgroundColor: _backgroundColor,
+        title: Text(
+          "flutter_custom_refresh_indicator",
+          style: TextStyle(
+            color: const Color(0xff877162),
+          ),
+        ),
+        elevation: 3,
       ),
       body: SafeArea(
         child: CustomRefreshIndicator(
@@ -27,14 +32,14 @@ class ExampleIndicatorScreen extends StatelessWidget {
           indicatorBuilder: customIndicator.indicatorBuilder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ListView.separated(
-            padding: const EdgeInsets.all(15),
-            itemBuilder: (BuildContext context, int index) => Element(
-              label: "Mail ${index + 1}",
-              content: _loremIpsum,
-            ),
+            itemBuilder: (BuildContext context, int index) => Element(),
             itemCount: 4,
             separatorBuilder: (BuildContext context, int index) =>
-                const SizedBox(height: 20),
+                const Divider(
+              height: 0,
+              color: Color(0xFFe2d6ce),
+              thickness: 1,
+            ),
           ),
         ),
       ),
@@ -43,41 +48,63 @@ class ExampleIndicatorScreen extends StatelessWidget {
 }
 
 class Element extends StatelessWidget {
-  final String label;
-  final String content;
-
-  const Element({
-    @required this.label,
-    @required this.content,
-  });
+  const Element();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.all(15),
-      height: 100,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black12)],
+        color: _backgroundColor,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 22, color: Colors.black),
-          ),
-          SizedBox(height: 5),
-          Text(
-            content,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+        children: <Widget>[
+          FakeBox(height: 80, width: 80),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FakeBox(height: 8, width: double.infinity),
+                FakeBox(height: 8, width: double.infinity),
+                FakeBox(height: 8, width: 200),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class FakeBox extends StatelessWidget {
+  const FakeBox({
+    Key key,
+    @required this.width,
+    @required this.height,
+  }) : super(key: key);
+
+  final double width;
+  final double height;
+
+  static const _boxDecoration = const BoxDecoration(
+    color: const Color(0xFFE2D8D7),
+    borderRadius: BorderRadius.all(
+      Radius.circular(10),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      width: width,
+      height: height,
+      decoration: _boxDecoration,
     );
   }
 }
