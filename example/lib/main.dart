@@ -3,6 +3,7 @@ import 'package:example/screens/example_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'indicators/emoji_indicator.dart';
+import 'indicators/plane_indicator.dart';
 
 void main() => runApp(MyApp());
 
@@ -56,6 +57,19 @@ class MainScreen extends StatelessWidget {
                 context,
                 '/example',
                 arguments: simpleIndicatorWithOpacity,
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Plane"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/example',
+                arguments: planeIndicator,
               ),
             ),
             const SizedBox(height: 15),
