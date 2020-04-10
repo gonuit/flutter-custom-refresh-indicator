@@ -28,8 +28,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
         child: CustomRefreshIndicator(
           leadingGlowVisible: false,
           trailingGlowVisible: false,
-          childTransformBuilder: customIndicator.childTransformBuilder,
-          indicatorBuilder: customIndicator.indicatorBuilder,
+          builder: customIndicator.builder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ListView.separated(
             itemBuilder: (BuildContext context, int index) => Element(),

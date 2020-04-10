@@ -11,25 +11,20 @@ class CustomRefreshIndicator extends StatefulWidget {
   final bool leadingGlowVisible;
   final bool trailingGlowVisible;
   final Widget child;
-  final IndicatorBuilder indicatorBuilder;
-  final ChildTransformBuilder childTransformBuilder;
+  final ChildTransformBuilder builder;
   final RefreshCallback onRefresh;
 
   CustomRefreshIndicator({
     @required this.child,
-    @required this.indicatorBuilder,
     @required this.onRefresh,
-    this.childTransformBuilder,
+    this.builder,
     this.dragingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
   })  : assert(child != null, 'child argument cannot be null'),
-        assert(
-          indicatorBuilder != null || childTransformBuilder != null,
-          'indicatorBuilder or childTransformBuilder argument should be provided.',
-        );
+        assert(builder != null, 'builder argument cannot be null');
 
   @override
   _CustomRefreshIndicatorState createState() => _CustomRefreshIndicatorState();
@@ -49,10 +44,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   IndicatorState _indicatorState;
 
   AnimationController _animationController;
-  IndicatorData _customRefreshIndicatorData;
+  IndicatorController _customRefreshIndicatorData;
 
   /// Current custom refresh indicator data
-  IndicatorData get data => _customRefreshIndicatorData;
+  IndicatorController get data => _customRefreshIndicatorData;
 
   static const double _kPositionLimit = 1.5;
   static const double _kDragContainerExtentPercentage = 0.15;
@@ -66,7 +61,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _axisDirection = AxisDirection.down;
     _userScrollingDirection = ScrollDirection.idle;
 
-    _customRefreshIndicatorData = IndicatorData(
+    _customRefreshIndicatorData = IndicatorController(
       value: _kInitialValue,
       direction: _axisDirection,
       scrollingDirection: _userScrollingDirection,
@@ -231,26 +226,15 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       (context, child, data) => child;
 
   @override
-  Widget build(BuildContext context) => Container(
-        child: Stack(
-          children: <Widget>[
-            (widget.childTransformBuilder ?? noChildTransform).call(
-              context,
-              NotificationListener<ScrollNotification>(
-                onNotification: _handleScrollNotification,
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: _handleGlowNotification,
-                  child: widget.child,
-                ),
-              ),
-              data,
-            ),
-            if (widget.indicatorBuilder != null)
-              widget.indicatorBuilder(
-                context,
-                _customRefreshIndicatorData,
-              ),
-          ],
+  Widget build(BuildContext context) => widget.builder.call(
+        context,
+        NotificationListener<ScrollNotification>(
+          onNotification: _handleScrollNotification,
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: _handleGlowNotification,
+            child: widget.child,
+          ),
         ),
+        data,
       );
 }

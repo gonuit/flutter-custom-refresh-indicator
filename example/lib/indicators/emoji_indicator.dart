@@ -6,7 +6,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'custom_indicator.dart';
 
 class ConfettiLayer extends StatefulWidget {
-  final IndicatorData data;
+  final IndicatorController data;
   final Widget child;
 
   const ConfettiLayer({Key key, this.data, this.child}) : super(key: key);
@@ -58,22 +58,7 @@ class _ConfettiLayerState extends State<ConfettiLayer> {
 }
 
 final emojiIndicator = CustomIndicatorConfig(
-  indicatorBuilder: (context, data) => PositionedIndicatorContainer(
-    data: data,
-    child: AnimatedBuilder(
-      animation: data,
-      child: Text(
-        "🤣",
-        style: TextStyle(
-          fontSize: 40,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      builder: (context, child) =>
-          InfiniteRatation(child: child, running: data.isLoading),
-    ),
-  ),
-  childTransformBuilder: (context, child, data) => Stack(
+  builder: (context, child, data) => Stack(
     children: <Widget>[
       child,
       Positioned(
@@ -88,6 +73,21 @@ final emojiIndicator = CustomIndicatorConfig(
           ),
         ),
       ),
+      PositionedIndicatorContainer(
+        controller: data,
+        child: AnimatedBuilder(
+          animation: data,
+          child: Text(
+            "🤣",
+            style: TextStyle(
+              fontSize: 40,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          builder: (context, child) =>
+              InfiniteRatation(child: child, running: data.isLoading),
+        ),
+      )
     ],
   ),
 );

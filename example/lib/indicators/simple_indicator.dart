@@ -6,11 +6,11 @@ import 'custom_indicator.dart';
 
 class SimpleIndicatorContent extends StatelessWidget {
   const SimpleIndicatorContent({
-    @required this.data,
+    @required this.controller,
     this.indicatorSize = _defaultIndicatorSize,
   }) : assert(indicatorSize != null && indicatorSize > 0);
 
-  final IndicatorData data;
+  final IndicatorController controller;
   static const _defaultIndicatorSize = 40.0;
   final double indicatorSize;
 
@@ -29,14 +29,14 @@ class SimpleIndicatorContent extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             AnimatedBuilder(
-              animation: data,
+              animation: controller,
               child: const Icon(
                 Icons.refresh,
                 color: Colors.blueAccent,
                 size: 30,
               ),
               builder: (context, child) => InfiniteRatation(
-                running: data.isLoading,
+                running: controller.isLoading,
                 child: child,
               ),
             ),
@@ -48,27 +48,32 @@ class SimpleIndicatorContent extends StatelessWidget {
 }
 
 final simpleIndicator = CustomIndicatorConfig(
-  indicatorBuilder: (context, data) => PositionedIndicatorContainer(
-    data: data,
-    child: SimpleIndicatorContent(
-      data: data,
-    ),
+  builder: (context, child, controller) => Stack(
+    children: <Widget>[
+      child,
+      PositionedIndicatorContainer(
+        controller: controller,
+        child: SimpleIndicatorContent(
+          controller: controller,
+        ),
+      ),
+    ],
   ),
 );
 
 final simpleIndicatorWithOpacity = CustomIndicatorConfig(
-  childTransformBuilder: (context, child, data) => AnimatedBuilder(
-    child: child,
-    animation: data,
-    builder: (context, child) => Opacity(
-      opacity: 1.0 - data.value.clamp(0.0, 1.0),
+  builder: (context, child, controller) => Stack(children: <Widget>[
+    AnimatedBuilder(
       child: child,
+      animation: controller,
+      builder: (context, child) => Opacity(
+        opacity: 1.0 - controller.value.clamp(0.0, 1.0),
+        child: child,
+      ),
     ),
-  ),
-  indicatorBuilder: (context, data) => PositionedIndicatorContainer(
-    data: data,
-    child: SimpleIndicatorContent(
-      data: data,
+    PositionedIndicatorContainer(
+      controller: controller,
+      child: SimpleIndicatorContent(controller: controller),
     ),
-  ),
+  ]),
 );

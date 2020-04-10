@@ -1,14 +1,9 @@
 part of custom_refresh_indicator;
 
-typedef IndicatorBuilder = Widget Function(
-  BuildContext context,
-  IndicatorData indicatorData,
-);
-
 typedef ChildTransformBuilder = Widget Function(
   BuildContext context,
   Widget child,
-  IndicatorData indicatorData,
+  IndicatorController controller,
 );
 
 /// Describes state of CustomRefreshIndicator
@@ -52,13 +47,13 @@ enum IndicatorState {
   loading,
 }
 
-class IndicatorData extends ChangeNotifier {
+class IndicatorController extends ChangeNotifier {
   double _value;
 
   /// Current indicator value / progress
   double get value => _value;
 
-  IndicatorData({
+  IndicatorController({
     @required double value,
     @required AxisDirection direction,
     @required ScrollDirection scrollingDirection,
