@@ -2,7 +2,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 
 class CustomIndicatorConfig {
-  final ChildTransformBuilder builder;
+  final IndicatorBuilder builder;
 
   const CustomIndicatorConfig({
     @required this.builder,

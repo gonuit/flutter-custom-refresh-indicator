@@ -1,21 +1,70 @@
 part of custom_refresh_indicator;
 
-typedef RefreshCallback = Future<void> Function();
+typedef IndicatorBuilder = Widget Function(
+  BuildContext context,
+  Widget child,
+  IndicatorController controller,
+);
 
 class CustomRefreshIndicator extends StatefulWidget {
   static const armedFromValue = 1.0;
-  static const defaultExtentPercentageToArmed = 0.3;
+  static const defaultExtentPercentageToArmed = 0.20;
 
+  /// Duration of changing [IndicatorController] value from `<1.0` to `0.0`.
+  /// When user stop dragging list before it become to armed [IndicatorState].
   final Duration dragingToIdleDuration;
+
+  /// Duration of changing [IndicatorController] value from `<=1.5` to `1.0`.
+  /// Will start just before [onRefresh] function invocation.
   final Duration armedToLoadingDuration;
+
+  /// Duration of changing [IndicatorController] value from `1.0` to `0.0`
+  /// when [onRefresh] callback was completed.
   final Duration loadingToIdleDuration;
+
+  /// Whether to display leading glow
   final bool leadingGlowVisible;
+
+  /// Whether to display trailing glow
   final bool trailingGlowVisible;
+
+  /// Number of pixels that user should drag to change [IndicatorState] from idle to armed.
   final double offsetToArmed;
+
+  /// Value from 0.0 to 1.0 that describes the percentage of scroll container extent
+  /// that user should drag to change [IndicatorState] from idle to armed.
   final double extentPercentageToArmed;
+
+  /// Part of widget tree that contains scrollable element (like ListView).
+  /// Scroll notifications from the first scrollable element will be used
+  /// to calculate [IndicatorController] data.
   final Widget child;
-  final ChildTransformBuilder builder;
+
+  /// Function in wich custom refresh indicator should be implemented.
+  ///
+  /// IMPORTANT:
+  /// IT IS NOT CALLED ON EVERY [IndicatorController] DATA CHANGE.
+  ///
+  /// TIP:
+  /// To rebuild widget on every [IndicatorController] data change, consider
+  /// using [IndicatorController] that is passed to this function as the third argument
+  /// in combination with [AnimationBuilder].
+  final IndicatorBuilder builder;
+
+  /// A function that's called when the user has dragged the refresh indicator
+  /// far enough to demonstrate that they want the app to refresh.
+  /// The returned [Future] must complete when the refresh operation is finished.
   final RefreshCallback onRefresh;
+
+  /// Indicator controller keeps all thata related to refresh indicator.
+  /// It extends [ChangeNotifier] so that it could be listen for changes.
+  ///
+  /// TIP:
+  /// Consider using it in combination with [AnimationBuilder] as animation argument
+  ///
+  /// The indicator controller will be passed as the third argument to the [builder] method.
+  ///
+  /// To better understand this data, look at example app.
   final IndicatorController controller;
 
   CustomRefreshIndicator({
@@ -53,7 +102,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   AnimationController _animationController;
   IndicatorController _customRefreshIndicatorController;
 
-  /// Keeps current custom refresh indicator data
+  /// Current [IndicatorController]
   IndicatorController get controller => _customRefreshIndicatorController;
 
   static const double _kPositionLimit = 1.5;

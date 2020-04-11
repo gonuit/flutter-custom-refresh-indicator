@@ -1,11 +1,5 @@
 part of custom_refresh_indicator;
 
-typedef ChildTransformBuilder = Widget Function(
-  BuildContext context,
-  Widget child,
-  IndicatorController controller,
-);
-
 /// Describes state of CustomRefreshIndicator
 enum IndicatorState {
   /// #### [CustomRefreshIndicator] is idle (There is no action)
@@ -146,7 +140,7 @@ class IndicatorController extends ChangeNotifier {
   bool _refreshEnabled;
 
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `draging`
-  bool get refreshEnabled => _refreshEnabled;
+  bool get isRefreshEnabled => _refreshEnabled;
 
   /// Disables list pull to refresh
   void disableRefresh() {
