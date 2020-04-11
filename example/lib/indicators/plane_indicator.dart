@@ -30,7 +30,6 @@ class _Cloud {
   });
 }
 
-/// Desgin by Katarzyna Klyta kasia@klyta.it
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
   const PlaneIndicator({
