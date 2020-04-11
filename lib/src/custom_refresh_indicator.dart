@@ -68,6 +68,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   final IndicatorController controller;
 
   CustomRefreshIndicator({
+    Key key,
     @required this.child,
     @required this.onRefresh,
     @required this.builder,
@@ -80,7 +81,8 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
   })  : assert(child != null, 'child argument cannot be null'),
-        assert(builder != null, 'builder argument cannot be null');
+        assert(builder != null, 'builder argument cannot be null'),
+        super(key: key);
 
   @override
   _CustomRefreshIndicatorState createState() => _CustomRefreshIndicatorState();
