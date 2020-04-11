@@ -4,12 +4,15 @@ typedef RefreshCallback = Future<void> Function();
 
 class CustomRefreshIndicator extends StatefulWidget {
   static const armedFromValue = 1.0;
+  static const defaultExtentPercentageToArmed = 0.3;
 
   final Duration dragingToIdleDuration;
   final Duration armedToLoadingDuration;
   final Duration loadingToIdleDuration;
   final bool leadingGlowVisible;
   final bool trailingGlowVisible;
+  final double offsetToArmed;
+  final double extentPercentageToArmed;
   final Widget child;
   final ChildTransformBuilder builder;
   final RefreshCallback onRefresh;
@@ -17,7 +20,9 @@ class CustomRefreshIndicator extends StatefulWidget {
   CustomRefreshIndicator({
     @required this.child,
     @required this.onRefresh,
-    this.builder,
+    @required this.builder,
+    this.offsetToArmed,
+    this.extentPercentageToArmed = defaultExtentPercentageToArmed,
     this.dragingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
@@ -50,7 +55,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   IndicatorController get data => _customRefreshIndicatorData;
 
   static const double _kPositionLimit = 1.5;
-  static const double _kDragContainerExtentPercentage = 0.15;
   static const double _kInitialValue = 0.0;
 
   @override
@@ -86,6 +90,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     super.dispose();
   }
 
+  /// Notifies the listeners of the controller
   void _updateCustomRefreshIndicatorData() {
     _customRefreshIndicatorData.updateAndNotify(
       value: _animationController?.value ?? _kInitialValue,
@@ -123,7 +128,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         _hide();
       } else {
         _dragOffset -= notification.scrollDelta;
-        _checkDragOffset(notification.metrics.viewportDimension);
+        _calculateDragOffset(notification.metrics.viewportDimension);
       }
       if (_indicatorState == IndicatorState.armed &&
           notification.dragDetails == null) {
@@ -134,8 +139,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleOverscrollNotification(OverscrollNotification notification) {
-    _dragOffset -= notification.overscroll / 2.0;
-    _checkDragOffset(notification.metrics.viewportDimension);
+    _dragOffset -= notification.overscroll;
+    _calculateDragOffset(notification.metrics.viewportDimension);
     return false;
   }
 
@@ -155,11 +160,20 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     return false;
   }
 
-  void _checkDragOffset(double containerExtent) {
+  void _calculateDragOffset(double containerExtent) {
     if (_indicatorState == IndicatorState.hiding ||
         _indicatorState == IndicatorState.loading) return;
-    double newValue =
-        _dragOffset / (containerExtent * _kDragContainerExtentPercentage);
+
+    double newValue;
+
+    /// If [offestToArmed] is provided then it will be used otherwise
+    /// [extentPercentageToArmed]
+    if (widget.offsetToArmed != null) {
+      newValue = _dragOffset / widget.offsetToArmed;
+    } else {
+      newValue =
+          _dragOffset / (containerExtent * widget.extentPercentageToArmed);
+    }
 
     if (newValue >= CustomRefreshIndicator.armedFromValue) {
       _indicatorState = IndicatorState.armed;
@@ -167,7 +181,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       _indicatorState = IndicatorState.draging;
     }
 
-    // triggers indicator update
+    /// triggers indicator update
     _animationController.value = newValue.clamp(0.0, _kPositionLimit);
   }
 
@@ -201,9 +215,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         duration: widget.loadingToIdleDuration);
 
     if (!mounted) return;
-    setState(() {
-      _indicatorState = IndicatorState.idle;
-    });
+
+    _indicatorState = IndicatorState.idle;
+    _updateCustomRefreshIndicatorData();
   }
 
   void _hide() async {
@@ -217,9 +231,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     );
 
     if (!mounted) return;
-    setState(() {
-      _indicatorState = IndicatorState.idle;
-    });
+
+    _indicatorState = IndicatorState.idle;
+    _updateCustomRefreshIndicatorData();
   }
 
   static final ChildTransformBuilder noChildTransform =
