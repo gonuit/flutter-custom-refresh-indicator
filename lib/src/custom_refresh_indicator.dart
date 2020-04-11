@@ -46,13 +46,12 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// The direction in which list scrolls
   AxisDirection _axisDirection;
   double _dragOffset;
-  IndicatorState _indicatorState;
 
   AnimationController _animationController;
   IndicatorController _customRefreshIndicatorData;
 
   /// Current custom refresh indicator data
-  IndicatorController get data => _customRefreshIndicatorData;
+  IndicatorController get controller => _customRefreshIndicatorData;
 
   static const double _kPositionLimit = 1.5;
   static const double _kInitialValue = 0.0;
@@ -61,7 +60,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void initState() {
     _dragOffset = 0;
     _canStart = false;
-    _indicatorState = IndicatorState.idle;
     _axisDirection = AxisDirection.down;
     _userScrollingDirection = ScrollDirection.idle;
 
@@ -69,7 +67,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       value: _kInitialValue,
       direction: _axisDirection,
       scrollingDirection: _userScrollingDirection,
-      state: _indicatorState,
     );
 
     _animationController = AnimationController(
@@ -96,7 +93,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       value: _animationController?.value ?? _kInitialValue,
       direction: _axisDirection,
       scrollingDirection: _userScrollingDirection,
-      state: _indicatorState,
     );
   }
 
@@ -112,9 +108,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   bool _handleScrollStartNotification(ScrollStartNotification notification) {
     _canStart = notification.metrics.extentBefore == 0 &&
-        _indicatorState == IndicatorState.idle;
+        controller.state == IndicatorState.idle;
 
-    if (_canStart) _indicatorState = IndicatorState.draging;
+    if (_canStart) controller._setIndicatorState(IndicatorState.draging);
 
     _axisDirection = notification.metrics.axisDirection;
     return false;
@@ -122,15 +118,15 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
     /// hide when list starts to scroll
-    if (_indicatorState == IndicatorState.draging ||
-        _indicatorState == IndicatorState.armed) {
+    if (controller.state == IndicatorState.draging ||
+        controller.state == IndicatorState.armed) {
       if (notification.metrics.extentBefore > 0.0) {
         _hide();
       } else {
         _dragOffset -= notification.scrollDelta;
         _calculateDragOffset(notification.metrics.viewportDimension);
       }
-      if (_indicatorState == IndicatorState.armed &&
+      if (controller.state == IndicatorState.armed &&
           notification.dragDetails == null) {
         _start();
       }
@@ -146,7 +142,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
     if (_animationController.value >= CustomRefreshIndicator.armedFromValue) {
-      if (_indicatorState == IndicatorState.armed) {
+      if (controller.state == IndicatorState.armed) {
         _start();
       }
     } else {
@@ -161,8 +157,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   void _calculateDragOffset(double containerExtent) {
-    if (_indicatorState == IndicatorState.hiding ||
-        _indicatorState == IndicatorState.loading) return;
+    if (controller.state == IndicatorState.hiding ||
+        controller.state == IndicatorState.loading) return;
 
     double newValue;
 
@@ -176,9 +172,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     }
 
     if (newValue >= CustomRefreshIndicator.armedFromValue) {
-      _indicatorState = IndicatorState.armed;
+      controller._setIndicatorState(IndicatorState.armed);
     } else if (newValue > 0.0) {
-      _indicatorState = IndicatorState.draging;
+      controller._setIndicatorState(IndicatorState.draging);
     }
 
     /// triggers indicator update
@@ -204,24 +200,23 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _start() async {
     _dragOffset = 0;
 
-    _indicatorState = IndicatorState.loading;
+    controller._setIndicatorState(IndicatorState.loading);
     await _animationController.animateTo(1.0,
         duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
 
     if (!mounted) return;
-    _indicatorState = IndicatorState.hiding;
+    controller._setIndicatorState(IndicatorState.hiding);
     await _animationController.animateTo(0.0,
         duration: widget.loadingToIdleDuration);
 
     if (!mounted) return;
 
-    _indicatorState = IndicatorState.idle;
-    _updateCustomRefreshIndicatorData();
+    controller._setIndicatorState(IndicatorState.idle);
   }
 
   void _hide() async {
-    _indicatorState = IndicatorState.hiding;
+    controller._setIndicatorState(IndicatorState.hiding);
     _dragOffset = 0;
     _canStart = false;
     await _animationController.animateTo(
@@ -232,8 +227,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (!mounted) return;
 
-    _indicatorState = IndicatorState.idle;
-    _updateCustomRefreshIndicatorData();
+    controller._setIndicatorState(IndicatorState.idle);
   }
 
   static final ChildTransformBuilder noChildTransform =
@@ -249,6 +243,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
             child: widget.child,
           ),
         ),
-        data,
+        controller,
       );
 }

@@ -55,12 +55,12 @@ class IndicatorController extends ChangeNotifier {
 
   IndicatorController({
     @required double value,
-    @required AxisDirection direction,
+    AxisDirection direction,
     @required ScrollDirection scrollingDirection,
-    @required IndicatorState state,
-  })  : _state = state,
+    IndicatorState state,
+  })  : _state = state ?? IndicatorState.idle,
         _scrollingDirection = scrollingDirection,
-        _direction = direction,
+        _direction = direction ?? AxisDirection.down,
         _value = value;
 
   @protected
@@ -69,12 +69,10 @@ class IndicatorController extends ChangeNotifier {
     @required double value,
     @required AxisDirection direction,
     @required ScrollDirection scrollingDirection,
-    @required IndicatorState state,
   }) {
     _value = value;
     _direction = direction;
     _scrollingDirection = scrollingDirection;
-    _state = state;
 
     notifyListeners();
   }
@@ -120,6 +118,12 @@ class IndicatorController extends ChangeNotifier {
       direction == AxisDirection.up || direction == AxisDirection.down;
 
   IndicatorState _state;
+
+  /// sets indicator state and notifies listeners
+  void _setIndicatorState(IndicatorState state) {
+    _state = state;
+    notifyListeners();
+  }
 
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _state;
