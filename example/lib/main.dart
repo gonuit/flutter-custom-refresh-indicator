@@ -1,5 +1,6 @@
 import 'package:example/indicators/simple_indicator.dart';
 import 'package:example/screens/example_indicator_screen.dart';
+import 'package:example/screens/ice_cream_indicator_screen.dart';
 import 'package:example/screens/plane_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,11 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-
       home: MainScreen(),
       routes: {
         '/example': (context) => ExampleIndicatorScreen(),
         '/plane': (context) => PlaneIndicatorScreen(),
+        '/ice_cream': (context) => IceCreamIndicatorScreen(),
       },
     );
   }
@@ -72,6 +73,18 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/plane',
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Ice cream"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/ice_cream',
               ),
             ),
             const SizedBox(height: 15),

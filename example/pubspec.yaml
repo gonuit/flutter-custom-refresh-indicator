@@ -22,3 +22,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/plane_indicator/
+    - assets/ice_cream_indicator/
