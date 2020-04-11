@@ -58,9 +58,12 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
   ];
 
   static const _indicatorSize = 150.0;
+  static const _imageSize = 140.0;
 
   IndicatorState _prevState;
   AnimationController _spoonController;
+  static final _spoonTween = CurveTween(curve: Curves.easeInOut);
+
   @override
   void initState() {
     _spoonController =
@@ -68,8 +71,24 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
     super.initState();
   }
 
-  static final _spoonTween = CurveTween(curve: Curves.easeInOut);
-  static const double _imageSize = 150.0;
+  Widget _buildImage(IndicatorController controller, ParalaxConfig asset) {
+    return Transform.translate(
+      offset: Offset(
+        0,
+        -(asset.level * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
+      ),
+      child: OverflowBox(
+        maxHeight: _imageSize,
+        minHeight: _imageSize,
+        child: Image(
+          image: asset.image,
+          fit: BoxFit.contain,
+          height: _imageSize,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
@@ -97,34 +116,19 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
                     _prevState != currentState) {
                   _spoonController..value = 0.0;
                 }
+
                 _prevState = currentState;
                 return SizedBox(
                   height: controller.value * _indicatorSize,
                   child: Stack(
                     children: <Widget>[
                       for (int i = 0; i < _assets.length; i++)
+
+                        /// check if it is a spoon build animated builed and attach spoon controller
                         if (i == 1)
                           AnimatedBuilder(
                             animation: _spoonController,
-                            child: Transform.translate(
-                              offset: Offset(
-                                0,
-                                (-_assets[i].level) *
-                                        (20.0 *
-                                            (controller.value.clamp(1.0, 1.5) -
-                                                1.0)) +
-                                    10,
-                              ),
-                              child: OverflowBox(
-                                maxHeight: _imageSize,
-                                minHeight: _imageSize,
-                                child: Image(
-                                  image: _assets[i].image,
-                                  fit: BoxFit.contain,
-                                  height: _imageSize,
-                                ),
-                              ),
-                            ),
+                            child: _buildImage(controller, _assets[i]),
                             builder: (context, child) {
                               return Transform.rotate(
                                 angle: (-_spoonTween
@@ -135,25 +139,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
                             },
                           )
                         else
-                          Transform.translate(
-                            offset: Offset(
-                              0,
-                              (-_assets[i].level) *
-                                      (20.0 *
-                                          (controller.value.clamp(1.0, 1.5) -
-                                              1.0)) +
-                                  10,
-                            ),
-                            child: OverflowBox(
-                              maxHeight: _imageSize,
-                              minHeight: _imageSize,
-                              child: Image(
-                                image: _assets[i].image,
-                                fit: BoxFit.contain,
-                                height: _imageSize,
-                              ),
-                            ),
-                          )
+                          _buildImage(controller, _assets[i])
                     ],
                   ),
                 );

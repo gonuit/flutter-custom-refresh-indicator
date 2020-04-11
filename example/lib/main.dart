@@ -1,11 +1,11 @@
-import 'package:example/indicators/simple_indicator.dart';
-import 'package:example/screens/example_indicator_screen.dart';
-import 'package:example/screens/ice_cream_indicator_screen.dart';
-import 'package:example/screens/plane_indicator_screen.dart';
+import 'package:example/screens/presentation_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'indicators/emoji_indicator.dart';
-import 'indicators/test_indicator.dart';
+import 'indicators/simple_indicator.dart';
+import 'screens/example_indicator_screen.dart';
+import 'screens/ice_cream_indicator_screen.dart';
+import 'screens/plane_indicator_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/example': (context) => ExampleIndicatorScreen(),
         '/plane': (context) => PlaneIndicatorScreen(),
         '/ice_cream': (context) => IceCreamIndicatorScreen(),
+        '/presentation': (context) => PresentationScreen(),
       },
     );
   }
@@ -38,6 +39,18 @@ class MainScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(15),
           children: <Widget>[
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Presentation"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/presentation',
+              ),
+            ),
+            const SizedBox(height: 15),
             RaisedButton(
               child: Container(
                 height: 50,
@@ -98,19 +111,6 @@ class MainScreen extends StatelessWidget {
                 context,
                 '/example',
                 arguments: emojiIndicator,
-              ),
-            ),
-            const SizedBox(height: 15),
-            RaisedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: Text("Test indicator"),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/example',
-                arguments: testIndicator,
               ),
             ),
           ],
