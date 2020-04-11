@@ -56,10 +56,10 @@ class IndicatorController extends ChangeNotifier {
   IndicatorController({
     @required double value,
     AxisDirection direction,
-    @required ScrollDirection scrollingDirection,
+    ScrollDirection scrollingDirection,
     IndicatorState state,
   })  : _state = state ?? IndicatorState.idle,
-        _scrollingDirection = scrollingDirection,
+        _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value;
 
@@ -67,17 +67,17 @@ class IndicatorController extends ChangeNotifier {
   @visibleForTesting
   void updateAndNotify({
     @required double value,
-    @required AxisDirection direction,
-    @required ScrollDirection scrollingDirection,
   }) {
     _value = value;
-    _direction = direction;
-    _scrollingDirection = scrollingDirection;
 
     notifyListeners();
   }
 
   ScrollDirection _scrollingDirection;
+  void _setScrollingDirection(ScrollDirection userScrollDirection) {
+    _scrollingDirection = userScrollDirection;
+    notifyListeners();
+  }
 
   /// Direction in which user is scrolling
   ScrollDirection get scrollingDirection => _scrollingDirection;
@@ -92,6 +92,12 @@ class IndicatorController extends ChangeNotifier {
   bool get isScrollIdle => scrollingDirection == ScrollDirection.idle;
 
   AxisDirection _direction;
+
+  /// Sets the direction in which list scrolls
+  void _setAxisDirection(AxisDirection direction) {
+    _direction = direction;
+    notifyListeners();
+  }
 
   /// The direction in which list scrolls
   ///

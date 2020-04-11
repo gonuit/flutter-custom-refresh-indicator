@@ -40,11 +40,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `draging`
   bool _canStart = false;
 
-  /// Direction in which user is scrolling
-  ScrollDirection _userScrollingDirection;
-
-  /// The direction in which list scrolls
-  AxisDirection _axisDirection;
   double _dragOffset;
 
   AnimationController _animationController;
@@ -60,13 +55,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void initState() {
     _dragOffset = 0;
     _canStart = false;
-    _axisDirection = AxisDirection.down;
-    _userScrollingDirection = ScrollDirection.idle;
 
     _customRefreshIndicatorData = IndicatorController(
       value: _kInitialValue,
-      direction: _axisDirection,
-      scrollingDirection: _userScrollingDirection,
     );
 
     _animationController = AnimationController(
@@ -91,8 +82,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _updateCustomRefreshIndicatorData() {
     _customRefreshIndicatorData.updateAndNotify(
       value: _animationController?.value ?? _kInitialValue,
-      direction: _axisDirection,
-      scrollingDirection: _userScrollingDirection,
     );
   }
 
@@ -112,7 +101,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (_canStart) controller._setIndicatorState(IndicatorState.draging);
 
-    _axisDirection = notification.metrics.axisDirection;
+    controller._setAxisDirection(notification.metrics.axisDirection);
     return false;
   }
 
@@ -152,7 +141,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleUserScrollNotification(UserScrollNotification notification) {
-    _userScrollingDirection = notification.direction;
+    controller._setScrollingDirection(notification.direction);
     return false;
   }
 
