@@ -25,7 +25,9 @@ class InfiniteRatationState extends State<InfiniteRatation>
       if (widget.running) {
         _startAnimation();
       } else {
-        _rotationController.stop();
+        _rotationController
+          ..stop()
+          ..value = 0.0;
       }
     }
     super.didUpdateWidget(oldWidget);

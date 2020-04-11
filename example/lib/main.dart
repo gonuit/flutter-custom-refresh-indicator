@@ -1,7 +1,11 @@
-import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:example/indicators/simple_indicator.dart';
-import 'package:example/screens/example_indicator_screen.dart';
+import 'package:example/screens/presentation_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'indicators/emoji_indicator.dart';
+import 'indicators/simple_indicator.dart';
+import 'screens/example_indicator_screen.dart';
+import 'screens/ice_cream_indicator_screen.dart';
+import 'screens/plane_indicator_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,6 +20,9 @@ class MyApp extends StatelessWidget {
       home: MainScreen(),
       routes: {
         '/example': (context) => ExampleIndicatorScreen(),
+        '/plane': (context) => PlaneIndicatorScreen(),
+        '/ice_cream': (context) => IceCreamIndicatorScreen(),
+        '/presentation': (context) => PresentationScreen(),
       },
     );
   }
@@ -36,17 +43,74 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
+                child: Text("Presentation"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/presentation',
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
                 child: Text("Simple"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/example',
-                arguments: (context, data) => SimpleIndicatorContainer(
-                  data: data,
-                  child: SimpleIndicatorContent(
-                    data: data,
-                  ),
-                ),
+                arguments: simpleIndicator,
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Simple with list opacity"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/example',
+                arguments: simpleIndicatorWithOpacity,
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Plane"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/plane',
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Ice cream"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/ice_cream',
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Emoji"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/example',
+                arguments: emojiIndicator,
               ),
             ),
           ],
