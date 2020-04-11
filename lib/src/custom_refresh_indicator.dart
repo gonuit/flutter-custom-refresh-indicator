@@ -16,11 +16,13 @@ class CustomRefreshIndicator extends StatefulWidget {
   final Widget child;
   final ChildTransformBuilder builder;
   final RefreshCallback onRefresh;
+  final IndicatorController controller;
 
   CustomRefreshIndicator({
     @required this.child,
     @required this.onRefresh,
     @required this.builder,
+    this.controller,
     this.offsetToArmed,
     this.extentPercentageToArmed = defaultExtentPercentageToArmed,
     this.dragingToIdleDuration = const Duration(milliseconds: 300),
@@ -37,16 +39,22 @@ class CustomRefreshIndicator extends StatefulWidget {
 
 class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with TickerProviderStateMixin {
+  bool __canStart = false;
+
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `draging`
-  bool _canStart = false;
+  bool get _canStart =>
+      __canStart && _customRefreshIndicatorController._refreshEnabled;
+  set _canStart(bool canStart) {
+    __canStart = canStart;
+  }
 
   double _dragOffset;
 
   AnimationController _animationController;
-  IndicatorController _customRefreshIndicatorData;
+  IndicatorController _customRefreshIndicatorController;
 
-  /// Current custom refresh indicator data
-  IndicatorController get controller => _customRefreshIndicatorData;
+  /// Keeps current custom refresh indicator data
+  IndicatorController get controller => _customRefreshIndicatorController;
 
   static const double _kPositionLimit = 1.5;
   static const double _kInitialValue = 0.0;
@@ -56,17 +64,15 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _dragOffset = 0;
     _canStart = false;
 
-    _customRefreshIndicatorData = IndicatorController(
-      value: _kInitialValue,
-    );
+    _customRefreshIndicatorController =
+        widget.controller ?? IndicatorController._();
 
     _animationController = AnimationController(
       vsync: this,
       upperBound: _kPositionLimit,
-      lowerBound: 0.0,
-    )
-      ..addListener(_updateCustomRefreshIndicatorData)
-      ..value = _kInitialValue;
+      lowerBound: _kInitialValue,
+      value: _kInitialValue,
+    )..addListener(_updateCustomRefreshIndicatorValue);
 
     super.initState();
   }
@@ -74,14 +80,14 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   @override
   void dispose() {
     _animationController.dispose();
-    _customRefreshIndicatorData.dispose();
+    _customRefreshIndicatorController.dispose();
     super.dispose();
   }
 
   /// Notifies the listeners of the controller
-  void _updateCustomRefreshIndicatorData() {
-    _customRefreshIndicatorData.updateAndNotify(
-      value: _animationController?.value ?? _kInitialValue,
+  void _updateCustomRefreshIndicatorValue() {
+    _customRefreshIndicatorController._setValue(
+      _animationController?.value ?? _kInitialValue,
     );
   }
 
@@ -218,9 +224,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     controller._setIndicatorState(IndicatorState.idle);
   }
-
-  static final ChildTransformBuilder noChildTransform =
-      (context, child, data) => child;
 
   @override
   Widget build(BuildContext context) => widget.builder.call(

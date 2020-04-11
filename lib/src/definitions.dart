@@ -53,23 +53,27 @@ class IndicatorController extends ChangeNotifier {
   /// Current indicator value / progress
   double get value => _value;
 
-  IndicatorController({
-    @required double value,
+  /// Creates [CustomRefreshIndicator] controller class
+  factory IndicatorController({
+    bool refreshEnabled,
+  }) =>
+      IndicatorController._(refreshEnabled: refreshEnabled);
+
+  IndicatorController._({
+    double value,
     AxisDirection direction,
     ScrollDirection scrollingDirection,
     IndicatorState state,
+    bool refreshEnabled,
   })  : _state = state ?? IndicatorState.idle,
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
-        _value = value;
+        _value = value ?? 0.0,
+        _refreshEnabled = refreshEnabled ?? true;
 
   @protected
-  @visibleForTesting
-  void updateAndNotify({
-    @required double value,
-  }) {
+  void _setValue(double value) {
     _value = value;
-
     notifyListeners();
   }
 
@@ -138,4 +142,21 @@ class IndicatorController extends ChangeNotifier {
   bool get isLoading => _state == IndicatorState.loading;
   bool get isHiding => _state == IndicatorState.hiding;
   bool get isIdle => _state == IndicatorState.idle;
+
+  bool _refreshEnabled;
+
+  /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `draging`
+  bool get refreshEnabled => _refreshEnabled;
+
+  /// Disables list pull to refresh
+  void disableRefresh() {
+    _refreshEnabled = false;
+    notifyListeners();
+  }
+
+  /// Enables list pull to refresh
+  void enableRefresh() {
+    _refreshEnabled = true;
+    notifyListeners();
+  }
 }
