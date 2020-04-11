@@ -8,7 +8,14 @@ class ExampleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(color: backgroundColor),
+      decoration: BoxDecoration(color: backgroundColor, boxShadow: [
+        BoxShadow(
+          blurRadius: 2,
+          color: Colors.black12,
+          spreadRadius: 0.5,
+          offset: Offset(0.0, .0),
+        )
+      ]),
       child: ListView.separated(
         itemBuilder: (BuildContext context, int index) => const Element(),
         itemCount: 4,

@@ -4,7 +4,6 @@ import 'package:example/screens/plane_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'indicators/emoji_indicator.dart';
-import 'indicators/plane_indicator.dart';
 import 'indicators/test_indicator.dart';
 
 void main() => runApp(MyApp());
@@ -17,6 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+
       home: MainScreen(),
       routes: {
         '/example': (context) => ExampleIndicatorScreen(),
@@ -72,7 +72,6 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/plane',
-                arguments: planeIndicator,
               ),
             ),
             const SizedBox(height: 15),
