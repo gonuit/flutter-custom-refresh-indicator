@@ -1,9 +1,11 @@
 import 'package:example/indicators/simple_indicator.dart';
 import 'package:example/screens/example_indicator_screen.dart';
+import 'package:example/screens/plane_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'indicators/emoji_indicator.dart';
 import 'indicators/plane_indicator.dart';
+import 'indicators/test_indicator.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,6 +20,7 @@ class MyApp extends StatelessWidget {
       home: MainScreen(),
       routes: {
         '/example': (context) => ExampleIndicatorScreen(),
+        '/plane': (context) => PlaneIndicatorScreen(),
       },
     );
   }
@@ -68,7 +71,7 @@ class MainScreen extends StatelessWidget {
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/example',
+                '/plane',
                 arguments: planeIndicator,
               ),
             ),
@@ -83,6 +86,19 @@ class MainScreen extends StatelessWidget {
                 context,
                 '/example',
                 arguments: emojiIndicator,
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Test indicator"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/example',
+                arguments: testIndicator,
               ),
             ),
           ],
