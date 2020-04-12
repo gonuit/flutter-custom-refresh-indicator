@@ -1,4 +1,4 @@
-## [0.8.0] - April 12, 2020
+## [0.8.0+1] - April 12, 2020
 
 ## BREAKING API CHANGES
 

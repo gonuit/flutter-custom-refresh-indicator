@@ -7,11 +7,11 @@ enum IndicatorState {
   /// (`CustomRefreshIndicatorData.value == 0`)
   idle,
 
-  /// #### Whether user is draging [CustomRefreshIndicator]
+  /// #### Whether user is dragging [CustomRefreshIndicator]
   /// ending the scroll **WILL NOT** result in `onRefresh` call
   ///
   /// (`CustomRefreshIndicatorData.value < 1`)
-  draging,
+  dragging,
 
   /// #### [CustomRefreshIndicator] is armed
   /// ending the scroll **WILL** result in:
@@ -29,7 +29,7 @@ enum IndicatorState {
   /// so `value` was less than `1` or the user started scrolling through the list)
   ///
   /// (`CustomRefreshIndicatorData.value` decreases to `0`
-  /// in duration specified by `CustomRefreshIndicator.dragingToIdleDuration`)
+  /// in duration specified by `CustomRefreshIndicator.draggingToIdleDuration`)
   hiding,
 
   /// #### [CustomRefreshIndicator] is awaiting on `onRefresh` call result
@@ -132,14 +132,14 @@ class IndicatorController extends ChangeNotifier {
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _state;
   bool get isArmed => _state == IndicatorState.armed;
-  bool get isDraging => _state == IndicatorState.draging;
+  bool get isDragging => _state == IndicatorState.dragging;
   bool get isLoading => _state == IndicatorState.loading;
   bool get isHiding => _state == IndicatorState.hiding;
   bool get isIdle => _state == IndicatorState.idle;
 
   bool _refreshEnabled;
 
-  /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `draging`
+  /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
   bool get isRefreshEnabled => _refreshEnabled;
 
   /// Disables list pull to refresh

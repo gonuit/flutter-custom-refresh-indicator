@@ -53,7 +53,8 @@ CustomRefreshIndicator(
 
 ### How the controller data change
 
-The best way to understand how the "CustomRefreshIndicator" widget changes its controller data is to see the example 😉.
+The best way to understand how the "CustomRefreshIndicator" widget changes its controller data is to see the example 😉. An example is available in the example application.
+  
 ![Controller_Data](readme/controller_data.gif)
 
 ## Examples
@@ -98,7 +99,7 @@ CustomRefreshIndicator is idle (There is no action)
 controller.value == 0.0
 ```
 
-#### `draging`
+#### `dragging`
 
 Whether the user is dragging a scrollable widget.  
 Ending the scroll **WILL NOT** result in `onRefresh` function call
@@ -122,7 +123,7 @@ controller.value >= 1.0
 #### `hiding`
 
 CustomRefreshIndicator is hiding its indicator. After the future returned from `onRefresh` function is completed or scroll ended when the state was equal to `dragging` or the user started scrolling through the list.
-controller value decreases to `0.0` in duration specified by `dragingToIdleDuration` CustomRefreshIndicator widget argument.
+controller value decreases to `0.0` in duration specified by `draggingToIdleDuration` CustomRefreshIndicator widget argument.
 
 ```dart
 controller.value <= 1.0

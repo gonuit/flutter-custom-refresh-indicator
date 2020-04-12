@@ -24,7 +24,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
         child: CustomRefreshIndicator(
           loadingToIdleDuration: const Duration(seconds: 1),
           armedToLoadingDuration: const Duration(seconds: 1),
-          dragingToIdleDuration: const Duration(seconds: 1),
+          draggingToIdleDuration: const Duration(seconds: 1),
           leadingGlowVisible: false,
           trailingGlowVisible: false,
           offsetToArmed: 100.0,

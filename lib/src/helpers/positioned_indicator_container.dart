@@ -19,10 +19,18 @@ class PositionedIndicatorContainer extends StatelessWidget {
         final double positionFromSide = -50 + (controller.value * 110);
 
         return Positioned(
-          top: controller.direction == AxisDirection.down ? positionFromSide : null,
-          bottom: controller.direction == AxisDirection.up ? positionFromSide : null,
-          left: controller.direction == AxisDirection.right ? positionFromSide : null,
-          right: controller.direction == AxisDirection.left ? positionFromSide : null,
+          top: controller.direction == AxisDirection.down
+              ? positionFromSide
+              : null,
+          bottom: controller.direction == AxisDirection.up
+              ? positionFromSide
+              : null,
+          left: controller.direction == AxisDirection.right
+              ? positionFromSide
+              : null,
+          right: controller.direction == AxisDirection.left
+              ? positionFromSide
+              : null,
           child: Container(
             height: controller.isHorizontalDirection
                 ? MediaQuery.of(context).size.height

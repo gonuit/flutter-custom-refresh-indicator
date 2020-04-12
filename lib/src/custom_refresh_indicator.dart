@@ -12,7 +12,7 @@ class CustomRefreshIndicator extends StatefulWidget {
 
   /// Duration of changing [IndicatorController] value from `<1.0` to `0.0`.
   /// When user stop dragging list before it become to armed [IndicatorState].
-  final Duration dragingToIdleDuration;
+  final Duration draggingToIdleDuration;
 
   /// Duration of changing [IndicatorController] value from `<=1.5` to `1.0`.
   /// Will start just before [onRefresh] function invocation.
@@ -75,7 +75,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.controller,
     this.offsetToArmed,
     this.extentPercentageToArmed = defaultExtentPercentageToArmed,
-    this.dragingToIdleDuration = const Duration(milliseconds: 300),
+    this.draggingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
     this.leadingGlowVisible = false,
@@ -92,7 +92,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with TickerProviderStateMixin {
   bool __canStart = false;
 
-  /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `draging`
+  /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
   bool get _canStart =>
       __canStart && _customRefreshIndicatorController._refreshEnabled;
   set _canStart(bool canStart) {
@@ -156,7 +156,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _canStart = notification.metrics.extentBefore == 0 &&
         controller.state == IndicatorState.idle;
 
-    if (_canStart) controller._setIndicatorState(IndicatorState.draging);
+    if (_canStart) controller._setIndicatorState(IndicatorState.dragging);
 
     controller._setAxisDirection(notification.metrics.axisDirection);
     return false;
@@ -164,7 +164,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
     /// hide when list starts to scroll
-    if (controller.state == IndicatorState.draging ||
+    if (controller.state == IndicatorState.dragging ||
         controller.state == IndicatorState.armed) {
       if (notification.metrics.extentBefore > 0.0) {
         _hide();
@@ -220,7 +220,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (newValue >= CustomRefreshIndicator.armedFromValue) {
       controller._setIndicatorState(IndicatorState.armed);
     } else if (newValue > 0.0) {
-      controller._setIndicatorState(IndicatorState.draging);
+      controller._setIndicatorState(IndicatorState.dragging);
     }
 
     /// triggers indicator update
@@ -267,7 +267,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _canStart = false;
     await _animationController.animateTo(
       0.0,
-      duration: widget.dragingToIdleDuration,
+      duration: widget.draggingToIdleDuration,
       curve: Curves.ease,
     );
 
