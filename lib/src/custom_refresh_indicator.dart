@@ -67,6 +67,9 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// To better understand this data, look at example app.
   final IndicatorController controller;
 
+  /// Sets axis that can start refresh drag
+  final RefreshAxis axis;
+
   CustomRefreshIndicator({
     Key key,
     @required this.child,
@@ -80,6 +83,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
+    this.axis = RefreshAxis.any,
   })  : assert(child != null, 'child argument cannot be null'),
         assert(builder != null, 'builder argument cannot be null'),
         super(key: key);
@@ -153,13 +157,25 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollStartNotification(ScrollStartNotification notification) {
-    _canStart = notification.metrics.extentBefore == 0 &&
+    _canStart = _isAxisDirectionValid(notification.metrics.axisDirection) &&
+        notification.metrics.extentBefore == 0 &&
         controller.state == IndicatorState.idle;
 
     if (_canStart) controller._setIndicatorState(IndicatorState.dragging);
 
     controller._setAxisDirection(notification.metrics.axisDirection);
     return false;
+  }
+
+  bool _isAxisDirectionValid(AxisDirection direction) {
+    switch (widget.axis) {
+      case RefreshAxis.vertical:
+        return direction == AxisDirection.up || direction == AxisDirection.down;
+      case RefreshAxis.horizontal:
+        return direction == AxisDirection.left || direction == AxisDirection.right;
+      default:
+        return true;
+    }
   }
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
@@ -288,4 +304,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         ),
         controller,
       );
+}
+
+enum RefreshAxis {
+  vertical,
+  horizontal,
+  any,
 }
