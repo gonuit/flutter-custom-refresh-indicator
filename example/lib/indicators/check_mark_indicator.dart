@@ -17,18 +17,8 @@ class CheckMarkIndicator extends StatefulWidget {
 class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
     with SingleTickerProviderStateMixin {
   static const _indicatorSize = 150.0;
-  static const _imageSize = 140.0;
 
-  IndicatorState _prevState;
-  AnimationController _spoonController;
-
-  @override
-  void initState() {
-    _spoonController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    super.initState();
-  }
-
+  /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
 
   @override
@@ -56,11 +46,11 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                 } else if (controller.didStateChange(to: IndicatorState.idle)) {
                   _renderCompleteState = false;
                 }
-                final height = controller.value * _indicatorSize;
+                final containerHeight = controller.value * _indicatorSize;
 
                 return Container(
                   alignment: Alignment.center,
-                  height: height,
+                  height: containerHeight,
                   child: OverflowBox(
                     maxHeight: 40,
                     minHeight: 40,
@@ -71,7 +61,10 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                       duration: const Duration(milliseconds: 150),
                       alignment: Alignment.center,
                       child: _renderCompleteState
-                          ? Icon(Icons.check)
+                          ? const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            )
                           : SizedBox(
                               height: 30,
                               width: 30,
@@ -79,6 +72,10 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                                 strokeWidth: 2,
                                 valueColor:
                                     AlwaysStoppedAnimation(Colors.white),
+                                value:
+                                    controller.isDragging || controller.isArmed
+                                        ? controller.value.clamp(0.0, 1.0)
+                                        : null,
                               ),
                             ),
                       decoration: BoxDecoration(
@@ -105,11 +102,5 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _spoonController.dispose();
-    super.dispose();
   }
 }
