@@ -28,6 +28,13 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Whether to display leading glow
   final bool leadingGlowVisible;
 
+  /// A check that specifies whether a [ScrollNotification] should be
+  /// handled by this widget.
+  ///
+  /// By default, checks whether `notification.depth == 0`. Set it to something
+  /// else for more complicated layouts.
+  final ScrollNotificationPredicate notificationPredicate;
+
   /// Whether to display trailing glow
   final bool trailingGlowVisible;
 
@@ -78,6 +85,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     @required this.child,
     @required this.onRefresh,
     @required this.builder,
+    this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
     this.extentPercentageToArmed = defaultExtentPercentageToArmed,
@@ -249,6 +257,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
+    /// if notification predicate is not matched then notification
+    /// will not be handled by this widget
+    if (!widget.notificationPredicate(notification)) return false;
+
     if (notification is ScrollStartNotification)
       return _handleScrollStartNotification(notification);
     if (!_canStart) return false;
