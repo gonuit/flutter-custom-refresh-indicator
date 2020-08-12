@@ -25,7 +25,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
       offsetToArmed: _indicatorSize,
-      onRefresh: () => Future.delayed(const Duration(seconds: 4)),
+      onRefresh: () => Future.delayed(const Duration(seconds: 2)),
       child: widget.child,
       completeStateDuration: const Duration(seconds: 2),
       builder: (

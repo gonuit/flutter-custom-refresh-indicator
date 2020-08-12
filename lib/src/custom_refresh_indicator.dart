@@ -18,15 +18,14 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Will start just before [onRefresh] function invocation.
   final Duration armedToLoadingDuration;
 
-  /// {@macro custom_refresh_indicator.complete_state}
-  final Duration completeStateDuration;
-
   /// Duration of changing [IndicatorController] value from `1.0` to `0.0`
   /// when [onRefresh] callback was completed.
+  ///
+  /// Occurs after `loading` or `complete` state.
   final Duration loadingToIdleDuration;
 
-  /// Whether to display leading glow
-  final bool leadingGlowVisible;
+  /// {@macro custom_refresh_indicator.complete_state}
+  final Duration completeStateDuration;
 
   /// A check that specifies whether a [ScrollNotification] should be
   /// handled by this widget.
@@ -34,6 +33,9 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// By default, checks whether `notification.depth == 0`. Set it to something
   /// else for more complicated layouts.
   final ScrollNotificationPredicate notificationPredicate;
+
+  /// Whether to display leading glow
+  final bool leadingGlowVisible;
 
   /// Whether to display trailing glow
   final bool trailingGlowVisible;
@@ -88,7 +90,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
-    this.extentPercentageToArmed = defaultExtentPercentageToArmed,
+    this.extentPercentageToArmed,
     this.draggingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
@@ -96,8 +98,13 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
     this.axis = RefreshAxis.any,
-  })  : assert(child != null, 'child argument cannot be null'),
-        assert(builder != null, 'builder argument cannot be null'),
+  })  : assert(child != null, '`child` argument cannot be null.'),
+        assert(builder != null, '`builder` argument cannot be null.'),
+        assert(
+          extentPercentageToArmed == null || offsetToArmed == null,
+          'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
+          'Remove redundant argument.',
+        ),
         super(key: key);
 
   @override
@@ -242,8 +249,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (widget.offsetToArmed != null) {
       newValue = _dragOffset / widget.offsetToArmed;
     } else {
-      newValue =
-          _dragOffset / (containerExtent * widget.extentPercentageToArmed);
+      final extentPercentageToArmed = widget.extentPercentageToArmed ??
+          CustomRefreshIndicator.defaultExtentPercentageToArmed;
+
+      newValue = _dragOffset / (containerExtent * extentPercentageToArmed);
     }
 
     if (newValue >= CustomRefreshIndicator.armedFromValue) {
