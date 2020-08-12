@@ -39,6 +39,18 @@ enum IndicatorState {
   ///
   /// (`CustomRefreshIndicatorData.value == 1`)
   loading,
+
+  /// ### IMPORTANT
+  /// This state is skipped by default.
+  ///
+  /// {@template custom_refresh_indicator.complete_state}
+  /// If [CustomRefreshIndicator.completeStateDuration] argument is provided to CustomRefreshIndicator,
+  /// state will changed from [loading] to [complete] for duration of [CustomRefreshIndicator.completeStateDuration].
+  ///
+  /// If [CustomRefreshIndicator.completeStateDuration] equals `null`, state
+  /// will skip [complete] state and will immediately become [hidding].
+  /// {@endtemplate}
+  complete,
 }
 
 class IndicatorController extends ChangeNotifier {

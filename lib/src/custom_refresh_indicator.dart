@@ -18,6 +18,9 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Will start just before [onRefresh] function invocation.
   final Duration armedToLoadingDuration;
 
+  /// {@macro custom_refresh_indicator.complete_state}
+  final Duration completeStateDuration;
+
   /// Duration of changing [IndicatorController] value from `1.0` to `0.0`
   /// when [onRefresh] callback was completed.
   final Duration loadingToIdleDuration;
@@ -81,6 +84,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.draggingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
+    this.completeStateDuration,
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
     this.axis = RefreshAxis.any,
@@ -172,7 +176,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       case RefreshAxis.vertical:
         return direction == AxisDirection.up || direction == AxisDirection.down;
       case RefreshAxis.horizontal:
-        return direction == AxisDirection.left || direction == AxisDirection.right;
+        return direction == AxisDirection.left ||
+            direction == AxisDirection.right;
       default:
         return true;
     }
@@ -266,6 +271,14 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     await _animationController.animateTo(1.0,
         duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
+
+    if (!mounted) return;
+
+    /// optional complete state
+    if (widget.completeStateDuration != null) {
+      controller._setIndicatorState(IndicatorState.complete);
+      await Future.delayed(widget.completeStateDuration);
+    }
 
     if (!mounted) return;
     controller._setIndicatorState(IndicatorState.hiding);
