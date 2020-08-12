@@ -1,3 +1,13 @@
+## [0.9.0-dev.1] - August 12, 2020
+- Added optional `complete` indicator state together with `completeStateDuration` parameter.
+- `IndicatorControler` changes:
+  - Added `prevoiusState` property.
+  - Added `didStateChange` helper method.
+  - Added `wasArmed`, `wasDragging`, `wasLoading`, `wasHiding` and `wasIdle` properties.
+- Added `notificationPredicate` property to the `CustomRefreshIndicator` widget.
+- Example app:
+  - Added initial version of `check_mark_indicator`. Example that shows how to make use of `complete` state. 
+
 ## [0.8.0+1] - April 12, 2020
 
 ## BREAKING API CHANGES
