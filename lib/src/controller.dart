@@ -177,6 +177,16 @@ class IndicatorController extends ChangeNotifier {
     _refreshEnabled = true;
     notifyListeners();
   }
+
+  /// Returns `true` when state did change [from] to [to].
+  bool didStateChange({IndicatorState from, IndicatorState to}) {
+    final stateChanged = _previousState != _currentState;
+    if (to == null) return _previousState == from && stateChanged;
+    if (from == null) return _currentState == to && stateChanged;
+    if (to == null && from == null) return stateChanged;
+    return _previousState == from && _currentState == to;
+  }
+
   /// Everytime [notifyListeners] method is called, [previousState] will be set to [state] value.
   @override
   void notifyListeners({bool updatePrevState = true}) {
