@@ -150,6 +150,7 @@ class IndicatorController extends ChangeNotifier {
   bool get wasArmed => _previousState == IndicatorState.armed;
   bool get wasDragging => _previousState == IndicatorState.dragging;
   bool get wasLoading => _previousState == IndicatorState.loading;
+  bool get wasComplete => _previousState == IndicatorState.complete;
   bool get wasHiding => _previousState == IndicatorState.hiding;
   bool get wasIdle => _previousState == IndicatorState.idle;
 
@@ -158,6 +159,7 @@ class IndicatorController extends ChangeNotifier {
   bool get isArmed => _currentState == IndicatorState.armed;
   bool get isDragging => _currentState == IndicatorState.dragging;
   bool get isLoading => _currentState == IndicatorState.loading;
+  bool get isComplete => _currentState == IndicatorState.complete;
   bool get isHiding => _currentState == IndicatorState.hiding;
   bool get isIdle => _currentState == IndicatorState.idle;
 
