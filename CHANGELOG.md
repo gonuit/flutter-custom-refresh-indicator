@@ -1,4 +1,4 @@
-## [0.9.0-dev.2] - August 24, 2020
+## [0.9.0-dev.2] - August 21, 2020
 - Added `isComplete` and `wasComplete` controller getters.
 - Removed `axis` property as it can be handled by `notificationPredicate`.
 ## [0.9.0-dev.1] - August 12, 2020
