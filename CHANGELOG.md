@@ -1,5 +1,6 @@
 ## [0.9.0] -
 - Improved readme documentation.
+- Removed material package import.
 ## [0.9.0-dev.2] - August 21, 2020
 - Added `isComplete` and `wasComplete` controller getters.
 - Removed `axis` property as it can be handled by `notificationPredicate`.

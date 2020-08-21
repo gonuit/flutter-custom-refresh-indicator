@@ -6,6 +6,8 @@ typedef IndicatorBuilder = Widget Function(
   IndicatorController controller,
 );
 
+typedef OnRefresh = Future<void> Function();
+
 class CustomRefreshIndicator extends StatefulWidget {
   static const armedFromValue = 1.0;
   static const defaultExtentPercentageToArmed = 0.20;
@@ -66,7 +68,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// A function that's called when the user has dragged the refresh indicator
   /// far enough to demonstrate that they want the app to refresh.
   /// The returned [Future] must complete when the refresh operation is finished.
-  final RefreshCallback onRefresh;
+  final OnRefresh onRefresh;
 
   /// Indicator controller keeps all thata related to refresh indicator.
   /// It extends [ChangeNotifier] so that it could be listen for changes.
