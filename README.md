@@ -6,9 +6,9 @@ If there is something that can be improved, fixed or you just have some great id
 
 If you implemented your own custom refresh indicator with this library and you want it to be mentioned here or provided as an example to the eample app, just open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
 
-## QUICK START
+# QUICK START
 
-### Code
+## Code
 
 ```dart
 CustomRefreshIndicator(
@@ -51,88 +51,57 @@ CustomRefreshIndicator(
 )
 ```
 
-### How the controller data change
-
-The best way to understand how the "CustomRefreshIndicator" widget changes its controller data is to see the example 😉. An example is available in the example application.
-  
-![Controller_Data](readme/controller_data.gif)
-
 ## Examples
 
 Almost all of these examples are available in the example application.
 
 ### Plane indicator [[SOURCE CODE](example/lib/indicators/plane_indicator.dart)]
-
 ![plane_indicator](readme/plane_indicator.gif)
+___
 
 ### Ice cream indicator [[SOURCE CODE](example/lib/indicators/ice_cream_indicator.dart)]
-
 ![ice_cream_indicator](readme/ice_cream_indicator.gif)
+___
 
 ### Simple indicator made with `PositionedIndicatorContainer` [[SOURCE CODE](example/lib/indicators/simple_indicator.dart)]
-
 ![simple_indicator](readme/simple_with_opacity.gif)
+___
 
 ### Envelope indicator
-
 ![letter_indicator](readme/letter_indicator.gif)
+___
 
 ### Emoji indicator [[SOURCE CODE](example/lib/indicators/emoji_indicator.dart)]
-
 You can create any indicator you want!
-
+  
 ![letter_indicator](readme/emoji_indicator.gif)
+___
+
+### Indicator with complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)]
+![indicator_with_complete_state](readme/indicator_with_complete_state.gif)
+___
+
+# Documentation
 
 ## CustomRefreshIndicator widget
 
 `CustomRefreshIndicator` widget provides an absolute minimum functionality that allows you to create and set your own custom indicators.
 
-## IndicatorState
+## IndicatorController
 
-Enum which describes state of CustomRefreshIndicator. It is provided by IndicatorController.
+### Controller state and value changes.
 
-#### `idle`
+The best way to understand how the "CustomRefreshIndicator" widget changes its controller data is to see the example 😉. An example is available in the example application.
+    
+![Controller_Data](readme/controller_data.gif)
 
-CustomRefreshIndicator is idle (There is no action)
+| state        | value   | value description                                                                                       | Description                                                                                                                                                                                                                              |
+| ------------ | :------ | :------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **idle**     | `==0.0` | Value eqals `0.0`.                                                                                      | No user action.                                                                                                                                                                                                                          |
+| **dragging** | `=<0.0` | Value is eqal `0.0` or larger but lower than `1.0`.                                                     | User is dragging the indicator.                                                                                                                                                                                                          |
+| **armed**    | `>=1.0` | Value is larger than `1.0`.                                                                             | User dragged the indicator further than the distance declared by `extentPercentageToArmed` or `offsetToArmed`. User still keeps the finger on the screen.                                                                                |
+| **loading**  | `>=1.0` | Value decreses from last `armed` state value in duration of `armedToLoadingDuration` argument to `1.0`. | User finished dragging (took his finger off the screen), when state was equal to `armed`. `onRefresh` function is called.                                                                                                                |
+| **hiding**   | `<=1.0` | Value decreses in duration of `draggingToIdleDuration` or `loadingToIdleDuration` arguments to `0.0`.   | Indicator is hiding after:<br />- User ended dragging when indicator was in `dragging` state.<br />- Future returned from `onRefresh` function is resolved.<br />- Complete state ended.<br />- User started scrolling through the list. |
+| **complete** | `==1.0` | Value equals `1.0` for duration of `completeStateDuration` argument.                                    | **This state is OPTIONAL, provide `completeStateDuration` argument with non null value to enable it.**<br /> Loading is completed.                                                                                                       |
 
-```dart
-controller.value == 0.0
-```
-
-#### `dragging`
-
-Whether the user is dragging a scrollable widget.  
-Ending the scroll **WILL NOT** result in `onRefresh` function call
-
-```dart
-controller.value < 1.0
-```
-
-#### `armed`
-
-CustomRefreshIndicator is armed ending the scroll **WILL** result in:
-
-- `onRefresh` function call
-- change of indicator status to `loading`
-- decreasing controller.value to `1.0` in duration specified by `armedToLoadingDuration` CustomRefreshIndicator widget argument
-
-```dart
-controller.value >= 1.0
-```
-
-#### `hiding`
-
-CustomRefreshIndicator is hiding its indicator. After the future returned from `onRefresh` function is completed or scroll ended when the state was equal to `dragging` or the user started scrolling through the list.
-controller value decreases to `0.0` in duration specified by `draggingToIdleDuration` CustomRefreshIndicator widget argument.
-
-```dart
-controller.value <= 1.0
-```
-
-#### `loading`
-
-CustomRefreshIndicator widget is awaiting on future returned from `onRefresh` function. After future completed state will be change into `hiding` and controller value will decrease from `1.0` to `0.0` in duration specified by `loadingToIdleDuration` CustomRefreshIndicator widget argument.
-
-```dart
-controller.value == 1.0
-```
+___
