@@ -39,6 +39,18 @@ enum IndicatorState {
   ///
   /// (`CustomRefreshIndicatorData.value == 1`)
   loading,
+
+  /// ### IMPORTANT
+  /// This state is skipped by default.
+  ///
+  /// {@template custom_refresh_indicator.complete_state}
+  /// If [CustomRefreshIndicator.completeStateDuration] argument is provided to CustomRefreshIndicator,
+  /// state will changed from [loading] to [complete] for duration of [CustomRefreshIndicator.completeStateDuration].
+  ///
+  /// If [CustomRefreshIndicator.completeStateDuration] equals `null`, state
+  /// will skip [complete] state and will immediately become [hidding].
+  /// {@endtemplate}
+  complete,
 }
 
 class IndicatorController extends ChangeNotifier {
@@ -59,7 +71,8 @@ class IndicatorController extends ChangeNotifier {
     ScrollDirection scrollingDirection,
     IndicatorState state,
     bool refreshEnabled,
-  })  : _state = state ?? IndicatorState.idle,
+  })  : _currentState = state ?? IndicatorState.idle,
+        _previousState = state ?? IndicatorState.idle,
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
@@ -121,21 +134,34 @@ class IndicatorController extends ChangeNotifier {
   bool get isVerticalDirection =>
       direction == AxisDirection.up || direction == AxisDirection.down;
 
-  IndicatorState _state;
+  IndicatorState _currentState;
+  IndicatorState _previousState;
 
   /// sets indicator state and notifies listeners
-  void _setIndicatorState(IndicatorState state) {
-    _state = state;
-    notifyListeners();
+  void _setIndicatorState(IndicatorState newState) {
+    _previousState = _currentState;
+    _currentState = newState;
+
+    notifyListeners(updatePrevState: false);
   }
 
+  /// Describes previous [CustomRefreshIndicator] state
+  IndicatorState get previousState => _previousState;
+  bool get wasArmed => _previousState == IndicatorState.armed;
+  bool get wasDragging => _previousState == IndicatorState.dragging;
+  bool get wasLoading => _previousState == IndicatorState.loading;
+  bool get wasComplete => _previousState == IndicatorState.complete;
+  bool get wasHiding => _previousState == IndicatorState.hiding;
+  bool get wasIdle => _previousState == IndicatorState.idle;
+
   /// Describes current [CustomRefreshIndicator] state
-  IndicatorState get state => _state;
-  bool get isArmed => _state == IndicatorState.armed;
-  bool get isDragging => _state == IndicatorState.dragging;
-  bool get isLoading => _state == IndicatorState.loading;
-  bool get isHiding => _state == IndicatorState.hiding;
-  bool get isIdle => _state == IndicatorState.idle;
+  IndicatorState get state => _currentState;
+  bool get isArmed => _currentState == IndicatorState.armed;
+  bool get isDragging => _currentState == IndicatorState.dragging;
+  bool get isLoading => _currentState == IndicatorState.loading;
+  bool get isComplete => _currentState == IndicatorState.complete;
+  bool get isHiding => _currentState == IndicatorState.hiding;
+  bool get isIdle => _currentState == IndicatorState.idle;
 
   bool _refreshEnabled;
 
@@ -152,5 +178,21 @@ class IndicatorController extends ChangeNotifier {
   void enableRefresh() {
     _refreshEnabled = true;
     notifyListeners();
+  }
+
+  /// Returns `true` when state did change [from] to [to].
+  bool didStateChange({IndicatorState from, IndicatorState to}) {
+    final stateChanged = _previousState != _currentState;
+    if (to == null) return _previousState == from && stateChanged;
+    if (from == null) return _currentState == to && stateChanged;
+    if (to == null && from == null) return stateChanged;
+    return _previousState == from && _currentState == to;
+  }
+
+  /// Everytime [notifyListeners] method is called, [previousState] will be set to [state] value.
+  @override
+  void notifyListeners({bool updatePrevState = true}) {
+    if (updatePrevState) _previousState = _currentState;
+    super.notifyListeners();
   }
 }

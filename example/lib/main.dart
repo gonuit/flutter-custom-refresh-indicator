@@ -6,6 +6,7 @@ import 'indicators/simple_indicator.dart';
 import 'screens/example_indicator_screen.dart';
 import 'screens/ice_cream_indicator_screen.dart';
 import 'screens/plane_indicator_screen.dart';
+import 'screens/check_mark_indicator_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         '/plane': (context) => PlaneIndicatorScreen(),
         '/ice_cream': (context) => IceCreamIndicatorScreen(),
         '/presentation': (context) => PresentationScreen(),
+        '/check-mark': (context) => CheckMarkIndicatorScreen(),
       },
     );
   }
@@ -98,6 +100,18 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/ice_cream',
+              ),
+            ),
+            const SizedBox(height: 15),
+            RaisedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Check mark"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/check-mark',
               ),
             ),
             const SizedBox(height: 15),

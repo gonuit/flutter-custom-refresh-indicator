@@ -6,6 +6,8 @@ typedef IndicatorBuilder = Widget Function(
   IndicatorController controller,
 );
 
+typedef OnRefresh = Future<void> Function();
+
 class CustomRefreshIndicator extends StatefulWidget {
   static const armedFromValue = 1.0;
   static const defaultExtentPercentageToArmed = 0.20;
@@ -20,7 +22,19 @@ class CustomRefreshIndicator extends StatefulWidget {
 
   /// Duration of changing [IndicatorController] value from `1.0` to `0.0`
   /// when [onRefresh] callback was completed.
+  ///
+  /// Occurs after `loading` or `complete` state.
   final Duration loadingToIdleDuration;
+
+  /// {@macro custom_refresh_indicator.complete_state}
+  final Duration completeStateDuration;
+
+  /// A check that specifies whether a [ScrollNotification] should be
+  /// handled by this widget.
+  ///
+  /// By default, checks whether `notification.depth == 0`. Set it to something
+  /// else for more complicated layouts.
+  final ScrollNotificationPredicate notificationPredicate;
 
   /// Whether to display leading glow
   final bool leadingGlowVisible;
@@ -54,7 +68,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// A function that's called when the user has dragged the refresh indicator
   /// far enough to demonstrate that they want the app to refresh.
   /// The returned [Future] must complete when the refresh operation is finished.
-  final RefreshCallback onRefresh;
+  final OnRefresh onRefresh;
 
   /// Indicator controller keeps all thata related to refresh indicator.
   /// It extends [ChangeNotifier] so that it could be listen for changes.
@@ -67,25 +81,28 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// To better understand this data, look at example app.
   final IndicatorController controller;
 
-  /// Sets axis that can start refresh drag
-  final RefreshAxis axis;
-
   CustomRefreshIndicator({
     Key key,
     @required this.child,
     @required this.onRefresh,
     @required this.builder,
+    this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
-    this.extentPercentageToArmed = defaultExtentPercentageToArmed,
+    this.extentPercentageToArmed,
     this.draggingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
+    this.completeStateDuration,
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
-    this.axis = RefreshAxis.any,
-  })  : assert(child != null, 'child argument cannot be null'),
-        assert(builder != null, 'builder argument cannot be null'),
+  })  : assert(child != null, '`child` argument cannot be null.'),
+        assert(builder != null, '`builder` argument cannot be null.'),
+        assert(
+          extentPercentageToArmed == null || offsetToArmed == null,
+          'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
+          'Remove redundant argument.',
+        ),
         super(key: key);
 
   @override
@@ -157,25 +174,13 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollStartNotification(ScrollStartNotification notification) {
-    _canStart = _isAxisDirectionValid(notification.metrics.axisDirection) &&
-        notification.metrics.extentBefore == 0 &&
+    _canStart = notification.metrics.extentBefore == 0 &&
         controller.state == IndicatorState.idle;
 
     if (_canStart) controller._setIndicatorState(IndicatorState.dragging);
 
     controller._setAxisDirection(notification.metrics.axisDirection);
     return false;
-  }
-
-  bool _isAxisDirectionValid(AxisDirection direction) {
-    switch (widget.axis) {
-      case RefreshAxis.vertical:
-        return direction == AxisDirection.up || direction == AxisDirection.down;
-      case RefreshAxis.horizontal:
-        return direction == AxisDirection.left || direction == AxisDirection.right;
-      default:
-        return true;
-    }
   }
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
@@ -229,8 +234,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (widget.offsetToArmed != null) {
       newValue = _dragOffset / widget.offsetToArmed;
     } else {
-      newValue =
-          _dragOffset / (containerExtent * widget.extentPercentageToArmed);
+      final extentPercentageToArmed = widget.extentPercentageToArmed ??
+          CustomRefreshIndicator.defaultExtentPercentageToArmed;
+
+      newValue = _dragOffset / (containerExtent * extentPercentageToArmed);
     }
 
     if (newValue >= CustomRefreshIndicator.armedFromValue) {
@@ -244,6 +251,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
+    /// if notification predicate is not matched then notification
+    /// will not be handled by this widget
+    if (!widget.notificationPredicate(notification)) return false;
+
     if (notification is ScrollStartNotification)
       return _handleScrollStartNotification(notification);
     if (!_canStart) return false;
@@ -266,6 +277,14 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     await _animationController.animateTo(1.0,
         duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
+
+    if (!mounted) return;
+
+    /// optional complete state
+    if (widget.completeStateDuration != null) {
+      controller._setIndicatorState(IndicatorState.complete);
+      await Future.delayed(widget.completeStateDuration);
+    }
 
     if (!mounted) return;
     controller._setIndicatorState(IndicatorState.hiding);
@@ -304,10 +323,4 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         ),
         controller,
       );
-}
-
-enum RefreshAxis {
-  vertical,
-  horizontal,
-  any,
 }
