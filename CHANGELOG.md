@@ -1,4 +1,4 @@
-## [0.9.0] -
+## [0.9.0] - October 02, 2020
 - Improved readme documentation.
 - Removed material package import.
 ## [0.9.0-dev.2] - August 21, 2020

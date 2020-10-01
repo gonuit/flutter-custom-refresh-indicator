@@ -6,9 +6,24 @@ If there is something that can be improved, fixed or you just have some great id
 
 If you implemented your own custom refresh indicator with this library and you want it to be mentioned here or provided as an example to the eample app, just open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
 
-# QUICK START
+### Table of Contents
+- [Flutter Custom Refresh Indicator](#flutter-custom-refresh-indicator)
+    - [Table of Contents](#table-of-contents)
+- [QUICK START](#quick-start)
+- [Examples](#examples)
+    - [Plane indicator [SOURCE CODE]](#plane-indicator-source-code)
+    - [Ice cream indicator [SOURCE CODE]](#ice-cream-indicator-source-code)
+    - [Simple indicator made with `PositionedIndicatorContainer` [SOURCE CODE]](#simple-indicator-made-with-positionedindicatorcontainer-source-code)
+    - [Envelope indicator](#envelope-indicator)
+    - [Emoji indicator [SOURCE CODE]](#emoji-indicator-source-code)
+    - [Indicator with complete state [SOURCE CODE]](#indicator-with-complete-state-source-code)
+- [Documentation](#documentation)
+  - [CustomRefreshIndicator widget](#customrefreshindicator-widget)
+  - [IndicatorController](#indicatorcontroller)
+    - [Controller state and value changes.](#controller-state-and-value-changes)
+    - [`didStateChange`](#didstatechange)
 
-## Code
+# QUICK START
 
 ```dart
 CustomRefreshIndicator(
@@ -51,7 +66,7 @@ CustomRefreshIndicator(
 )
 ```
 
-## Examples
+# Examples
 
 Almost all of these examples are available in the example application.
 
@@ -105,3 +120,33 @@ The best way to understand how the "CustomRefreshIndicator" widget changes its c
 | **complete** | `==1.0` | Value equals `1.0` for duration of `completeStateDuration` argument.                                    | **This state is OPTIONAL, provide `completeStateDuration` argument with non null value to enable it.**<br /> Loading is completed.                                                                                                       |
 
 ___
+
+### `didStateChange`
+With this method, you can easily check if the indicator's state has changed.
+
+```dart
+/// When the state changes to [idle]
+if(controller.didStateChange(to: IndicatorState.idle)) {
+  // Code...
+}
+
+/// When the state changes from [idle] to [dragging]
+if (controller.didStateChange(
+  from: IndicatorState.idle,
+  to: IndicatorState.dragging,
+)) {
+  // Code...
+}
+
+/// When the state changes from [idle] to another.
+if (controller.didStateChange(
+  from: IndicatorState.idle,
+)) {
+  // Code...
+}
+
+/// When the state changes.
+if (controller.didStateChange()) {
+  // Code...
+}
+```
