@@ -11,12 +11,6 @@ If you implemented your own custom refresh indicator with this library and you w
     - [Table of Contents](#table-of-contents)
 - [QUICK START](#quick-start)
 - [Examples](#examples)
-    - [Plane indicator [SOURCE CODE]](#plane-indicator-source-code)
-    - [Ice cream indicator [SOURCE CODE]](#ice-cream-indicator-source-code)
-    - [Simple indicator made with `PositionedIndicatorContainer` [SOURCE CODE]](#simple-indicator-made-with-positionedindicatorcontainer-source-code)
-    - [Envelope indicator](#envelope-indicator)
-    - [Emoji indicator [SOURCE CODE]](#emoji-indicator-source-code)
-    - [Indicator with complete state [SOURCE CODE]](#indicator-with-complete-state-source-code)
 - [Documentation](#documentation)
   - [CustomRefreshIndicator widget](#customrefreshindicator-widget)
   - [IndicatorController](#indicatorcontroller)
@@ -70,31 +64,20 @@ CustomRefreshIndicator(
 
 Almost all of these examples are available in the example application.
 
-### Plane indicator [[SOURCE CODE](example/lib/indicators/plane_indicator.dart)]
-![plane_indicator](readme/plane_indicator.gif)
-___
+| Plane indicator [[SOURCE CODE](example/lib/indicators/plane_indicator.dart)] | Ice cream indicator [[SOURCE CODE](example/lib/indicators/ice_cream_indicator.dart)] |
+| :--------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
+|                ![plane_indicator](readme/plane_indicator.gif)                |                ![ice_cream_indicator](readme/ice_cream_indicator.gif)                |
 
-### Ice cream indicator [[SOURCE CODE](example/lib/indicators/ice_cream_indicator.dart)]
-![ice_cream_indicator](readme/ice_cream_indicator.gif)
-___
+| Simple indicator made with `PositionedIndicatorContainer` [[SOURCE CODE](example/lib/indicators/simple_indicator.dart)] |                Envelope indicator                |
+| :---------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------: |
+|                                   ![simple_indicator](readme/simple_with_opacity.gif)                                   | ![letter_indicator](readme/letter_indicator.gif) |
 
-### Simple indicator made with `PositionedIndicatorContainer` [[SOURCE CODE](example/lib/indicators/simple_indicator.dart)]
-![simple_indicator](readme/simple_with_opacity.gif)
-___
+| Indicator with complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)] |                               Your indicator                                |
+| :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
+|           ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)            | Have you created a fancy refresh indicator? This place is for you. Open PR. |
 
-### Envelope indicator
-![letter_indicator](readme/letter_indicator.gif)
-___
 
-### Emoji indicator [[SOURCE CODE](example/lib/indicators/emoji_indicator.dart)]
-You can create any indicator you want!
-  
-![letter_indicator](readme/emoji_indicator.gif)
-___
 
-### Indicator with complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)]
-![indicator_with_complete_state](readme/indicator_with_complete_state.gif)
-___
 
 # Documentation
 
