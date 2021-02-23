@@ -61,16 +61,16 @@ class IndicatorController extends ChangeNotifier {
 
   /// Creates [CustomRefreshIndicator] controller class
   factory IndicatorController({
-    bool refreshEnabled,
+    bool? refreshEnabled,
   }) =>
       IndicatorController._(refreshEnabled: refreshEnabled);
 
   IndicatorController._({
-    double value,
-    AxisDirection direction,
-    ScrollDirection scrollingDirection,
-    IndicatorState state,
-    bool refreshEnabled,
+    double? value,
+    AxisDirection? direction,
+    ScrollDirection? scrollingDirection,
+    IndicatorState? state,
+    bool? refreshEnabled,
   })  : _currentState = state ?? IndicatorState.idle,
         _previousState = state ?? IndicatorState.idle,
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
@@ -181,10 +181,10 @@ class IndicatorController extends ChangeNotifier {
   }
 
   /// Returns `true` when state did change [from] to [to].
-  bool didStateChange({IndicatorState from, IndicatorState to}) {
+  bool didStateChange({IndicatorState? from, IndicatorState? to}) {
     final stateChanged = _previousState != _currentState;
-    if (to == null) return _previousState == from && stateChanged;
-    if (from == null) return _currentState == to && stateChanged;
+    if (to == null && from != null) return _previousState == from && stateChanged;
+    if (to != null && from == null ) return _currentState == to && stateChanged;
     if (to == null && from == null) return stateChanged;
     return _previousState == from && _currentState == to;
   }

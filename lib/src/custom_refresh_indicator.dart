@@ -27,7 +27,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   final Duration loadingToIdleDuration;
 
   /// {@macro custom_refresh_indicator.complete_state}
-  final Duration completeStateDuration;
+  final Duration? completeStateDuration;
 
   /// A check that specifies whether a [ScrollNotification] should be
   /// handled by this widget.
@@ -43,11 +43,11 @@ class CustomRefreshIndicator extends StatefulWidget {
   final bool trailingGlowVisible;
 
   /// Number of pixels that user should drag to change [IndicatorState] from idle to armed.
-  final double offsetToArmed;
+  final double? offsetToArmed;
 
   /// Value from 0.0 to 1.0 that describes the percentage of scroll container extent
   /// that user should drag to change [IndicatorState] from idle to armed.
-  final double extentPercentageToArmed;
+  final double? extentPercentageToArmed;
 
   /// Part of widget tree that contains scrollable element (like ListView).
   /// Scroll notifications from the first scrollable element will be used
@@ -79,13 +79,13 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// The indicator controller will be passed as the third argument to the [builder] method.
   ///
   /// To better understand this data, look at example app.
-  final IndicatorController controller;
+  final IndicatorController? controller;
 
   CustomRefreshIndicator({
-    Key key,
-    @required this.child,
-    @required this.onRefresh,
-    @required this.builder,
+    Key? key,
+    required this.child,
+    required this.onRefresh,
+    required this.builder,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
@@ -96,9 +96,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.completeStateDuration,
     this.leadingGlowVisible = false,
     this.trailingGlowVisible = true,
-  })  : assert(child != null, '`child` argument cannot be null.'),
-        assert(builder != null, '`builder` argument cannot be null.'),
-        assert(
+  })  : assert(
           extentPercentageToArmed == null || offsetToArmed == null,
           'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
           'Remove redundant argument.',
@@ -120,10 +118,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     __canStart = canStart;
   }
 
-  double _dragOffset;
+  late double _dragOffset;
 
-  AnimationController _animationController;
-  IndicatorController _customRefreshIndicatorController;
+  late AnimationController _animationController;
+  late IndicatorController _customRefreshIndicatorController;
 
   /// Current [IndicatorController]
   IndicatorController get controller => _customRefreshIndicatorController;
@@ -157,11 +155,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   /// Notifies the listeners of the controller
-  void _updateCustomRefreshIndicatorValue() {
-    _customRefreshIndicatorController._setValue(
-      _animationController?.value ?? _kInitialValue,
-    );
-  }
+  void _updateCustomRefreshIndicatorValue() =>
+      _customRefreshIndicatorController._setValue(_animationController.value);
 
   bool _handleGlowNotification(OverscrollIndicatorNotification notification) {
     if (notification.depth != 0) return false;
@@ -190,7 +185,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       if (notification.metrics.extentBefore > 0.0) {
         _hide();
       } else {
-        _dragOffset -= notification.scrollDelta;
+        _dragOffset -= notification.scrollDelta!;
         _calculateDragOffset(notification.metrics.viewportDimension);
       }
       if (controller.state == IndicatorState.armed &&
@@ -229,10 +224,12 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     double newValue;
 
+    final offsetToArmed = widget.offsetToArmed;
+
     /// If [offestToArmed] is provided then it will be used otherwise
     /// [extentPercentageToArmed]
-    if (widget.offsetToArmed != null) {
-      newValue = _dragOffset / widget.offsetToArmed;
+    if (offsetToArmed != null) {
+      newValue = _dragOffset / offsetToArmed;
     } else {
       final extentPercentageToArmed = widget.extentPercentageToArmed ??
           CustomRefreshIndicator.defaultExtentPercentageToArmed;
@@ -281,9 +278,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (!mounted) return;
 
     /// optional complete state
-    if (widget.completeStateDuration != null) {
+    final completeStateDuration = widget.completeStateDuration;
+    if (completeStateDuration != null) {
       controller._setIndicatorState(IndicatorState.complete);
-      await Future.delayed(widget.completeStateDuration);
+      await Future.delayed(completeStateDuration);
     }
 
     if (!mounted) return;

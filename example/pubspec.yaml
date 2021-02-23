@@ -10,12 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
   confetti: 0.4.0
+  custom_refresh_indicator:
+    path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  custom_refresh_indicator:
-    path: ../
 
 flutter:
   uses-material-design: true
