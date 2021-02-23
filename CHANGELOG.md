@@ -1,10 +1,20 @@
-## [0.9.0] - October 02, 2020
+## 1.0.0-nullsafety.0
+
+- **BREAKING**: opt into null safety
+  - Dart SDK constraints: >=2.12.0-0 <3.0.0
+
+## 0.9.0
+
 - Improved readme documentation.
 - Removed material package import.
-## [0.9.0-dev.2] - August 21, 2020
+
+## 0.9.0-dev.2
+
 - Added `isComplete` and `wasComplete` controller getters.
 - Removed `axis` property as it can be handled by `notificationPredicate`.
-## [0.9.0-dev.1] - August 12, 2020
+
+## 0.9.0-dev.1
+
 - Added optional `complete` indicator state together with `completeStateDuration` parameter.
 - `IndicatorControler` changes:
   - Added `prevoiusState` property.
@@ -14,7 +24,7 @@
 - Example app:
   - Added initial version of `check_mark_indicator`. Example that shows how to make use of `complete` state. 
 
-## [0.8.0+1] - April 12, 2020
+## 0.8.0+1
 
 ## BREAKING API CHANGES
 
@@ -56,21 +66,21 @@ return CustomRefreshIndicator(
   );
 ```
 
-## [0.2.1]
+## 0.2.1
 
 - Upgrade example to AndroidX
 - Improved README
 
-## [0.2.0] - Added support for BouncingScrollPhysics.
+## 0.2.0
 
 - Added support for `BouncingScrollPhysics` - ios default sroll physics
 - Improved readme
 
-## [0.1.1]
+## 0.1.1
 
 - Extracted inbox example to [`letter_refresh_indicator`](https://pub.dev/packages/letter_refresh_indicator) package
 
-## [0.1.0] - Initial version.
+## 0.1.0
 
 - Added basic `CustomRefreshIndicator` widget with `CustomRefreshIndicatorData` class.
 - Added `SimpleIndicatorContainer` widget which simulate default `RefreshIndicator` container
