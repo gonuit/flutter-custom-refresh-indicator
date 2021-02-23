@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class InfiniteRatation extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
   final bool running;
   final bool reverse;
 
   InfiniteRatation({
-    @required this.child,
-    @required this.running,
+    required this.child,
+    required this.running,
     this.reverse = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
   @override
   InfiniteRatationState createState() => InfiniteRatationState();
@@ -17,7 +17,7 @@ class InfiniteRatation extends StatefulWidget {
 
 class InfiniteRatationState extends State<InfiniteRatation>
     with SingleTickerProviderStateMixin {
-  AnimationController _rotationController;
+  late AnimationController _rotationController;
 
   @override
   void didUpdateWidget(InfiniteRatation oldWidget) {

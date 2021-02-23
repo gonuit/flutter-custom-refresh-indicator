@@ -1,15 +1,14 @@
 name: example
-description: A new Flutter project.
+description: Custom refresh indicator example.
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=2.12.0-259.12.beta <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  confetti: 0.4.0
   custom_refresh_indicator:
     path: ../
 

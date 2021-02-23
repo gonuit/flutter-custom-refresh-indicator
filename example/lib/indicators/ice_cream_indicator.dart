@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ParalaxConfig {
-  final int level;
-  final AssetImage image;
+  final int? level;
+  final AssetImage? image;
 
   const ParalaxConfig({
     this.level,
@@ -16,8 +16,8 @@ class IceCreamIndicator extends StatefulWidget {
   final Widget child;
 
   const IceCreamIndicator({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -60,8 +60,8 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
   static const _indicatorSize = 150.0;
   static const _imageSize = 140.0;
 
-  IndicatorState _prevState;
-  AnimationController _spoonController;
+  IndicatorState? _prevState;
+  late AnimationController _spoonController;
   static final _spoonTween = CurveTween(curve: Curves.easeInOut);
 
   @override
@@ -75,13 +75,13 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
     return Transform.translate(
       offset: Offset(
         0,
-        -(asset.level * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
+        -(asset.level! * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
       ),
       child: OverflowBox(
         maxHeight: _imageSize,
         minHeight: _imageSize,
         child: Image(
-          image: asset.image,
+          image: asset.image!,
           fit: BoxFit.contain,
           height: _imageSize,
         ),
@@ -104,7 +104,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
           children: <Widget>[
             AnimatedBuilder(
               animation: controller,
-              builder: (BuildContext context, Widget _) {
+              builder: (BuildContext context, Widget? _) {
                 final currentState = controller.state;
                 if (_prevState == IndicatorState.armed &&
                     currentState == IndicatorState.loading) {
@@ -114,7 +114,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
                   _spoonController.stop();
                 } else if (currentState == IndicatorState.idle &&
                     _prevState != currentState) {
-                  _spoonController..value = 0.0;
+                  _spoonController.value = 0.0;
                 }
 
                 _prevState = currentState;

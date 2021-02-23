@@ -1,7 +1,6 @@
 import 'package:example/screens/presentation_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'indicators/emoji_indicator.dart';
 import 'indicators/simple_indicator.dart';
 import 'screens/example_indicator_screen.dart';
 import 'screens/ice_cream_indicator_screen.dart';
@@ -41,7 +40,7 @@ class MainScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(15),
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
@@ -53,7 +52,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            RaisedButton(
+            ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
@@ -66,7 +65,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            RaisedButton(
+            ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
@@ -79,7 +78,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            RaisedButton(
+            ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
@@ -91,7 +90,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            RaisedButton(
+            ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
@@ -103,7 +102,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            RaisedButton(
+            ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
@@ -115,18 +114,6 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            RaisedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: Text("Emoji"),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/example',
-                arguments: emojiIndicator,
-              ),
-            ),
           ],
         ),
       ),

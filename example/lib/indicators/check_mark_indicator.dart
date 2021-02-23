@@ -6,8 +6,8 @@ class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
 
   const CheckMarkIndicator({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -37,7 +37,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
           children: <Widget>[
             AnimatedBuilder(
               animation: controller,
-              builder: (BuildContext context, Widget _) {
+              builder: (BuildContext context, Widget? _) {
                 /// set [_renderCompleteState] to true when controller.state become completed
                 if (controller.didStateChange(to: IndicatorState.complete)) {
                   _renderCompleteState = true;

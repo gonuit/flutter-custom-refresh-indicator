@@ -6,16 +6,16 @@ class PositionedIndicatorContainer extends StatelessWidget {
 
   /// Position child widget in a similar way to RefreshIndicator widget
   const PositionedIndicatorContainer({
-    @required this.controller,
-    @required this.child,
-  }) : assert(child != null, "child argument cannot be null");
+    required this.controller,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       child: child,
       animation: controller,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         final double positionFromSide = -50 + (controller.value * 110);
 
         return Positioned(

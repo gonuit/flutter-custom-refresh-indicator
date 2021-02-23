@@ -13,13 +13,13 @@ class _Cloud {
     "assets/plane_indicator/cloud4.png",
   ];
 
-  AnimationController controller;
-  final Color color;
-  final AssetImage image;
-  final double width;
-  final double dy;
-  final double initialValue;
-  final Duration duration;
+  AnimationController? controller;
+  final Color? color;
+  final AssetImage? image;
+  final double? width;
+  final double? dy;
+  final double? initialValue;
+  final Duration? duration;
   _Cloud({
     this.color,
     this.image,
@@ -33,7 +33,7 @@ class _Cloud {
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
   const PlaneIndicator({
-    @required this.child,
+    required this.child,
   });
 
   @override
@@ -43,8 +43,8 @@ class PlaneIndicator extends StatefulWidget {
 class _PlaneIndicatorState extends State<PlaneIndicator>
     with TickerProviderStateMixin {
   static final _planeTween = CurveTween(curve: Curves.easeInOut);
-  AnimationController _planeController;
-  IndicatorState _prevState;
+  late AnimationController _planeController;
+  IndicatorState? _prevState;
 
   @override
   void initState() {
@@ -120,15 +120,15 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
   }
 
   void _stopCloudAnimation() {
-    for (final cloud in _clouds) cloud.controller..stop();
+    for (final cloud in _clouds) cloud.controller!.stop();
   }
 
   void _startCloudAnimation() {
-    for (final cloud in _clouds) cloud.controller.repeat();
+    for (final cloud in _clouds) cloud.controller!.repeat();
   }
 
   void _disposeCloudsControllers() {
-    for (final cloud in _clouds) cloud.controller.dispose();
+    for (final cloud in _clouds) cloud.controller!.dispose();
   }
 
   @override
@@ -151,7 +151,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
         height: 50,
         fit: BoxFit.contain,
       ),
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return Transform.translate(
           offset: Offset(
               0.0, 10 * (0.5 - _planeTween.transform(_planeController.value))),
@@ -185,7 +185,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
             _prevState = currentState;
 
             return Stack(
-              overflow: Overflow.clip,
+              clipBehavior: Clip.hardEdge,
               children: <Widget>[
                 if (_prevState != IndicatorState.idle)
                   Container(
@@ -193,18 +193,18 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                     color: Color(0xFFFDFEFF),
                     width: double.infinity,
                     child: AnimatedBuilder(
-                      animation: _clouds.first.controller,
-                      builder: (BuildContext context, Widget child) {
+                      animation: _clouds.first.controller!,
+                      builder: (BuildContext context, Widget? child) {
                         return Stack(
-                          overflow: Overflow.clip,
+                          clipBehavior: Clip.hardEdge,
                           children: <Widget>[
                             for (final cloud in _clouds)
                               Transform.translate(
                                 offset: Offset(
-                                  ((screenWidth + cloud.width) *
-                                          cloud.controller.value) -
-                                      cloud.width,
-                                  cloud.dy * controller.value,
+                                  ((screenWidth + cloud.width!) *
+                                          cloud.controller!.value) -
+                                      cloud.width!,
+                                  cloud.dy! * controller.value,
                                 ),
                                 child: OverflowBox(
                                   minWidth: cloud.width,
@@ -215,7 +215,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                   child: Container(
                                     child: Image(
                                       color: cloud.color,
-                                      image: cloud.image,
+                                      image: cloud.image!,
                                       fit: BoxFit.contain,
                                     ),
                                   ),

@@ -62,9 +62,9 @@ class Element extends StatelessWidget {
 
 class FakeBox extends StatelessWidget {
   const FakeBox({
-    Key key,
-    @required this.width,
-    @required this.height,
+    Key? key,
+    required this.width,
+    required this.height,
   }) : super(key: key);
 
   final double width;

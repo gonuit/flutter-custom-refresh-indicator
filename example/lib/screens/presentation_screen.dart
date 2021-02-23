@@ -8,7 +8,7 @@ class PresentationScreen extends StatefulWidget {
 }
 
 class _PresentationScreenState extends State<PresentationScreen> {
-  IndicatorController _controller;
+  IndicatorController? _controller;
   @override
   void initState() {
     _controller = IndicatorController(refreshEnabled: true);
@@ -35,8 +35,8 @@ class _PresentationScreenState extends State<PresentationScreen> {
             child: ListView(
               children: [
                 AnimatedBuilder(
-                  animation: _controller,
-                  builder: (BuildContext context, Widget child) {
+                  animation: _controller!,
+                  builder: (BuildContext context, Widget? child) {
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
@@ -73,7 +73,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                 color: appBackgroundColor,
                               ),
                               Text(
-                                "value: ${_controller.value.toStringAsFixed(2)}",
+                                "value: ${_controller!.value.toStringAsFixed(2)}",
                                 style: const TextStyle(fontSize: 18),
                               ),
                               const Divider(
@@ -82,7 +82,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                 color: appBackgroundColor,
                               ),
                               Text(
-                                "state: ${_controller.state.toString().split('.').last}",
+                                "state: ${_controller!.state.toString().split('.').last}",
                                 style: const TextStyle(fontSize: 18),
                               ),
                               const Divider(
@@ -91,7 +91,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                 color: appBackgroundColor,
                               ),
                               Text(
-                                "scrollingDirection: ${_controller.scrollingDirection.toString().split('.').last}",
+                                "scrollingDirection: ${_controller!.scrollingDirection.toString().split('.').last}",
                                 style: const TextStyle(fontSize: 18),
                               ),
                               const Divider(
@@ -100,7 +100,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                 color: appBackgroundColor,
                               ),
                               Text(
-                                "direction: ${_controller.direction.toString().split('.').last}",
+                                "direction: ${_controller!.direction.toString().split('.').last}",
                                 style: const TextStyle(fontSize: 18),
                               ),
                               const Divider(
@@ -111,26 +111,33 @@ class _PresentationScreenState extends State<PresentationScreen> {
                               Row(
                                 children: [
                                   Text(
-                                    "isRefreshEnabled: ${_controller.isRefreshEnabled}",
+                                    "isRefreshEnabled: ${_controller!.isRefreshEnabled}",
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                   const Spacer(),
-                                  RaisedButton(
-                                    color: _controller.isRefreshEnabled
-                                        ? Colors.red
-                                        : Colors.lightGreen,
-                                    child: Text(
-                                      _controller.isRefreshEnabled
-                                          ? "DISABLE"
-                                          : "ENABLE",
-                                      style: TextStyle(
-                                        color: Colors.white,
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        _controller!.isRefreshEnabled
+                                            ? Colors.red
+                                            : Colors.lightGreen,
+                                      ),
+                                    ),
+                                    child: Container(
+                                      child: Text(
+                                        _controller!.isRefreshEnabled
+                                            ? "DISABLE"
+                                            : "ENABLE",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                     onPressed: () =>
-                                        _controller.isRefreshEnabled
-                                            ? _controller.disableRefresh()
-                                            : _controller.enableRefresh(),
+                                        _controller!.isRefreshEnabled
+                                            ? _controller!.disableRefresh()
+                                            : _controller!.enableRefresh(),
                                   ),
                                 ],
                               ),
@@ -182,10 +189,10 @@ class _PresentationScreenState extends State<PresentationScreen> {
                   ),
                 ),
                 AnimatedBuilder(
-                  animation: _controller,
+                  animation: _controller!,
                   builder: (context, snapshot) {
                     return Transform.translate(
-                      offset: Offset(0.0, 100 * _controller.value),
+                      offset: Offset(0.0, 100 * _controller!.value),
                       child: child,
                     );
                   },

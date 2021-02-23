@@ -8,7 +8,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CustomIndicatorConfig customIndicator =
-        ModalRoute.of(context).settings.arguments;
+        ModalRoute.of(context)!.settings.arguments as CustomIndicatorConfig;
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: const ExampleAppBar(),
