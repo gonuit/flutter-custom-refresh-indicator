@@ -79,7 +79,8 @@ class IndicatorController extends ChangeNotifier {
         _refreshEnabled = refreshEnabled ?? true;
 
   @protected
-  void _setValue(double value) {
+  @visibleForTesting
+  void setValue(double value) {
     _value = value;
     notifyListeners();
   }
@@ -138,7 +139,9 @@ class IndicatorController extends ChangeNotifier {
   IndicatorState _previousState;
 
   /// sets indicator state and notifies listeners
-  void _setIndicatorState(IndicatorState newState) {
+  @protected
+  @visibleForTesting
+  void setIndicatorState(IndicatorState newState) {
     _previousState = _currentState;
     _currentState = newState;
 
@@ -183,8 +186,9 @@ class IndicatorController extends ChangeNotifier {
   /// Returns `true` when state did change [from] to [to].
   bool didStateChange({IndicatorState? from, IndicatorState? to}) {
     final stateChanged = _previousState != _currentState;
-    if (to == null && from != null) return _previousState == from && stateChanged;
-    if (to != null && from == null ) return _currentState == to && stateChanged;
+    if (to == null && from != null)
+      return _previousState == from && stateChanged;
+    if (to != null && from == null) return _currentState == to && stateChanged;
     if (to == null && from == null) return stateChanged;
     return _previousState == from && _currentState == to;
   }

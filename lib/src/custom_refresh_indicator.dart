@@ -156,7 +156,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Notifies the listeners of the controller
   void _updateCustomRefreshIndicatorValue() =>
-      _customRefreshIndicatorController._setValue(_animationController.value);
+      _customRefreshIndicatorController.setValue(_animationController.value);
 
   bool _handleGlowNotification(OverscrollIndicatorNotification notification) {
     if (notification.depth != 0) return false;
@@ -172,7 +172,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _canStart = notification.metrics.extentBefore == 0 &&
         controller.state == IndicatorState.idle;
 
-    if (_canStart) controller._setIndicatorState(IndicatorState.dragging);
+    if (_canStart) controller.setIndicatorState(IndicatorState.dragging);
 
     controller._setAxisDirection(notification.metrics.axisDirection);
     return false;
@@ -238,9 +238,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     }
 
     if (newValue >= CustomRefreshIndicator.armedFromValue) {
-      controller._setIndicatorState(IndicatorState.armed);
+      controller.setIndicatorState(IndicatorState.armed);
     } else if (newValue > 0.0) {
-      controller._setIndicatorState(IndicatorState.dragging);
+      controller.setIndicatorState(IndicatorState.dragging);
     }
 
     /// triggers indicator update
@@ -270,7 +270,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _start() async {
     _dragOffset = 0;
 
-    controller._setIndicatorState(IndicatorState.loading);
+    controller.setIndicatorState(IndicatorState.loading);
     await _animationController.animateTo(1.0,
         duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
@@ -280,22 +280,22 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// optional complete state
     final completeStateDuration = widget.completeStateDuration;
     if (completeStateDuration != null) {
-      controller._setIndicatorState(IndicatorState.complete);
+      controller.setIndicatorState(IndicatorState.complete);
       await Future.delayed(completeStateDuration);
     }
 
     if (!mounted) return;
-    controller._setIndicatorState(IndicatorState.hiding);
+    controller.setIndicatorState(IndicatorState.hiding);
     await _animationController.animateTo(0.0,
         duration: widget.loadingToIdleDuration);
 
     if (!mounted) return;
 
-    controller._setIndicatorState(IndicatorState.idle);
+    controller.setIndicatorState(IndicatorState.idle);
   }
 
   void _hide() async {
-    controller._setIndicatorState(IndicatorState.hiding);
+    controller.setIndicatorState(IndicatorState.hiding);
     _dragOffset = 0;
     _canStart = false;
     await _animationController.animateTo(
@@ -306,7 +306,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (!mounted) return;
 
-    controller._setIndicatorState(IndicatorState.idle);
+    controller.setIndicatorState(IndicatorState.idle);
   }
 
   @override
