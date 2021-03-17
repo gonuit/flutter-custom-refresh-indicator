@@ -86,7 +86,9 @@ class IndicatorController extends ChangeNotifier {
   }
 
   ScrollDirection _scrollingDirection;
-  void _setScrollingDirection(ScrollDirection userScrollDirection) {
+  @protected
+  @visibleForTesting
+  void setScrollingDirection(ScrollDirection userScrollDirection) {
     _scrollingDirection = userScrollDirection;
     notifyListeners();
   }
@@ -106,7 +108,9 @@ class IndicatorController extends ChangeNotifier {
   AxisDirection _direction;
 
   /// Sets the direction in which list scrolls
-  void _setAxisDirection(AxisDirection direction) {
+  @protected
+  @visibleForTesting
+  void setAxisDirection(AxisDirection direction) {
     _direction = direction;
     notifyListeners();
   }
@@ -145,7 +149,7 @@ class IndicatorController extends ChangeNotifier {
     _previousState = _currentState;
     _currentState = newState;
 
-    notifyListeners(updatePrevState: false);
+    notifyListeners(shiftState: false);
   }
 
   /// Describes previous [CustomRefreshIndicator] state
@@ -195,8 +199,8 @@ class IndicatorController extends ChangeNotifier {
 
   /// Everytime [notifyListeners] method is called, [previousState] will be set to [state] value.
   @override
-  void notifyListeners({bool updatePrevState = true}) {
-    if (updatePrevState) _previousState = _currentState;
+  void notifyListeners({bool shiftState = true}) {
+    if (shiftState) _previousState = _currentState;
     super.notifyListeners();
   }
 }

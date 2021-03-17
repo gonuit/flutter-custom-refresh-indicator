@@ -174,7 +174,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (_canStart) controller.setIndicatorState(IndicatorState.dragging);
 
-    controller._setAxisDirection(notification.metrics.axisDirection);
+    controller.setAxisDirection(notification.metrics.axisDirection);
     return false;
   }
 
@@ -214,7 +214,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleUserScrollNotification(UserScrollNotification notification) {
-    controller._setScrollingDirection(notification.direction);
+    controller.setScrollingDirection(notification.direction);
     return false;
   }
 
