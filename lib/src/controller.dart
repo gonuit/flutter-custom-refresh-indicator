@@ -72,7 +72,6 @@ class IndicatorController extends ChangeNotifier {
     IndicatorState? state,
     bool? refreshEnabled,
   })  : _currentState = state ?? IndicatorState.idle,
-        _previousState = state ?? IndicatorState.idle,
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
@@ -140,26 +139,15 @@ class IndicatorController extends ChangeNotifier {
       direction == AxisDirection.up || direction == AxisDirection.down;
 
   IndicatorState _currentState;
-  IndicatorState _previousState;
 
   /// sets indicator state and notifies listeners
   @protected
   @visibleForTesting
   void setIndicatorState(IndicatorState newState) {
-    _previousState = _currentState;
     _currentState = newState;
 
-    notifyListeners(shiftState: false);
+    notifyListeners();
   }
-
-  /// Describes previous [CustomRefreshIndicator] state
-  IndicatorState get previousState => _previousState;
-  bool get wasArmed => _previousState == IndicatorState.armed;
-  bool get wasDragging => _previousState == IndicatorState.dragging;
-  bool get wasLoading => _previousState == IndicatorState.loading;
-  bool get wasComplete => _previousState == IndicatorState.complete;
-  bool get wasHiding => _previousState == IndicatorState.hiding;
-  bool get wasIdle => _previousState == IndicatorState.idle;
 
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _currentState;
@@ -185,22 +173,5 @@ class IndicatorController extends ChangeNotifier {
   void enableRefresh() {
     _refreshEnabled = true;
     notifyListeners();
-  }
-
-  /// Returns `true` when state did change [from] to [to].
-  bool didStateChange({IndicatorState? from, IndicatorState? to}) {
-    final stateChanged = _previousState != _currentState;
-    if (to == null && from != null)
-      return _previousState == from && stateChanged;
-    if (to != null && from == null) return _currentState == to && stateChanged;
-    if (to == null && from == null) return stateChanged;
-    return _previousState == from && _currentState == to;
-  }
-
-  /// Everytime [notifyListeners] method is called, [previousState] will be set to [state] value.
-  @override
-  void notifyListeners({bool shiftState = true}) {
-    if (shiftState) _previousState = _currentState;
-    super.notifyListeners();
   }
 }

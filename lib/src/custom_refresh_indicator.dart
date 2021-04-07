@@ -237,10 +237,13 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       newValue = _dragOffset / (containerExtent * extentPercentageToArmed);
     }
 
-    if (newValue >= CustomRefreshIndicator.armedFromValue) {
-      controller.setIndicatorState(IndicatorState.armed);
-    } else if (newValue > 0.0) {
+    if (newValue > 0.0 &&
+        newValue < CustomRefreshIndicator.armedFromValue &&
+        !controller.isDragging) {
       controller.setIndicatorState(IndicatorState.dragging);
+    } else if (newValue >= CustomRefreshIndicator.armedFromValue &&
+        !controller.isArmed) {
+      controller.setIndicatorState(IndicatorState.armed);
     }
 
     /// triggers indicator update
@@ -310,15 +313,17 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder.call(
-        context,
-        NotificationListener<ScrollNotification>(
-          onNotification: _handleScrollNotification,
-          child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: _handleGlowNotification,
-            child: widget.child,
-          ),
+  Widget build(BuildContext context) {
+    return widget.builder(
+      context,
+      NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: _handleGlowNotification,
+          child: widget.child,
         ),
-        controller,
-      );
+      ),
+      controller,
+    );
+  }
 }
