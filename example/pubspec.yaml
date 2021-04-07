@@ -1,5 +1,6 @@
 name: example
 description: Custom refresh indicator example.
+publish_to: none
 
 version: 1.0.0+1
 
