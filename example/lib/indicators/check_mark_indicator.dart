@@ -17,6 +17,7 @@ class CheckMarkIndicator extends StatefulWidget {
 class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
     with SingleTickerProviderStateMixin {
   static const _indicatorSize = 150.0;
+  final _helper = IndicatorStateHelper();
 
   /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
@@ -38,12 +39,14 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
             AnimatedBuilder(
               animation: controller,
               builder: (BuildContext context, Widget? _) {
+                _helper.update(controller.state);
+
                 /// set [_renderCompleteState] to true when controller.state become completed
-                if (controller.didStateChange(to: IndicatorState.complete)) {
+                if (_helper.didStateChange(to: IndicatorState.complete)) {
                   _renderCompleteState = true;
 
                   /// set [_renderCompleteState] to false when controller.state become idle
-                } else if (controller.didStateChange(to: IndicatorState.idle)) {
+                } else if (_helper.didStateChange(to: IndicatorState.idle)) {
                   _renderCompleteState = false;
                 }
                 final containerHeight = controller.value * _indicatorSize;
