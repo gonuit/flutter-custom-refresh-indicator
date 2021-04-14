@@ -113,6 +113,8 @@ class _WarpIndicatorState extends State<WarpIndicator>
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
       offsetToArmed: _indicatorSize,
+      leadingGlowVisible: false,
+      trailingGlowVisible: false,
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
       child: widget.child,
       builder: (

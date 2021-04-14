@@ -68,9 +68,9 @@ Almost all of these examples are available in the example application.
 | :--------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
 |                ![plane_indicator](readme/plane_indicator.gif)                |                ![ice_cream_indicator](readme/ice_cream_indicator.gif)                |
 
-| Simple indicator made with `PositionedIndicatorContainer` [[SOURCE CODE](example/lib/indicators/simple_indicator.dart)] |                Envelope indicator                |
+| Warp indicator [[SOURCE CODE](example/lib/indicators/warp_indicator.dart)] |                Envelope indicator                |
 | :---------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------: |
-|                                   ![simple_indicator](readme/simple_with_opacity.gif)                                   | ![letter_indicator](readme/letter_indicator.gif) |
+|                                   ![simple_indicator](readme/warp_indicator.gif)                                   | ![letter_indicator](readme/letter_indicator.gif) |
 
 | Indicator with complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)] |                               Your indicator                                |
 | :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
