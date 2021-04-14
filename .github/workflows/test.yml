@@ -1,0 +1,16 @@
+name: Tests
+on: pull_request
+
+jobs:
+  checks:
+    name: Analyzer and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1.4.0
+      - name: Getting packages
+        run: flutter pub get
+      - name: analyzis
+        run: flutter analyze .
+      - name: tests
+        run: flutter test
