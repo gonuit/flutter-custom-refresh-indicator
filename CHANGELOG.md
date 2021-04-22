@@ -1,5 +1,5 @@
 
-## 1.0.0
+## 1.0.0-nullsafety.1
 - Stable nullsafety release.
 - **BREAKING**: Removed `prevState` from `IndicatorController` class.
   Because flutter only marks the widget that it is ready for rebuild, it is possible that the controller state will change more than once during a single frame what causes one or more steps to be skipped. To still use `prevState` and `didChangeState` method, you can use `IndicatorStateHelper`. Take a look at `check_mark_indicator.dart` or `warp_indicator.dart` for example usage.
