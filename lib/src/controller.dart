@@ -55,6 +55,7 @@ enum IndicatorState {
 
 class IndicatorController extends ChangeNotifier {
   double _value;
+  bool _disposed = false;
 
   /// Current indicator value / progress
   double get value => _value;
@@ -176,10 +177,21 @@ class IndicatorController extends ChangeNotifier {
   }
 
   @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
   void notifyListeners() {
     final scheduler = SchedulerBinding.instance;
     if (scheduler != null) {
-      scheduler.addPostFrameCallback((_) => super.notifyListeners());
+      scheduler.addPostFrameCallback((_) {
+        if (_disposed) {
+          return;
+        }
+        super.notifyListeners();
+      });
     } else {
       super.notifyListeners();
     }
