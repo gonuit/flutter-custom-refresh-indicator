@@ -1,6 +1,7 @@
 library custom_refresh_indicator;
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
 part 'src/helpers/positioned_indicator_container.dart';

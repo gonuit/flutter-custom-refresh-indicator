@@ -174,4 +174,14 @@ class IndicatorController extends ChangeNotifier {
     _refreshEnabled = true;
     notifyListeners();
   }
+
+  @override
+  void notifyListeners() {
+    final scheduler = SchedulerBinding.instance;
+    if (scheduler != null) {
+      scheduler.addPostFrameCallback((_) => super.notifyListeners());
+    } else {
+      super.notifyListeners();
+    }
+  }
 }
