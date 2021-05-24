@@ -2,7 +2,7 @@ name: example
 description: Custom refresh indicator example.
 publish_to: none
 
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: '>=2.12.0-259.12.beta <3.0.0'
