@@ -1,0 +1,306 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
+
+enum WarpAnimationState {
+  stopped,
+  playing,
+}
+
+typedef StarColorGetter = Color Function(int index);
+
+class WarpIndicator extends StatefulWidget {
+  final Widget child;
+  final int starsCount;
+  final Color skyColor;
+  final StarColorGetter starColorGetter;
+
+  const WarpIndicator({
+    Key? key,
+    required this.child,
+    this.starsCount = 30,
+    this.skyColor = Colors.black,
+    this.starColorGetter = _defaultStarColorGetter,
+  }) : super(key: key);
+
+  static Color _defaultStarColorGetter(int index) =>
+      HSLColor.fromAHSL(1, Random().nextDouble() * 360, 1, 0.98).toColor();
+
+  @override
+  _WarpIndicatorState createState() => _WarpIndicatorState();
+}
+
+class _WarpIndicatorState extends State<WarpIndicator>
+    with SingleTickerProviderStateMixin {
+  static const _indicatorSize = 150.0;
+  final _random = Random();
+  final _helper = IndicatorStateHelper();
+  WarpAnimationState _state = WarpAnimationState.stopped;
+
+  List<Star> stars = [];
+  var _offsetTween = Tween<Offset>(
+    begin: Offset.zero,
+    end: Offset.zero,
+  );
+  var _angleTween = Tween<double>(
+    begin: 0,
+    end: 0,
+  );
+
+  late AnimationController shakeController;
+
+  static final _scaleTween = Tween(begin: 1.0, end: 0.75);
+  static final _radiusTween = Tween(begin: 0.0, end: 16.0);
+
+  @override
+  void initState() {
+    shakeController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
+    super.initState();
+  }
+
+  Offset _getRandomOffset() => Offset(
+        _random.nextInt(10) - 5,
+        _random.nextInt(10) - 5,
+      );
+
+  double _getRandomAngle() {
+    final degrees = ((_random.nextDouble() * 2) - 1);
+    final radians = degrees == 0 ? 0.0 : degrees / 360.0;
+    return radians;
+  }
+
+  void _shiftAndGenerateRandomShakeTransform() {
+    _offsetTween.begin = _offsetTween.end;
+    _offsetTween.end = _getRandomOffset();
+
+    _angleTween.begin = _angleTween.end;
+    _angleTween.end = _getRandomAngle();
+  }
+
+  void _startShakeAnimation() {
+    _shiftAndGenerateRandomShakeTransform();
+    shakeController.animateTo(1.0);
+    _state = WarpAnimationState.playing;
+    stars = List.generate(
+      widget.starsCount,
+      (index) => Star(initialColor: widget.starColorGetter(index)),
+    );
+  }
+
+  void _resetShakeAnimation() {
+    _shiftAndGenerateRandomShakeTransform();
+    shakeController.value = 0.0;
+    shakeController.animateTo(1.0);
+  }
+
+  void _stopShakeAnimation() {
+    _offsetTween.end = Offset.zero;
+    _angleTween.end = 0.0;
+    _state = WarpAnimationState.stopped;
+    _shiftAndGenerateRandomShakeTransform();
+    shakeController.stop();
+    shakeController.value = 0.0;
+    stars = [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomRefreshIndicator(
+      offsetToArmed: _indicatorSize,
+      leadingGlowVisible: false,
+      trailingGlowVisible: false,
+      onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+      child: widget.child,
+      builder: (
+        BuildContext context,
+        Widget child,
+        IndicatorController controller,
+      ) {
+        final animation = Listenable.merge([controller, shakeController]);
+        return Stack(
+          children: <Widget>[
+            AnimatedBuilder(
+                animation: shakeController,
+                builder: (_, __) {
+                  return LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return CustomPaint(
+                        painter: Sky(
+                          stars: stars,
+                          color: widget.skyColor,
+                        ),
+                        child: SizedBox.expand(),
+                      );
+                    },
+                  );
+                }),
+            AnimatedBuilder(
+              animation: animation,
+              builder: (context, _) {
+                _helper.update(controller.state);
+                if (_helper.didStateChange(
+                  to: IndicatorState.loading,
+                )) {
+                  SchedulerBinding.instance
+                      ?.addPostFrameCallback((_) => _startShakeAnimation());
+                } else if (_helper.didStateChange(
+                  to: IndicatorState.idle,
+                )) {
+                  SchedulerBinding.instance
+                      ?.addPostFrameCallback((_) => _stopShakeAnimation());
+                }
+                return Transform.scale(
+                  scale: _scaleTween.transform(controller.value),
+                  child: Builder(builder: (context) {
+                    if (shakeController.value == 1.0 &&
+                        _state == WarpAnimationState.playing) {
+                      SchedulerBinding.instance
+                          ?.addPostFrameCallback((_) => _resetShakeAnimation());
+                    }
+                    return Transform.rotate(
+                      angle: _angleTween.transform(shakeController.value),
+                      child: Transform.translate(
+                        offset: _offsetTween.transform(shakeController.value),
+                        child: ClipRRect(
+                          child: child,
+                          borderRadius: BorderRadius.circular(
+                            _radiusTween.transform(controller.value),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    shakeController.dispose();
+    super.dispose();
+  }
+}
+
+class Star {
+  Offset? position;
+  Color? color;
+  double value;
+  late Offset speed;
+  final Color initialColor;
+  late double angle;
+
+  Star({
+    required this.initialColor,
+  }) : value = 0.0;
+
+  static const _minOpacity = 0.1;
+  static const _maxOpacity = 1.0;
+
+  void _init(Rect rect) {
+    position = rect.center;
+    value = 0.0;
+    final random = Random();
+    angle = random.nextDouble() * pi * 3;
+    speed = Offset(cos(angle), sin(angle));
+    final minSpeedScale = 20;
+    final maxSpeedScale = 35;
+    final speedScale = minSpeedScale +
+        random.nextInt(maxSpeedScale - minSpeedScale).toDouble();
+    speed = speed.scale(
+      speedScale,
+      speedScale,
+    );
+    final t = speedScale / maxSpeedScale;
+    final opacity = _minOpacity + (_maxOpacity - _minOpacity) * t;
+    color = initialColor.withOpacity(opacity);
+  }
+
+  draw(Canvas canvas, Rect rect) {
+    if (position == null) {
+      _init(rect);
+    }
+
+    value++;
+    final startPosition = Offset(position!.dx, position!.dy);
+    final endPosition = position! + (speed * (value * 0.3));
+    position = speed + position!;
+    final paint = Paint()..color = color!;
+
+    final startShiftAngle = angle + (pi / 2);
+    final startShift = Offset(cos(startShiftAngle), sin(startShiftAngle));
+    final shiftedStartPosition =
+        startPosition + (startShift * (0.75 + value * 0.01));
+
+    final endShiftAngle = angle + (pi / 2);
+    final endShift = Offset(cos(endShiftAngle), sin(endShiftAngle));
+    final shiftedEndPosition = endPosition + (endShift * (1.5 + value * 0.01));
+
+    final path = Path()
+      ..moveTo(startPosition.dx, startPosition.dy)
+      ..lineTo(startPosition.dx, startPosition.dy)
+      ..lineTo(shiftedStartPosition.dx, shiftedStartPosition.dy)
+      ..lineTo(shiftedEndPosition.dx, shiftedEndPosition.dy)
+      ..lineTo(endPosition.dx, endPosition.dy);
+
+    if (!rect.contains(startPosition)) {
+      _init(rect);
+    }
+
+    canvas.drawPath(path, paint);
+  }
+}
+
+class Sky extends CustomPainter {
+  final List<Star> stars;
+  final Color color;
+
+  Sky({
+    required this.stars,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var rect = Offset.zero & size;
+
+    canvas.drawRect(rect, Paint()..color = color);
+
+    for (final star in stars) {
+      star.draw(canvas, rect);
+    }
+  }
+
+  @override
+  SemanticsBuilderCallback get semanticsBuilder {
+    return (Size size) {
+      var rect = Offset.zero & size;
+
+      return [
+        CustomPainterSemantics(
+          rect: rect,
+          properties: SemanticsProperties(
+            label: 'Lightspeed animation.',
+            textDirection: TextDirection.ltr,
+          ),
+        ),
+      ];
+    };
+  }
+
+  @override
+  bool shouldRepaint(Sky oldDelegate) => true;
+  @override
+  bool shouldRebuildSemantics(Sky oldDelegate) => false;
+}

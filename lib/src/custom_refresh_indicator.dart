@@ -118,6 +118,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     __canStart = canStart;
   }
 
+  /// Indicating that indicator is currently stopping drag.
+  /// When true, user is not able to performe any action.
+  bool _isStopingDrag = false;
+
   late double _dragOffset;
 
   late AnimationController _animationController;
@@ -156,7 +160,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Notifies the listeners of the controller
   void _updateCustomRefreshIndicatorValue() =>
-      _customRefreshIndicatorController._setValue(_animationController.value);
+      _customRefreshIndicatorController.setValue(_animationController.value);
 
   bool _handleGlowNotification(OverscrollIndicatorNotification notification) {
     if (notification.depth != 0) return false;
@@ -172,9 +176,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _canStart = notification.metrics.extentBefore == 0 &&
         controller.state == IndicatorState.idle;
 
-    if (_canStart) controller._setIndicatorState(IndicatorState.dragging);
+    if (_canStart) controller.setIndicatorState(IndicatorState.dragging);
 
-    controller._setAxisDirection(notification.metrics.axisDirection);
+    controller.setAxisDirection(notification.metrics.axisDirection);
     return false;
   }
 
@@ -214,7 +218,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleUserScrollNotification(UserScrollNotification notification) {
-    controller._setScrollingDirection(notification.direction);
+    controller.setScrollingDirection(notification.direction);
     return false;
   }
 
@@ -237,10 +241,13 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       newValue = _dragOffset / (containerExtent * extentPercentageToArmed);
     }
 
-    if (newValue >= CustomRefreshIndicator.armedFromValue) {
-      controller._setIndicatorState(IndicatorState.armed);
-    } else if (newValue > 0.0) {
-      controller._setIndicatorState(IndicatorState.dragging);
+    if (newValue > 0.0 &&
+        newValue < CustomRefreshIndicator.armedFromValue &&
+        !controller.isDragging) {
+      controller.setIndicatorState(IndicatorState.dragging);
+    } else if (newValue >= CustomRefreshIndicator.armedFromValue &&
+        !controller.isArmed) {
+      controller.setIndicatorState(IndicatorState.armed);
     }
 
     /// triggers indicator update
@@ -251,6 +258,19 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// if notification predicate is not matched then notification
     /// will not be handled by this widget
     if (!widget.notificationPredicate(notification)) return false;
+
+    if (_isStopingDrag) {
+      controller._shouldStopDrag = false;
+      return false;
+    } else if (controller._shouldStopDrag) {
+      controller._shouldStopDrag = false;
+      _isStopingDrag = true;
+
+      _hide().whenComplete(() {
+        _isStopingDrag = false;
+      });
+      return false;
+    }
 
     if (notification is ScrollStartNotification)
       return _handleScrollStartNotification(notification);
@@ -270,7 +290,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _start() async {
     _dragOffset = 0;
 
-    controller._setIndicatorState(IndicatorState.loading);
+    controller.setIndicatorState(IndicatorState.loading);
     await _animationController.animateTo(1.0,
         duration: widget.armedToLoadingDuration);
     await widget.onRefresh();
@@ -280,22 +300,22 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// optional complete state
     final completeStateDuration = widget.completeStateDuration;
     if (completeStateDuration != null) {
-      controller._setIndicatorState(IndicatorState.complete);
+      controller.setIndicatorState(IndicatorState.complete);
       await Future.delayed(completeStateDuration);
     }
 
     if (!mounted) return;
-    controller._setIndicatorState(IndicatorState.hiding);
+    controller.setIndicatorState(IndicatorState.hiding);
     await _animationController.animateTo(0.0,
         duration: widget.loadingToIdleDuration);
 
     if (!mounted) return;
 
-    controller._setIndicatorState(IndicatorState.idle);
+    controller.setIndicatorState(IndicatorState.idle);
   }
 
-  void _hide() async {
-    controller._setIndicatorState(IndicatorState.hiding);
+  Future<void> _hide() async {
+    controller.setIndicatorState(IndicatorState.hiding);
     _dragOffset = 0;
     _canStart = false;
     await _animationController.animateTo(
@@ -306,19 +326,21 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (!mounted) return;
 
-    controller._setIndicatorState(IndicatorState.idle);
+    controller.setIndicatorState(IndicatorState.idle);
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder.call(
-        context,
-        NotificationListener<ScrollNotification>(
-          onNotification: _handleScrollNotification,
-          child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: _handleGlowNotification,
-            child: widget.child,
-          ),
+  Widget build(BuildContext context) {
+    return widget.builder(
+      context,
+      NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: _handleGlowNotification,
+          child: widget.child,
         ),
-        controller,
-      );
+      ),
+      controller,
+    );
+  }
 }

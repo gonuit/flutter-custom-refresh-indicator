@@ -1,5 +1,7 @@
 # Flutter Custom Refresh Indicator
 
+[![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
+
 This package provides `CustomRefreshIndicator` widget that make it easy to implement your own custom refresh indicator. It listens for scroll events from scroll widget passed to child argument and parsing it to data easy for custom refresh indicator implementation. Indicator data is provided by IndicatorController (third argument of builder method). Long story short... thats it!
 
 If there is something that can be improved, fixed or you just have some great idea feel free to open github issue [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/issues) or open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
@@ -7,8 +9,9 @@ If there is something that can be improved, fixed or you just have some great id
 If you implemented your own custom refresh indicator with this library and you want it to be mentioned here or provided as an example to the eample app, just open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
 
 ### Table of Contents
+
 - [Flutter Custom Refresh Indicator](#flutter-custom-refresh-indicator)
-    - [Table of Contents](#table-of-contents)
+  - [Table of Contents](#table-of-contents)
 - [QUICK START](#quick-start)
 - [Examples](#examples)
 - [Documentation](#documentation)
@@ -68,16 +71,13 @@ Almost all of these examples are available in the example application.
 | :--------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
 |                ![plane_indicator](readme/plane_indicator.gif)                |                ![ice_cream_indicator](readme/ice_cream_indicator.gif)                |
 
-| Simple indicator made with `PositionedIndicatorContainer` [[SOURCE CODE](example/lib/indicators/simple_indicator.dart)] |                Envelope indicator                |
-| :---------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------: |
-|                                   ![simple_indicator](readme/simple_with_opacity.gif)                                   | ![letter_indicator](readme/letter_indicator.gif) |
+| Warp indicator [[SOURCE CODE](example/lib/indicators/warp_indicator.dart)] |                Envelope indicator                |
+| :------------------------------------------------------------------------: | :----------------------------------------------: |
+|                ![warp_indicator](readme/warp_indicator.gif)                | ![letter_indicator](readme/letter_indicator.gif) |
 
 | Indicator with complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)] |                               Your indicator                                |
 | :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
 |           ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)            | Have you created a fancy refresh indicator? This place is for you. Open PR. |
-
-
-
 
 # Documentation
 
@@ -90,7 +90,7 @@ Almost all of these examples are available in the example application.
 ### Controller state and value changes.
 
 The best way to understand how the "CustomRefreshIndicator" widget changes its controller data is to see the example 😉. An example is available in the example application.
-    
+
 ![Controller_Data](readme/controller_data.gif)
 
 | state        | value   | value description                                                                                       | Description                                                                                                                                                                                                                              |
@@ -102,19 +102,37 @@ The best way to understand how the "CustomRefreshIndicator" widget changes its c
 | **hiding**   | `<=1.0` | Value decreses in duration of `draggingToIdleDuration` or `loadingToIdleDuration` arguments to `0.0`.   | Indicator is hiding after:<br />- User ended dragging when indicator was in `dragging` state.<br />- Future returned from `onRefresh` function is resolved.<br />- Complete state ended.<br />- User started scrolling through the list. |
 | **complete** | `==1.0` | Value equals `1.0` for duration of `completeStateDuration` argument.                                    | **This state is OPTIONAL, provide `completeStateDuration` argument with non null value to enable it.**<br /> Loading is completed.                                                                                                       |
 
-___
+---
 
-### `didStateChange`
-With this method, you can easily check if the indicator's state has changed.
+### IndicatorStateHelper
 
+With the IndicatorStateHelper class, you can easily track indicator's state changes. Example usage can be found [HERE](example/lib/indicators/check_mark_indicator.dart).
+  
+All you need to do is to update it's value on every controller update.
+```dart
+CustomRefreshIndicator(
+  onRefresh: onRefresh,
+  child: widget.child,
+  builder: (
+    BuildContext context,
+    Widget child,
+    IndicatorController controller,
+  ) => AnimatedBuilder(
+    animation: controller,
+    builder: (BuildContext context, Widget? _) {
+      /// Now every state change will be tracked by the helper class.
+      _helper.update(controller.state);
+    // ...
+```
+Then you can simply track state changes:
 ```dart
 /// When the state changes to [idle]
-if(controller.didStateChange(to: IndicatorState.idle)) {
+if(_helper.didStateChange(to: IndicatorState.idle)) {
   // Code...
 }
 
 /// When the state changes from [idle] to [dragging]
-if (controller.didStateChange(
+if (_helper.didStateChange(
   from: IndicatorState.idle,
   to: IndicatorState.dragging,
 )) {
@@ -122,14 +140,14 @@ if (controller.didStateChange(
 }
 
 /// When the state changes from [idle] to another.
-if (controller.didStateChange(
+if (_helper.didStateChange(
   from: IndicatorState.idle,
 )) {
   // Code...
 }
 
 /// When the state changes.
-if (controller.didStateChange()) {
+if (_helper.didStateChange()) {
   // Code...
 }
 ```

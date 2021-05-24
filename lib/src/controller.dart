@@ -72,20 +72,23 @@ class IndicatorController extends ChangeNotifier {
     IndicatorState? state,
     bool? refreshEnabled,
   })  : _currentState = state ?? IndicatorState.idle,
-        _previousState = state ?? IndicatorState.idle,
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
-        _refreshEnabled = refreshEnabled ?? true;
+        _refreshEnabled = refreshEnabled ?? true,
+        _shouldStopDrag = false;
 
   @protected
-  void _setValue(double value) {
+  @visibleForTesting
+  void setValue(double value) {
     _value = value;
     notifyListeners();
   }
 
   ScrollDirection _scrollingDirection;
-  void _setScrollingDirection(ScrollDirection userScrollDirection) {
+  @protected
+  @visibleForTesting
+  void setScrollingDirection(ScrollDirection userScrollDirection) {
     _scrollingDirection = userScrollDirection;
     notifyListeners();
   }
@@ -105,7 +108,9 @@ class IndicatorController extends ChangeNotifier {
   AxisDirection _direction;
 
   /// Sets the direction in which list scrolls
-  void _setAxisDirection(AxisDirection direction) {
+  @protected
+  @visibleForTesting
+  void setAxisDirection(AxisDirection direction) {
     _direction = direction;
     notifyListeners();
   }
@@ -135,24 +140,15 @@ class IndicatorController extends ChangeNotifier {
       direction == AxisDirection.up || direction == AxisDirection.down;
 
   IndicatorState _currentState;
-  IndicatorState _previousState;
 
   /// sets indicator state and notifies listeners
-  void _setIndicatorState(IndicatorState newState) {
-    _previousState = _currentState;
+  @protected
+  @visibleForTesting
+  void setIndicatorState(IndicatorState newState) {
     _currentState = newState;
 
-    notifyListeners(updatePrevState: false);
+    notifyListeners();
   }
-
-  /// Describes previous [CustomRefreshIndicator] state
-  IndicatorState get previousState => _previousState;
-  bool get wasArmed => _previousState == IndicatorState.armed;
-  bool get wasDragging => _previousState == IndicatorState.dragging;
-  bool get wasLoading => _previousState == IndicatorState.loading;
-  bool get wasComplete => _previousState == IndicatorState.complete;
-  bool get wasHiding => _previousState == IndicatorState.hiding;
-  bool get wasIdle => _previousState == IndicatorState.idle;
 
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _currentState;
@@ -164,9 +160,21 @@ class IndicatorController extends ChangeNotifier {
   bool get isIdle => _currentState == IndicatorState.idle;
 
   bool _refreshEnabled;
+  bool _shouldStopDrag;
 
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
   bool get isRefreshEnabled => _refreshEnabled;
+
+  void stopDrag() {
+    if (isDragging || isArmed) {
+      _shouldStopDrag = true;
+    } else {
+      throw StateError(
+        "stopDrag method can be used only during "
+        "drag or armed indicator state.",
+      );
+    }
+  }
 
   /// Disables list pull to refresh
   void disableRefresh() {
@@ -178,21 +186,5 @@ class IndicatorController extends ChangeNotifier {
   void enableRefresh() {
     _refreshEnabled = true;
     notifyListeners();
-  }
-
-  /// Returns `true` when state did change [from] to [to].
-  bool didStateChange({IndicatorState? from, IndicatorState? to}) {
-    final stateChanged = _previousState != _currentState;
-    if (to == null && from != null) return _previousState == from && stateChanged;
-    if (to != null && from == null ) return _currentState == to && stateChanged;
-    if (to == null && from == null) return stateChanged;
-    return _previousState == from && _currentState == to;
-  }
-
-  /// Everytime [notifyListeners] method is called, [previousState] will be set to [state] value.
-  @override
-  void notifyListeners({bool updatePrevState = true}) {
-    if (updatePrevState) _previousState = _currentState;
-    super.notifyListeners();
   }
 }
