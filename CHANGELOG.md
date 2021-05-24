@@ -1,16 +1,13 @@
-
-## 1.0.0-nullsafety.1
+## 1.0.0
 - Stable nullsafety release.
+- **BREAKING**: opt into null safety
+  - Dart SDK constraints: >=2.12.0-0 <3.0.0
 - **BREAKING**: Removed `prevState` from `IndicatorController` class.
   Because flutter only marks the widget that it is ready for rebuild, it is possible that the controller state will change more than once during a single frame what causes one or more steps to be skipped. To still use `prevState` and `didChangeState` method, you can use `IndicatorStateHelper`. Take a look at `check_mark_indicator.dart` or `warp_indicator.dart` for example usage.
 - Added `IndicatorStateHelper` class.
 - Added `IndicatorController` unit tests.
 - Added warp indicator example.
-
-## 1.0.0-nullsafety.0
-
-- **BREAKING**: opt into null safety
-  - Dart SDK constraints: >=2.12.0-0 <3.0.0
+- Added `stopDrag` method to the `IndicatorController` class. It allows you to stop current user drag.
 
 ## 0.9.0
 
