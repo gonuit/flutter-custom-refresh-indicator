@@ -75,7 +75,8 @@ class IndicatorController extends ChangeNotifier {
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
-        _refreshEnabled = refreshEnabled ?? true;
+        _refreshEnabled = refreshEnabled ?? true,
+        _shouldStopDrag = false;
 
   @protected
   @visibleForTesting
@@ -159,9 +160,21 @@ class IndicatorController extends ChangeNotifier {
   bool get isIdle => _currentState == IndicatorState.idle;
 
   bool _refreshEnabled;
+  bool _shouldStopDrag;
 
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
   bool get isRefreshEnabled => _refreshEnabled;
+
+  void stopDrag() {
+    if (isDragging || isArmed) {
+      _shouldStopDrag = true;
+    } else {
+      throw StateError(
+        "stopDrag method can be used only during "
+        "drag or armed indicator state.",
+      );
+    }
+  }
 
   /// Disables list pull to refresh
   void disableRefresh() {

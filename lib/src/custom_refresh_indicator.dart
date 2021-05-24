@@ -118,6 +118,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     __canStart = canStart;
   }
 
+  /// Indicating that indicator is currently stopping drag.
+  /// When true, user is not able to performe any action.
+  bool _isStopingDrag = false;
+
   late double _dragOffset;
 
   late AnimationController _animationController;
@@ -255,6 +259,19 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// will not be handled by this widget
     if (!widget.notificationPredicate(notification)) return false;
 
+    if (_isStopingDrag) {
+      controller._shouldStopDrag = false;
+      return false;
+    } else if (controller._shouldStopDrag) {
+      controller._shouldStopDrag = false;
+      _isStopingDrag = true;
+
+      _hide().whenComplete(() {
+        _isStopingDrag = false;
+      });
+      return false;
+    }
+
     if (notification is ScrollStartNotification)
       return _handleScrollStartNotification(notification);
     if (!_canStart) return false;
@@ -297,7 +314,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     controller.setIndicatorState(IndicatorState.idle);
   }
 
-  void _hide() async {
+  Future<void> _hide() async {
     controller.setIndicatorState(IndicatorState.hiding);
     _dragOffset = 0;
     _canStart = false;
