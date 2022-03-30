@@ -1,6 +1,10 @@
 # Flutter Custom Refresh Indicator
-
 [![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
+  
+## TLDR;
+Bored of reading long readmes? Check this out **[ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
+
+---
 
 This package provides `CustomRefreshIndicator` widget that make it easy to implement your own custom refresh indicator. It listens for scroll events from scroll widget passed to child argument and parsing it to data easy for custom refresh indicator implementation. Indicator data is provided by IndicatorController (third argument of builder method). Long story short... thats it!
 
@@ -107,8 +111,9 @@ The best way to understand how the "CustomRefreshIndicator" widget changes its c
 ### IndicatorStateHelper
 
 With the IndicatorStateHelper class, you can easily track indicator's state changes. Example usage can be found [HERE](example/lib/indicators/check_mark_indicator.dart).
-  
+
 All you need to do is to update it's value on every controller update.
+
 ```dart
 CustomRefreshIndicator(
   onRefresh: onRefresh,
@@ -124,7 +129,9 @@ CustomRefreshIndicator(
       _helper.update(controller.state);
     // ...
 ```
+
 Then you can simply track state changes:
+
 ```dart
 /// When the state changes to [idle]
 if(_helper.didStateChange(to: IndicatorState.idle)) {
