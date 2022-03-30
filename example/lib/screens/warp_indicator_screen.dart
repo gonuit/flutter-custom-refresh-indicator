@@ -1,7 +1,6 @@
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../indicators/warp_indicator.dart';
 
