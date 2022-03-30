@@ -1,16 +1,11 @@
 # Flutter Custom Refresh Indicator
 [![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
   
-## TLDR;
-Bored of reading long readmes? Check this out **[ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
+A flutter package that allows you to easily create a `Custom RefreshIndicator` widget.
+  
+**Bored of reading long readmes? Check out this [ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
 
 ---
-
-This package provides `CustomRefreshIndicator` widget that make it easy to implement your own custom refresh indicator. It listens for scroll events from scroll widget passed to child argument and parsing it to data easy for custom refresh indicator implementation. Indicator data is provided by IndicatorController (third argument of builder method). Long story short... thats it!
-
-If there is something that can be improved, fixed or you just have some great idea feel free to open github issue [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/issues) or open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
-
-If you implemented your own custom refresh indicator with this library and you want it to be mentioned here or provided as an example to the eample app, just open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
 
 ### Table of Contents
 
@@ -158,3 +153,8 @@ if (_helper.didStateChange()) {
   // Code...
 }
 ```
+___
+
+If there is something that can be improved, fixed or you just have some great idea feel free to open github issue [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/issues) or open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
+
+If you implemented your own custom refresh indicator using this library and you want it to be mentioned here or provided as an example to the eample app, just open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
