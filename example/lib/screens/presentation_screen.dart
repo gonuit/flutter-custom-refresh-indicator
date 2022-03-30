@@ -33,6 +33,9 @@ class _PresentationScreenState extends State<PresentationScreen> {
           child: DecoratedBox(
             decoration: BoxDecoration(color: appBackgroundColor),
             child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
               children: [
                 AnimatedBuilder(
                   animation: _controller!,

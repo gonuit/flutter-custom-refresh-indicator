@@ -17,6 +17,9 @@ class ExampleList extends StatelessWidget {
         )
       ]),
       child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
         itemBuilder: (BuildContext context, int index) => const Element(),
         itemCount: 4,
         separatorBuilder: (BuildContext context, int index) => const Divider(

@@ -1,4 +1,13 @@
+## 1.1.0
+
+- Updated example app
+  - Added support for the Android embedding v2
+  - Added web support
+    - Added WebFrame widget for better indicator scaling (basically it emulates a mobile screen size).
+  - Added windows support - if someone is interested 🤷‍♂️ go for it, I think.
+
 ## 1.0.0
+
 - Stable nullsafety release.
 - **BREAKING**: opt into null safety
   - Dart SDK constraints: >=2.12.0-0 <3.0.0
@@ -28,7 +37,7 @@
   - Added `wasArmed`, `wasDragging`, `wasLoading`, `wasHiding` and `wasIdle` properties.
 - Added `notificationPredicate` property to the `CustomRefreshIndicator` widget.
 - Example app:
-  - Added initial version of `check_mark_indicator`. Example that shows how to make use of `complete` state. 
+  - Added initial version of `check_mark_indicator`. Example that shows how to make use of `complete` state.
 
 ## 0.8.0+1
 

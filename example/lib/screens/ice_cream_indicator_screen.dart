@@ -2,7 +2,6 @@ import 'package:example/indicators/ice_cream_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class IceCreamIndicatorScreen extends StatefulWidget {
   @override

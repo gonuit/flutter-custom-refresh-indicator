@@ -1,7 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
@@ -22,7 +21,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
 
   /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
-
 
   ScrollDirection prevScrollDirection = ScrollDirection.idle;
 

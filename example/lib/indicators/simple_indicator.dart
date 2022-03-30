@@ -48,32 +48,40 @@ class SimpleIndicatorContent extends StatelessWidget {
 }
 
 final simpleIndicator = CustomIndicatorConfig(
-  builder: (context, child, controller) => Stack(
-    children: <Widget>[
-      child,
-      PositionedIndicatorContainer(
-        controller: controller,
-        child: SimpleIndicatorContent(
+  builder: (context, child, controller) =>
+      LayoutBuilder(builder: (context, constraints) {
+    return Stack(
+      children: <Widget>[
+        child,
+        PositionedIndicatorContainer(
+          constraints: constraints,
           controller: controller,
+          child: SimpleIndicatorContent(
+            controller: controller,
+          ),
         ),
-      ),
-    ],
-  ),
+      ],
+    );
+  }),
 );
 
 final simpleIndicatorWithOpacity = CustomIndicatorConfig(
-  builder: (context, child, controller) => Stack(children: <Widget>[
-    AnimatedBuilder(
-      child: child,
-      animation: controller,
-      builder: (context, child) => Opacity(
-        opacity: 1.0 - controller.value.clamp(0.0, 1.0),
+  builder: (context, child, controller) =>
+      LayoutBuilder(builder: (context, constraints) {
+    return Stack(children: <Widget>[
+      AnimatedBuilder(
         child: child,
+        animation: controller,
+        builder: (context, child) => Opacity(
+          opacity: 1.0 - controller.value.clamp(0.0, 1.0),
+          child: child,
+        ),
       ),
-    ),
-    PositionedIndicatorContainer(
-      controller: controller,
-      child: SimpleIndicatorContent(controller: controller),
-    ),
-  ]),
+      PositionedIndicatorContainer(
+        constraints: constraints,
+        controller: controller,
+        child: SimpleIndicatorContent(controller: controller),
+      ),
+    ]);
+  }),
 );
