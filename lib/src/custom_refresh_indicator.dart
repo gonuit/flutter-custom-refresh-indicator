@@ -288,13 +288,20 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   void _start() async {
-    _dragOffset = 0;
+    try {
+      _dragOffset = 0;
 
-    controller.setIndicatorState(IndicatorState.loading);
-    await _animationController.animateTo(1.0,
-        duration: widget.armedToLoadingDuration);
-    await widget.onRefresh();
+      controller.setIndicatorState(IndicatorState.loading);
+      await _animationController.animateTo(1.0,
+          duration: widget.armedToLoadingDuration);
+      await widget.onRefresh();
+    } finally {
+      await _hideAfterRefresh();
+    }
+  }
 
+  /// Hides an indicator after the `onRefresh` function.
+  Future<void> _hideAfterRefresh() async {
     if (!mounted) return;
 
     /// optional complete state
@@ -310,7 +317,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         duration: widget.loadingToIdleDuration);
 
     if (!mounted) return;
-
     controller.setIndicatorState(IndicatorState.idle);
   }
 
