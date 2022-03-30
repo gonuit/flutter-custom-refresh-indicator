@@ -1,10 +1,14 @@
 ## 1.1.0
 
-- Updated example app
-  - Added support for the Android embedding v2
-  - Added web support
-    - Added WebFrame widget for better indicator scaling (basically it emulates a mobile screen size).
-  - Added windows support - if someone is interested 🤷‍♂️ go for it, I think.
+- Fixes:
+  - Handle errors thrown from the `onRefresh` method.
+- Improvements:
+  - Updated example app
+    - Added support for the Android embedding v2
+    - Added web support
+    - Added windows support.
+  - Added a web based demo app (url in the readme file).
+  - Replaced the deprecated `disallowGlow` method calls with `disallowIndicator`.
 
 ## 1.0.0
 
