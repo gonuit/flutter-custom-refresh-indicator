@@ -165,9 +165,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   bool _handleGlowNotification(OverscrollIndicatorNotification notification) {
     if (notification.depth != 0) return false;
     if (notification.leading) {
-      if (!widget.leadingGlowVisible) notification.disallowGlow();
+      if (!widget.leadingGlowVisible) notification.disallowIndicator();
     } else {
-      if (!widget.trailingGlowVisible) notification.disallowGlow();
+      if (!widget.trailingGlowVisible) notification.disallowIndicator();
     }
     return true;
   }
