@@ -7,19 +7,6 @@ A flutter package that allows you to easily create a custom refresh indicator wi
 ### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
 
 ---
-
-### Table of Contents
-
-- [Flutter Custom Refresh Indicator](#flutter-custom-refresh-indicator)
-  - [Table of Contents](#table-of-contents)
-- [QUICK START](#quick-start)
-- [Examples](#examples)
-- [Documentation](#documentation)
-  - [CustomRefreshIndicator widget](#customrefreshindicator-widget)
-    - [`onStateChanged`](#onStateChanged)
-  - [IndicatorController](#indicatorcontroller)
-    - [Controller state and value changes.](#controller-state-and-value-changes)
-
 # QUICK START
 
 ```dart
