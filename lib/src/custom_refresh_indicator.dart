@@ -37,10 +37,10 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// else for more complicated layouts.
   final ScrollNotificationPredicate notificationPredicate;
 
-  /// Whether to display leading glow
+  /// Whether to display leading scroll indicator
   final bool leadingScrollIndicatorVisible;
 
-  /// Whether to display trailing glow
+  /// Whether to display trailing scroll indicator
   final bool trailingScrollIndicatorVisible;
 
   /// Number of pixels that user should drag to change [IndicatorState] from idle to armed.
