@@ -6,9 +6,11 @@ import 'custom_indicator.dart';
 
 class SimpleIndicatorContent extends StatelessWidget {
   const SimpleIndicatorContent({
+    Key? key,
     required this.controller,
     this.indicatorSize = _defaultIndicatorSize,
-  }) : assert(indicatorSize > 0);
+  })  : assert(indicatorSize > 0),
+        super(key: key);
 
   final IndicatorController controller;
   static const _defaultIndicatorSize = 40.0;

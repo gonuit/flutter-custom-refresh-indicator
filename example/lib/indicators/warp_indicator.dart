@@ -46,11 +46,11 @@ class _WarpIndicatorState extends State<WarpIndicator>
   WarpAnimationState _state = WarpAnimationState.stopped;
 
   List<Star> stars = [];
-  var _offsetTween = Tween<Offset>(
+  final _offsetTween = Tween<Offset>(
     begin: Offset.zero,
     end: Offset.zero,
   );
-  var _angleTween = Tween<double>(
+  final _angleTween = Tween<double>(
     begin: 0,
     end: 0,
   );
@@ -64,7 +64,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
   void initState() {
     shakeController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 100),
     );
     super.initState();
   }
@@ -150,7 +150,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
                           stars: stars,
                           color: widget.skyColor,
                         ),
-                        child: SizedBox.expand(),
+                        child: const SizedBox.expand(),
                       );
                     },
                   );
@@ -216,8 +216,8 @@ class Star {
     final random = Random();
     angle = random.nextDouble() * pi * 3;
     speed = Offset(cos(angle), sin(angle));
-    final minSpeedScale = 20;
-    final maxSpeedScale = 35;
+    const minSpeedScale = 20;
+    const maxSpeedScale = 35;
     final speedScale = minSpeedScale +
         random.nextInt(maxSpeedScale - minSpeedScale).toDouble();
     speed = speed.scale(
@@ -292,7 +292,7 @@ class Sky extends CustomPainter {
       return [
         CustomPainterSemantics(
           rect: rect,
-          properties: SemanticsProperties(
+          properties: const SemanticsProperties(
             label: 'Lightspeed animation.',
             textDirection: TextDirection.ltr,
           ),

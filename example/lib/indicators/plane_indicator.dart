@@ -33,8 +33,9 @@ class _Cloud {
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
   const PlaneIndicator({
+    Key? key,
     required this.child,
-  });
+  }) : super(key: key);
 
   @override
   _PlaneIndicatorState createState() => _PlaneIndicatorState();
@@ -64,7 +65,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 10.0,
       image: AssetImage(_Cloud._assets[1]),
       width: 100,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._light,
@@ -72,7 +73,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 25.0,
       image: AssetImage(_Cloud._assets[3]),
       width: 40,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._light,
@@ -80,7 +81,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 65.0,
       image: AssetImage(_Cloud._assets[2]),
       width: 60,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._dark,
@@ -88,7 +89,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 70.0,
       image: AssetImage(_Cloud._assets[3]),
       width: 100,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._normal,
@@ -96,17 +97,18 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 10,
       image: AssetImage(_Cloud._assets[0]),
       width: 80,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
   ];
 
   void _setupCloudsAnimationControllers() {
-    for (final cloud in _clouds)
+    for (final cloud in _clouds) {
       cloud.controller = AnimationController(
         vsync: this,
         duration: cloud.duration,
         value: cloud.initialValue,
       );
+    }
   }
 
   void _startPlaneAnimation() {
@@ -116,19 +118,25 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
   void _stopPlaneAnimation() {
     _planeController
       ..stop()
-      ..animateTo(0.0, duration: Duration(milliseconds: 100));
+      ..animateTo(0.0, duration: const Duration(milliseconds: 100));
   }
 
   void _stopCloudAnimation() {
-    for (final cloud in _clouds) cloud.controller!.stop();
+    for (final cloud in _clouds) {
+      cloud.controller!.stop();
+    }
   }
 
   void _startCloudAnimation() {
-    for (final cloud in _clouds) cloud.controller!.repeat();
+    for (final cloud in _clouds) {
+      cloud.controller!.repeat();
+    }
   }
 
   void _disposeCloudsControllers() {
-    for (final cloud in _clouds) cloud.controller!.dispose();
+    for (final cloud in _clouds) {
+      cloud.controller!.dispose();
+    }
   }
 
   @override
@@ -190,7 +198,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                 if (_prevState != IndicatorState.idle)
                   Container(
                     height: _offsetToArmed * controller.value,
-                    color: Color(0xFFFDFEFF),
+                    color: const Color(0xFFFDFEFF),
                     width: double.infinity,
                     child: AnimatedBuilder(
                       animation: _clouds.first.controller!,
@@ -212,12 +220,10 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                   maxHeight: cloud.width,
                                   maxWidth: cloud.width,
                                   alignment: Alignment.topLeft,
-                                  child: Container(
-                                    child: Image(
-                                      color: cloud.color,
-                                      image: cloud.image!,
-                                      fit: BoxFit.contain,
-                                    ),
+                                  child: Image(
+                                    color: cloud.color,
+                                    image: cloud.image!,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                               ),

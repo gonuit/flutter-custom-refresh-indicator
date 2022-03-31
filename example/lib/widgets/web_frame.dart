@@ -13,9 +13,9 @@ class WebFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWebNotMobile = kIsWeb;
-    (defaultTargetPlatform != TargetPlatform.iOS &&
-        defaultTargetPlatform != TargetPlatform.android);
+    final isWebNotMobile = kIsWeb &&
+        (defaultTargetPlatform != TargetPlatform.iOS &&
+            defaultTargetPlatform != TargetPlatform.android);
     if (isWebNotMobile) {
       final safeAreaWidth =
           math.max<double>(MediaQuery.of(context).size.width, 300);

@@ -4,6 +4,8 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class IceCreamIndicatorScreen extends StatefulWidget {
+  const IceCreamIndicatorScreen({Key? key}) : super(key: key);
+
   @override
   _IceCreamIndicatorScreenState createState() =>
       _IceCreamIndicatorScreenState();
@@ -12,12 +14,12 @@ class IceCreamIndicatorScreen extends StatefulWidget {
 class _IceCreamIndicatorScreenState extends State<IceCreamIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: appBackgroundColor,
-      appBar: const ExampleAppBar(),
+      appBar: ExampleAppBar(),
       body: SafeArea(
         child: IceCreamIndicator(
-          child: const ExampleList(),
+          child: ExampleList(),
         ),
       ),
     );

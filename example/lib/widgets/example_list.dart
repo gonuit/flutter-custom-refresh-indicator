@@ -7,20 +7,25 @@ class ExampleList extends StatelessWidget {
 
   final Color backgroundColor;
   const ExampleList({
+    Key? key,
     this.backgroundColor = appBackgroundColor,
     this.itemCount = 4,
-  });
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(color: backgroundColor, boxShadow: [
-        BoxShadow(
-          blurRadius: 2,
-          color: Colors.black12,
-          spreadRadius: 0.5,
-          offset: Offset(0.0, .0),
-        )
-      ]),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 2,
+            color: Colors.black12,
+            spreadRadius: 0.5,
+            offset: Offset(0.0, .0),
+          )
+        ],
+      ),
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(
           parent: ClampingScrollPhysics(),
@@ -38,7 +43,7 @@ class ExampleList extends StatelessWidget {
 }
 
 class Element extends StatelessWidget {
-  const Element();
+  const Element({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +53,14 @@ class Element extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FakeBox(height: 80, width: 80),
+          const FakeBox(height: 80, width: 80),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 FakeBox(height: 8, width: double.infinity),
                 FakeBox(height: 8, width: double.infinity),
                 FakeBox(height: 8, width: 200),
@@ -78,8 +83,8 @@ class FakeBox extends StatelessWidget {
   final double width;
   final double height;
 
-  static const _boxDecoration = const BoxDecoration(
-    color: const Color(0xFFE2D8D7),
+  static const _boxDecoration = BoxDecoration(
+    color: Color(0xFFE2D8D7),
     borderRadius: BorderRadius.all(
       Radius.circular(10),
     ),

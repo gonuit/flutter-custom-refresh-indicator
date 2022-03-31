@@ -7,10 +7,11 @@ class PositionedIndicatorContainer extends StatelessWidget {
 
   /// Position child widget in a similar way to RefreshIndicator widget
   const PositionedIndicatorContainer({
+    Key? key,
     required this.controller,
     required this.constraints,
     required this.child,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

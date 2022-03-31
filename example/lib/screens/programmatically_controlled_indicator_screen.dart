@@ -23,7 +23,8 @@ class _ProgrammaticallyControlledState
 
   int _itemsCount = 4;
   Future<void> onRefresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
     setState(() {
       _itemsCount = Random().nextInt(4) + 1;
     });
@@ -33,7 +34,7 @@ class _ProgrammaticallyControlledState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Programmatically-controlled"),
+        title: const Text("Programmatically-controlled"),
         actions: [
           AnimatedBuilder(
             animation: controller,
@@ -81,5 +82,11 @@ class _ProgrammaticallyControlledState
         child: ExampleList(itemCount: _itemsCount),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

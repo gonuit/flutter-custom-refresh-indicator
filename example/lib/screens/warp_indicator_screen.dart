@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../indicators/warp_indicator.dart';
 
 class WarpIndicatorScreen extends StatefulWidget {
+  const WarpIndicatorScreen({Key? key}) : super(key: key);
+
   @override
   _WarpIndicatorScreenState createState() => _WarpIndicatorScreenState();
 }

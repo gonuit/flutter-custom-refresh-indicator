@@ -4,6 +4,8 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class PlaneIndicatorScreen extends StatefulWidget {
+  const PlaneIndicatorScreen({Key? key}) : super(key: key);
+
   @override
   _PlaneIndicatorScreenState createState() => _PlaneIndicatorScreenState();
 }
@@ -11,11 +13,11 @@ class PlaneIndicatorScreen extends StatefulWidget {
 class _PlaneIndicatorScreenState extends State<PlaneIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: appBackgroundColor,
-      appBar: const ExampleAppBar(),
+      appBar: ExampleAppBar(),
       body: PlaneIndicator(
-        child: const ExampleList(),
+        child: ExampleList(),
       ),
     );
   }

@@ -11,9 +11,11 @@ import 'screens/check_mark_indicator_screen.dart';
 import 'screens/warp_indicator_screen.dart';
 import 'utils/mobile_like_scroll_behavior.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,28 +24,30 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
       builder: (context, child) => WebFrame(child: child),
       routes: {
-        '/example': (context) => ExampleIndicatorScreen(),
-        '/plane': (context) => PlaneIndicatorScreen(),
-        '/ice_cream': (context) => IceCreamIndicatorScreen(),
-        '/presentation': (context) => PresentationScreen(),
-        '/check-mark': (context) => CheckMarkIndicatorScreen(),
-        '/warp': (context) => WarpIndicatorScreen(),
+        '/example': (context) => const ExampleIndicatorScreen(),
+        '/plane': (context) => const PlaneIndicatorScreen(),
+        '/ice_cream': (context) => const IceCreamIndicatorScreen(),
+        '/presentation': (context) => const PresentationScreen(),
+        '/check-mark': (context) => const CheckMarkIndicatorScreen(),
+        '/warp': (context) => const WarpIndicatorScreen(),
         '/programmatically-controlled': (context) =>
-            ProgrammaticallyControlled(),
+            const ProgrammaticallyControlled(),
       },
     );
   }
 }
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Examples"),
+        title: const Text("Examples"),
       ),
       body: SafeArea(
         child: ListView(
@@ -53,7 +57,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Presentation"),
+                child: const Text("Presentation"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -65,7 +69,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Simple"),
+                child: const Text("Simple"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -78,7 +82,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Simple with list opacity"),
+                child: const Text("Simple with list opacity"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -91,7 +95,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Plane"),
+                child: const Text("Plane"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -103,7 +107,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Ice cream"),
+                child: const Text("Ice cream"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -115,7 +119,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Check mark"),
+                child: const Text("Check mark"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -127,7 +131,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Warp indicator"),
+                child: const Text("Warp indicator"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -140,7 +144,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text("Programmatically-controlled warp"),
+                child: const Text("Programmatically-controlled warp"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,

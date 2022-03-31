@@ -1,7 +1,6 @@
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../lib/custom_refresh_indicator.dart';
 
 class TestListener {
   int _called = 0;

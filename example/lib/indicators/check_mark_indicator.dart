@@ -86,7 +86,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
+                                    const AlwaysStoppedAnimation(Colors.white),
                                 value:
                                     controller.isDragging || controller.isArmed
                                         ? controller.value.clamp(0.0, 1.0)

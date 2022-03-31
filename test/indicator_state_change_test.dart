@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("State getters works correctly", () {
-    final change = IndicatorStateChange(
+    const change = IndicatorStateChange(
       IndicatorState.dragging,
       IndicatorState.armed,
     );
@@ -12,12 +12,12 @@ void main() {
   });
 
   test('didChange method works correctly.', () {
-    var change = IndicatorStateChange(
+    var change = const IndicatorStateChange(
       IndicatorState.idle,
       IndicatorState.idle,
     );
     expect(change.didChange(), isFalse);
-    change = IndicatorStateChange(
+    change = const IndicatorStateChange(
       IndicatorState.idle,
       IndicatorState.dragging,
     );
@@ -59,7 +59,7 @@ void main() {
   });
 
   test("toString method works correctly", () {
-    var change = IndicatorStateChange(
+    var change = const IndicatorStateChange(
       IndicatorState.dragging,
       IndicatorState.armed,
     );
@@ -67,7 +67,7 @@ void main() {
       change.toString(),
       'IndicatorStateChange(dragging → armed)',
     );
-    change = IndicatorStateChange(
+    change = const IndicatorStateChange(
       IndicatorState.loading,
       IndicatorState.complete,
     );

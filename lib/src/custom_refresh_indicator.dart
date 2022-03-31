@@ -84,7 +84,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// To better understand this data, look at example app.
   final IndicatorController? controller;
 
-  CustomRefreshIndicator({
+  const CustomRefreshIndicator({
     Key? key,
     required this.child,
     required this.onRefresh,
@@ -129,6 +129,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   late double _dragOffset;
 
   late AnimationController _animationController;
+  late bool _controllerProvided;
   late IndicatorController _customRefreshIndicatorController;
 
   /// Current [IndicatorController]
@@ -142,6 +143,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _dragOffset = 0;
     _canStart = false;
 
+    _controllerProvided = widget.controller != null;
     _customRefreshIndicatorController =
         widget.controller ?? IndicatorController._();
 
@@ -337,17 +339,24 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       return false;
     }
 
-    if (notification is ScrollStartNotification)
+    if (notification is ScrollStartNotification) {
       return _handleScrollStartNotification(notification);
-    if (!_canStart) return false;
-    if (notification is ScrollUpdateNotification)
+    }
+    if (!_canStart) {
+      return false;
+    }
+    if (notification is ScrollUpdateNotification) {
       return _handleScrollUpdateNotification(notification);
-    if (notification is OverscrollNotification)
+    }
+    if (notification is OverscrollNotification) {
       return _handleOverscrollNotification(notification);
-    if (notification is ScrollEndNotification)
+    }
+    if (notification is ScrollEndNotification) {
       return _handleScrollEndNotification(notification);
-    if (notification is UserScrollNotification)
+    }
+    if (notification is UserScrollNotification) {
       return _handleUserScrollNotification(notification);
+    }
 
     return false;
   }
@@ -420,7 +429,11 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   @override
   void dispose() {
     _animationController.dispose();
-    _customRefreshIndicatorController.dispose();
+
+    /// Provided controller should be disposed by the user.
+    if (!_controllerProvided) {
+      _customRefreshIndicatorController.dispose();
+    }
     super.dispose();
   }
 }
