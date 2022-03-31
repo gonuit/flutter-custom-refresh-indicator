@@ -9,6 +9,9 @@
     - Added windows support.
   - Added a web based demo app (url in the readme file).
   - Replaced the deprecated `disallowGlow` method calls with `disallowIndicator`.
+  - Added `onStateChanged` function argument that allows tracking indicator state changes.
+  - The `IndicatorStateHelper` class is now deprecated in favor of `onStateChange` function and `IndicatorStateChange` class.
+  - Initial support for programmatically-controlled indicators has been added. Added the `show`,` hide` and `refresh` methods to the` CustomRefreshIndicatorState` class. It can be accessed via GlobalKey. Take a look at an [programmatically-controlled screen example](/example/lib/screens/programmatically_controlled_indicator_screen.dart).
 
 ## 1.0.0
 
