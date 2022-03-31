@@ -17,6 +17,7 @@ class _WarpIndicatorScreenState extends State<WarpIndicatorScreen> {
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: WarpIndicator(
+          onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: const ExampleList(),
         ),
       ),

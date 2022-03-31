@@ -15,11 +15,17 @@ typedef StarColorGetter = Color Function(int index);
 class WarpIndicator extends StatefulWidget {
   final Widget child;
   final int starsCount;
+  final OnRefresh onRefresh;
+  final IndicatorController? controller;
   final Color skyColor;
   final StarColorGetter starColorGetter;
+  final Key? indicatorKey;
 
   const WarpIndicator({
     Key? key,
+    this.indicatorKey,
+    this.controller,
+    required this.onRefresh,
     required this.child,
     this.starsCount = 30,
     this.skyColor = Colors.black,
@@ -37,7 +43,6 @@ class _WarpIndicatorState extends State<WarpIndicator>
     with SingleTickerProviderStateMixin {
   static const _indicatorSize = 150.0;
   final _random = Random();
-  final _helper = IndicatorStateHelper();
   WarpAnimationState _state = WarpAnimationState.stopped;
 
   List<Star> stars = [];
@@ -112,10 +117,19 @@ class _WarpIndicatorState extends State<WarpIndicator>
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
+      key: widget.indicatorKey,
+      controller: widget.controller,
       offsetToArmed: _indicatorSize,
       leadingGlowVisible: false,
       trailingGlowVisible: false,
-      onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+      onRefresh: widget.onRefresh,
+      onStateChanged: (change) {
+        if (change.didChange(to: IndicatorState.loading)) {
+          _startShakeAnimation();
+        } else if (change.didChange(to: IndicatorState.idle)) {
+          _stopShakeAnimation();
+        }
+      },
       child: widget.child,
       builder: (
         BuildContext context,
@@ -144,18 +158,6 @@ class _WarpIndicatorState extends State<WarpIndicator>
             AnimatedBuilder(
               animation: animation,
               builder: (context, _) {
-                _helper.update(controller.state);
-                if (_helper.didStateChange(
-                  to: IndicatorState.loading,
-                )) {
-                  SchedulerBinding.instance
-                      ?.addPostFrameCallback((_) => _startShakeAnimation());
-                } else if (_helper.didStateChange(
-                  to: IndicatorState.idle,
-                )) {
-                  SchedulerBinding.instance
-                      ?.addPostFrameCallback((_) => _stopShakeAnimation());
-                }
                 return Transform.scale(
                   scale: _scaleTween.transform(controller.value),
                   child: Builder(builder: (context) {
