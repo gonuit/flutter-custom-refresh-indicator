@@ -104,10 +104,10 @@ class CustomRefreshIndicator extends StatefulWidget {
         super(key: key);
 
   @override
-  _CustomRefreshIndicatorState createState() => _CustomRefreshIndicatorState();
+  CustomRefreshIndicatorState createState() => CustomRefreshIndicatorState();
 }
 
-class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
+class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with TickerProviderStateMixin {
   bool __canStart = false;
 
@@ -217,6 +217,64 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     return false;
   }
 
+  /// Show the pointer programmatically. The pointer will not hide
+  /// automatically, call the [hide] method to hide the pointer.
+  ///
+  /// This method is only responsible for the visual part, if you want
+  /// to do the whole process with a [onRefresh] call, use the [refresh]
+  /// method instead.
+  Future<void> show({
+    Duration draggingDuration = const Duration(milliseconds: 300),
+    Curve draggingCurve = Curves.linear,
+  }) async {
+    if (!controller.isIdle) {
+      throw StateError(
+        "Cannot show indicator. "
+        "Controller must be in the idle state. "
+        "Current state: ${controller.state}.",
+      );
+    }
+    controller.setIndicatorState(IndicatorState.dragging);
+    await _animationController.animateTo(
+      1.0,
+      duration: draggingDuration,
+      curve: draggingCurve,
+    );
+    controller.setIndicatorState(IndicatorState.armed);
+    await Future<void>.delayed(const Duration(milliseconds: 0));
+    controller.setIndicatorState(IndicatorState.loading);
+  }
+
+  Future<void> refresh({
+    Duration draggingDuration = const Duration(milliseconds: 300),
+    Curve draggingCurve = Curves.linear,
+  }) async {
+    await show(
+      draggingDuration: draggingDuration,
+      draggingCurve: draggingCurve,
+    );
+    try {
+      await widget.onRefresh();
+    } finally {
+      /// If the user has programmatically hidden the pointer
+      /// so it is not in "loading" state, then nothing needs to be done.
+      if (controller.isLoading) {
+        await hide();
+      }
+    }
+  }
+
+  /// Hides indicator
+  Future<void> hide() {
+    if (!controller.isLoading) {
+      throw StateError(
+        'Controller must be in the loading state. '
+        'Current state: ${controller.state}',
+      );
+    }
+    return _hideAfterRefresh();
+  }
+
   bool _handleUserScrollNotification(UserScrollNotification notification) {
     controller.setScrollingDirection(notification.direction);
     return false;
@@ -302,6 +360,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Hides an indicator after the `onRefresh` function.
   Future<void> _hideAfterRefresh() async {
+    assert(controller.isLoading);
+
     if (!mounted) return;
 
     /// optional complete state
