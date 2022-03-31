@@ -116,9 +116,10 @@ The best way to understand how the _CustomRefreshIndicator_ widget changes its c
 ### Support
 
 If you like this package, you have learned something from it, or you just don't know what to do with your money 😅 just buy me a cup of coffee ☕️ and this dose of caffeine will put a smile on my face which in turn will help me improve this package. Also as a thank you, you will be mentioned in this readme as a sponsor.
-
+  
 <div align="center">
-<a href="https://www.buymeacoffee.com/kamilklyta" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+<a href="https://www.buymeacoffee.com/kamilklyta" target="_blank"><img height="60px" width="217px" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 </div>
+<p align="center">Have a nice day! 👋</p>
 
-Have a nice day! 👋
+
