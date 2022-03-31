@@ -1,4 +1,5 @@
 import 'package:example/screens/presentation_screen.dart';
+import 'package:example/screens/programmatically_controlled_indicator_screen.dart';
 import 'package:example/widgets/web_frame.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
         '/presentation': (context) => PresentationScreen(),
         '/check-mark': (context) => CheckMarkIndicatorScreen(),
         '/warp': (context) => WarpIndicatorScreen(),
+        '/programmatically-controlled': (context) =>
+            ProgrammaticallyControlled(),
       },
     );
   }
@@ -130,6 +133,18 @@ class MainScreen extends StatelessWidget {
                 context,
                 '/warp',
                 arguments: simpleIndicator,
+              ),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: Text("Programmatically-controlled warp"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/programmatically-controlled',
               ),
             ),
           ],

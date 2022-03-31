@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'example_app_bar.dart';
 
 class ExampleList extends StatelessWidget {
+  final int itemCount;
+
   final Color backgroundColor;
-  const ExampleList([this.backgroundColor = appBackgroundColor]);
+  const ExampleList({
+    this.backgroundColor = appBackgroundColor,
+    this.itemCount = 4,
+  });
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -21,7 +26,7 @@ class ExampleList extends StatelessWidget {
           parent: ClampingScrollPhysics(),
         ),
         itemBuilder: (BuildContext context, int index) => const Element(),
-        itemCount: 4,
+        itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => const Divider(
           height: 0,
           color: Color(0xFFe2d6ce),
