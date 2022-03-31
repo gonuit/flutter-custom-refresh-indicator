@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.1.0-dev.1
 
 - Fixes:
   - Handle errors thrown from the `onRefresh` method.
@@ -13,6 +13,7 @@
   - The `IndicatorStateHelper` class is now deprecated in favor of `onStateChange` function and `IndicatorStateChange` class.
   - Initial support for programmatically-controlled indicators has been added. Added the `show`,` hide` and `refresh` methods to the` CustomRefreshIndicatorState` class. It can be accessed via GlobalKey. Take a look at an [programmatically-controlled screen example](/example/lib/screens/programmatically_controlled_indicator_screen.dart).
   - Use the `flutter_lints` package for analysis.
+  - Deprecate `leadingGlowVisible` and `trailingGlowVisible` in favor of `leadingScrollIndicatorVisible` and `trailingScrollIndicatorVisible` arguments.
 
 ## 1.0.0
 

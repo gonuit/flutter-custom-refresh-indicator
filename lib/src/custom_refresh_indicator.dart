@@ -38,10 +38,10 @@ class CustomRefreshIndicator extends StatefulWidget {
   final ScrollNotificationPredicate notificationPredicate;
 
   /// Whether to display leading glow
-  final bool leadingGlowVisible;
+  final bool leadingScrollIndicatorVisible;
 
   /// Whether to display trailing glow
-  final bool trailingGlowVisible;
+  final bool trailingScrollIndicatorVisible;
 
   /// Number of pixels that user should drag to change [IndicatorState] from idle to armed.
   final double? offsetToArmed;
@@ -98,13 +98,21 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
     this.completeStateDuration,
-    this.leadingGlowVisible = false,
-    this.trailingGlowVisible = true,
+    @Deprecated('Deprecated in favor of leadingScrollIndicatorVisible argument.')
+        bool leadingGlowVisible = false,
+    @Deprecated('Deprecated in favor of trailingScrollIndicatorVisible argument.')
+        bool trailingGlowVisible = true,
+    bool? leadingScrollIndicatorVisible,
+    bool? trailingScrollIndicatorVisible,
   })  : assert(
           extentPercentageToArmed == null || offsetToArmed == null,
           'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
           'Remove redundant argument.',
         ),
+        leadingScrollIndicatorVisible =
+            leadingScrollIndicatorVisible ?? leadingGlowVisible,
+        trailingScrollIndicatorVisible =
+            trailingScrollIndicatorVisible ?? trailingGlowVisible,
         super(key: key);
 
   @override
@@ -171,12 +179,18 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _updateCustomRefreshIndicatorValue() =>
       _customRefreshIndicatorController.setValue(_animationController.value);
 
-  bool _handleGlowNotification(OverscrollIndicatorNotification notification) {
+  bool _handleScrollIndicatorNotification(
+    OverscrollIndicatorNotification notification,
+  ) {
     if (notification.depth != 0) return false;
     if (notification.leading) {
-      if (!widget.leadingGlowVisible) notification.disallowIndicator();
+      if (!widget.leadingScrollIndicatorVisible) {
+        notification.disallowIndicator();
+      }
     } else {
-      if (!widget.trailingGlowVisible) notification.disallowIndicator();
+      if (!widget.trailingScrollIndicatorVisible) {
+        notification.disallowIndicator();
+      }
     }
     return true;
   }
@@ -418,7 +432,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
         child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: _handleGlowNotification,
+          onNotification: _handleScrollIndicatorNotification,
           child: widget.child,
         ),
       ),

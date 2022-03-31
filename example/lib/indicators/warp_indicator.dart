@@ -120,8 +120,8 @@ class _WarpIndicatorState extends State<WarpIndicator>
       key: widget.indicatorKey,
       controller: widget.controller,
       offsetToArmed: _indicatorSize,
-      leadingGlowVisible: false,
-      trailingGlowVisible: false,
+      leadingScrollIndicatorVisible: false,
+      trailingScrollIndicatorVisible: false,
       onRefresh: widget.onRefresh,
       onStateChanged: (change) {
         if (change.didChange(to: IndicatorState.loading)) {

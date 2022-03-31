@@ -16,9 +16,9 @@ class ExampleIndicatorScreen extends StatelessWidget {
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: CustomRefreshIndicator(
-          leadingGlowVisible: false,
+          leadingScrollIndicatorVisible: false,
+          trailingScrollIndicatorVisible: false,
           offsetToArmed: 200.0,
-          trailingGlowVisible: false,
           builder: customIndicator.builder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: const ExampleList(),
