@@ -33,8 +33,9 @@ class _Cloud {
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
   const PlaneIndicator({
+    Key? key,
     required this.child,
-  });
+  }) : super(key: key);
 
   @override
   _PlaneIndicatorState createState() => _PlaneIndicatorState();
@@ -64,7 +65,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 10.0,
       image: AssetImage(_Cloud._assets[1]),
       width: 100,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._light,
@@ -72,7 +73,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 25.0,
       image: AssetImage(_Cloud._assets[3]),
       width: 40,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._light,
@@ -80,7 +81,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 65.0,
       image: AssetImage(_Cloud._assets[2]),
       width: 60,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._dark,
@@ -88,7 +89,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 70.0,
       image: AssetImage(_Cloud._assets[3]),
       width: 100,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
     _Cloud(
       color: _Cloud._normal,
@@ -96,17 +97,18 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
       dy: 10,
       image: AssetImage(_Cloud._assets[0]),
       width: 80,
-      duration: Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1600),
     ),
   ];
 
   void _setupCloudsAnimationControllers() {
-    for (final cloud in _clouds)
+    for (final cloud in _clouds) {
       cloud.controller = AnimationController(
         vsync: this,
         duration: cloud.duration,
         value: cloud.initialValue,
       );
+    }
   }
 
   void _startPlaneAnimation() {
@@ -116,19 +118,25 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
   void _stopPlaneAnimation() {
     _planeController
       ..stop()
-      ..animateTo(0.0, duration: Duration(milliseconds: 100));
+      ..animateTo(0.0, duration: const Duration(milliseconds: 100));
   }
 
   void _stopCloudAnimation() {
-    for (final cloud in _clouds) cloud.controller!.stop();
+    for (final cloud in _clouds) {
+      cloud.controller!.stop();
+    }
   }
 
   void _startCloudAnimation() {
-    for (final cloud in _clouds) cloud.controller!.repeat();
+    for (final cloud in _clouds) {
+      cloud.controller!.repeat();
+    }
   }
 
   void _disposeCloudsControllers() {
-    for (final cloud in _clouds) cloud.controller!.dispose();
+    for (final cloud in _clouds) {
+      cloud.controller!.dispose();
+    }
   }
 
   @override
@@ -142,107 +150,109 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final plane = AnimatedBuilder(
-      animation: _planeController,
-      child: Image.asset(
-        "assets/plane_indicator/plane.png",
-        width: 172,
-        height: 50,
-        fit: BoxFit.contain,
-      ),
-      builder: (BuildContext context, Widget? child) {
-        return Transform.translate(
-          offset: Offset(
-              0.0, 10 * (0.5 - _planeTween.transform(_planeController.value))),
-          child: child,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        final plane = AnimatedBuilder(
+          animation: _planeController,
+          child: Image.asset(
+            "assets/plane_indicator/plane.png",
+            width: 172,
+            height: 50,
+            fit: BoxFit.contain,
+          ),
+          builder: (BuildContext context, Widget? child) {
+            return Transform.translate(
+              offset: Offset(0.0,
+                  10 * (0.5 - _planeTween.transform(_planeController.value))),
+              child: child,
+            );
+          },
         );
-      },
-    );
-    return CustomRefreshIndicator(
-      offsetToArmed: _offsetToArmed,
-      child: widget.child,
-      onRefresh: () => Future.delayed(const Duration(seconds: 3)),
-      builder:
-          (BuildContext context, Widget child, IndicatorController controller) {
-        return AnimatedBuilder(
-          animation: controller,
-          child: child,
-          builder: (context, child) {
-            final currentState = controller.state;
-            if (_prevState == IndicatorState.armed &&
-                currentState == IndicatorState.loading) {
-              _startCloudAnimation();
-              _startPlaneAnimation();
-            } else if (_prevState == IndicatorState.loading &&
-                currentState == IndicatorState.hiding) {
-              _stopPlaneAnimation();
-            } else if (_prevState == IndicatorState.hiding &&
-                currentState != _prevState) {
-              _stopCloudAnimation();
-            }
+        return CustomRefreshIndicator(
+          offsetToArmed: _offsetToArmed,
+          child: widget.child,
+          onRefresh: () => Future.delayed(const Duration(seconds: 3)),
+          builder: (BuildContext context, Widget child,
+              IndicatorController controller) {
+            return AnimatedBuilder(
+              animation: controller,
+              child: child,
+              builder: (context, child) {
+                final currentState = controller.state;
+                if (_prevState == IndicatorState.armed &&
+                    currentState == IndicatorState.loading) {
+                  _startCloudAnimation();
+                  _startPlaneAnimation();
+                } else if (_prevState == IndicatorState.loading &&
+                    currentState == IndicatorState.hiding) {
+                  _stopPlaneAnimation();
+                } else if (_prevState == IndicatorState.hiding &&
+                    currentState != _prevState) {
+                  _stopCloudAnimation();
+                }
 
-            _prevState = currentState;
+                _prevState = currentState;
 
-            return Stack(
-              clipBehavior: Clip.hardEdge,
-              children: <Widget>[
-                if (_prevState != IndicatorState.idle)
-                  Container(
-                    height: _offsetToArmed * controller.value,
-                    color: Color(0xFFFDFEFF),
-                    width: double.infinity,
-                    child: AnimatedBuilder(
-                      animation: _clouds.first.controller!,
-                      builder: (BuildContext context, Widget? child) {
-                        return Stack(
-                          clipBehavior: Clip.hardEdge,
-                          children: <Widget>[
-                            for (final cloud in _clouds)
-                              Transform.translate(
-                                offset: Offset(
-                                  ((screenWidth + cloud.width!) *
-                                          cloud.controller!.value) -
-                                      cloud.width!,
-                                  cloud.dy! * controller.value,
-                                ),
-                                child: OverflowBox(
-                                  minWidth: cloud.width,
-                                  minHeight: cloud.width,
-                                  maxHeight: cloud.width,
-                                  maxWidth: cloud.width,
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    child: Image(
-                                      color: cloud.color,
-                                      image: cloud.image!,
-                                      fit: BoxFit.contain,
+                return Stack(
+                  clipBehavior: Clip.hardEdge,
+                  children: <Widget>[
+                    if (_prevState != IndicatorState.idle)
+                      Container(
+                        height: _offsetToArmed * controller.value,
+                        color: const Color(0xFFFDFEFF),
+                        width: double.infinity,
+                        child: AnimatedBuilder(
+                          animation: _clouds.first.controller!,
+                          builder: (BuildContext context, Widget? child) {
+                            return Stack(
+                              clipBehavior: Clip.hardEdge,
+                              children: <Widget>[
+                                for (final cloud in _clouds)
+                                  Transform.translate(
+                                    offset: Offset(
+                                      ((screenWidth + cloud.width!) *
+                                              cloud.controller!.value) -
+                                          cloud.width!,
+                                      cloud.dy! * controller.value,
+                                    ),
+                                    child: OverflowBox(
+                                      minWidth: cloud.width,
+                                      minHeight: cloud.width,
+                                      maxHeight: cloud.width,
+                                      maxWidth: cloud.width,
+                                      alignment: Alignment.topLeft,
+                                      child: Image(
+                                        color: cloud.color,
+                                        image: cloud.image!,
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
 
-                            /// plane
-                            Center(
-                              child: OverflowBox(
-                                child: plane,
-                                maxWidth: 172,
-                                minWidth: 172,
-                                maxHeight: 50,
-                                minHeight: 50,
-                                alignment: Alignment.center,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                                /// plane
+                                Center(
+                                  child: OverflowBox(
+                                    child: plane,
+                                    maxWidth: 172,
+                                    minWidth: 172,
+                                    maxHeight: 50,
+                                    minHeight: 50,
+                                    alignment: Alignment.center,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    Transform.translate(
+                      offset: Offset(0.0, _offsetToArmed * controller.value),
+                      child: child,
                     ),
-                  ),
-                Transform.translate(
-                  offset: Offset(0.0, _offsetToArmed * controller.value),
-                  child: child,
-                ),
-              ],
+                  ],
+                );
+              },
             );
           },
         );

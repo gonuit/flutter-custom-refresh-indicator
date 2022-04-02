@@ -2,9 +2,10 @@ import 'package:example/indicators/check_mark_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CheckMarkIndicatorScreen extends StatefulWidget {
+  const CheckMarkIndicatorScreen({Key? key}) : super(key: key);
+
   @override
   _CheckMarkIndicatorScreenState createState() =>
       _CheckMarkIndicatorScreenState();
@@ -13,12 +14,12 @@ class CheckMarkIndicatorScreen extends StatefulWidget {
 class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: appBackgroundColor,
-      appBar: const ExampleAppBar(),
+      appBar: ExampleAppBar(),
       body: SafeArea(
         child: CheckMarkIndicator(
-          child: const ExampleList(),
+          child: ExampleList(),
         ),
       ),
     );

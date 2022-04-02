@@ -1,24 +1,13 @@
-# Flutter Custom Refresh Indicator
+![Cover image](/readme/cover.png)
+# Custom Refresh Indicator
 
 [![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
 
-This package provides `CustomRefreshIndicator` widget that make it easy to implement your own custom refresh indicator. It listens for scroll events from scroll widget passed to child argument and parsing it to data easy for custom refresh indicator implementation. Indicator data is provided by IndicatorController (third argument of builder method). Long story short... thats it!
+A flutter package that allows you to easily create a custom refresh indicator widget.
 
-If there is something that can be improved, fixed or you just have some great idea feel free to open github issue [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/issues) or open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
+### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
 
-If you implemented your own custom refresh indicator with this library and you want it to be mentioned here or provided as an example to the eample app, just open a pull request [HERE](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls).
-
-### Table of Contents
-
-- [Flutter Custom Refresh Indicator](#flutter-custom-refresh-indicator)
-  - [Table of Contents](#table-of-contents)
-- [QUICK START](#quick-start)
-- [Examples](#examples)
-- [Documentation](#documentation)
-  - [CustomRefreshIndicator widget](#customrefreshindicator-widget)
-  - [IndicatorController](#indicatorcontroller)
-    - [Controller state and value changes.](#controller-state-and-value-changes)
-    - [`didStateChange`](#didstatechange)
+---
 
 # QUICK START
 
@@ -67,31 +56,55 @@ CustomRefreshIndicator(
 
 Almost all of these examples are available in the example application.
 
-| Plane indicator [[SOURCE CODE](example/lib/indicators/plane_indicator.dart)] | Ice cream indicator [[SOURCE CODE](example/lib/indicators/ice_cream_indicator.dart)] |
-| :--------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-|                ![plane_indicator](readme/plane_indicator.gif)                |                ![ice_cream_indicator](readme/ice_cream_indicator.gif)                |
+| Plane indicator [[SOURCE](example/lib/indicators/plane_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | Ice cream [[SOURCE](example/lib/indicators/ice_cream_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | Warp [[SOURCE](example/lib/indicators/warp_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
+| :--------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: |
+|                                           ![plane_indicator](readme/plane_indicator.gif)                                           |                                        ![ice_cream_indicator](readme/ice_cream_indicator.gif)                                        |                                     ![warp_indicator](readme/warp_indicator.gif)                                      |
 
-| Warp indicator [[SOURCE CODE](example/lib/indicators/warp_indicator.dart)] |                Envelope indicator                |
-| :------------------------------------------------------------------------: | :----------------------------------------------: |
-|                ![warp_indicator](readme/warp_indicator.gif)                | ![letter_indicator](readme/letter_indicator.gif) |
+| With complete state [[SOURCE](example/lib/indicators/check_mark_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | Pull to fetch more [[SOURCE](example/lib/indicators/swipe_action.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | Envelope [[SOURCE](example/lib/indicators/envelope_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
+| :----------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
+|                                    ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)                                    |                                                  ![fetch_more](readme/fetch_more.gif)                                                   |                                       ![Envelope indicator](readme/envelope_indicator.gif)                                        |
 
-| Indicator with complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)] |                               Your indicator                                |
-| :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
-|           ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)            | Have you created a fancy refresh indicator? This place is for you. Open PR. |
+| Programmatically controlled [[SOURCE](example/lib/screens/programmatically_controlled_indicator_screen.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] |                                                                 Your indicator                                                                  |                                                                 Your indicator                                                                  |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                             ![programmatically_controlled](readme/programmatically_controlled.gif)                                                             | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). |
 
 # Documentation
 
 ## CustomRefreshIndicator widget
 
-`CustomRefreshIndicator` widget provides an absolute minimum functionality that allows you to create and set your own custom indicators.
+The _CustomRefreshIndicator_ widget provides an absolute minimum functionality that allows you to create and set your own custom indicators.
+
+### onStateChanged
+
+The _onStateChanged_ callback is called everytime _IndicatorState_ has been changed.  
+This is a convenient place for tracking indicator state changes. For a reference take a look at the [example check mark indicator widget](example/lib/indicators/check_mark_indicator.dart).
+
+Example usage:
+
+```dart
+CustomRefreshIndicator(
+  onRefresh: onRefresh,
+  // You can track state changes here.
+  onStateChanged: (IndicatorStateChange change) {
+    if (change.didChange(from: IndicatorState.dragging, to: IndicatorState.armed)) {
+      // Do something...
+    } else if(change.didChange(to: IndicatorState.idle)) {
+      // Do something...
+    }
+    // And so on...
+  }
+  // ...
+)
+```
 
 ## IndicatorController
 
 ### Controller state and value changes.
 
-The best way to understand how the "CustomRefreshIndicator" widget changes its controller data is to see the example 😉. An example is available in the example application.
+The best way to understand how the _CustomRefreshIndicator_ widget changes its controller data is to see the example 😉. An example is available in the example application.
 
-![Controller_Data](readme/controller_data.gif)
+[![Controller data example](readme/controller_data.gif)](https://custom-refresh-indicator.klyta.it/#/presentation)
+[Online example](https://custom-refresh-indicator.klyta.it/#/presentation)
 
 | state        | value   | value description                                                                                       | Description                                                                                                                                                                                                                              |
 | ------------ | :------ | :------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -104,50 +117,11 @@ The best way to understand how the "CustomRefreshIndicator" widget changes its c
 
 ---
 
-### IndicatorStateHelper
+### Support
 
-With the IndicatorStateHelper class, you can easily track indicator's state changes. Example usage can be found [HERE](example/lib/indicators/check_mark_indicator.dart).
-  
-All you need to do is to update it's value on every controller update.
-```dart
-CustomRefreshIndicator(
-  onRefresh: onRefresh,
-  child: widget.child,
-  builder: (
-    BuildContext context,
-    Widget child,
-    IndicatorController controller,
-  ) => AnimatedBuilder(
-    animation: controller,
-    builder: (BuildContext context, Widget? _) {
-      /// Now every state change will be tracked by the helper class.
-      _helper.update(controller.state);
-    // ...
-```
-Then you can simply track state changes:
-```dart
-/// When the state changes to [idle]
-if(_helper.didStateChange(to: IndicatorState.idle)) {
-  // Code...
-}
+If you like this package, you have learned something from it, or you just don't know what to do with your money 😅 just buy me a cup of coffee ☕️ and this dose of caffeine will put a smile on my face which in turn will help me improve this package. Also as a thank you, you will be mentioned in this readme as a sponsor.
 
-/// When the state changes from [idle] to [dragging]
-if (_helper.didStateChange(
-  from: IndicatorState.idle,
-  to: IndicatorState.dragging,
-)) {
-  // Code...
-}
-
-/// When the state changes from [idle] to another.
-if (_helper.didStateChange(
-  from: IndicatorState.idle,
-)) {
-  // Code...
-}
-
-/// When the state changes.
-if (_helper.didStateChange()) {
-  // Code...
-}
-```
+<div align="center">
+<a href="https://www.buymeacoffee.com/kamilklyta" target="_blank"><img height="60px" width="217px" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+</div>
+<p align="center">Have a nice day! 👋</p>

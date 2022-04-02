@@ -1,11 +1,12 @@
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../indicators/warp_indicator.dart';
 
 class WarpIndicatorScreen extends StatefulWidget {
+  const WarpIndicatorScreen({Key? key}) : super(key: key);
+
   @override
   _WarpIndicatorScreenState createState() => _WarpIndicatorScreenState();
 }
@@ -18,6 +19,7 @@ class _WarpIndicatorScreenState extends State<WarpIndicatorScreen> {
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: WarpIndicator(
+          onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: const ExampleList(),
         ),
       ),

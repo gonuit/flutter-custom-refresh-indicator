@@ -1,5 +1,26 @@
 part of custom_refresh_indicator;
 
+/// Deprecated in favor of the [CustomRefreshIndicator.onStateChanged]
+/// function argument and [IndicatorStateChange] class.
+///
+/// ```dart
+/// CustomRefreshIndicator(
+///  onStateChanged: (change) {
+///     if (change.didChange(to: IndicatorState.loading)) {
+///       _startShakeAnimation();
+///     } else if (change.didChange(to: IndicatorState.idle)) {
+///       _stopShakeAnimation();
+///     }
+///   },
+///   child: child,
+///   builder: (context, child, controller) {
+///     /***/
+///   },
+/// );
+/// ```
+@Deprecated(
+  'Deprecated in favor of the CustomRefreshIndicator.onStateChanged function.',
+)
 class IndicatorStateHelper {
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get previousState => _previousState;
@@ -23,8 +44,8 @@ class IndicatorStateHelper {
 
   /// Updates [state] and [previousState] data.
   void update(IndicatorState state) {
-    this._previousState = this._currentState;
-    this._currentState = state;
+    _previousState = _currentState;
+    _currentState = state;
   }
 
   /// - When [from] and [to] are provided - returns `true` when state did change [from] to [to].
@@ -33,8 +54,9 @@ class IndicatorStateHelper {
   /// - When [from] and [to] equals `null` - returns `true` for any state change.
   bool didStateChange({IndicatorState? from, IndicatorState? to}) {
     final stateChanged = _previousState != _currentState;
-    if (to == null && from != null)
+    if (to == null && from != null) {
       return _previousState == from && stateChanged;
+    }
     if (to != null && from == null) return _currentState == to && stateChanged;
     if (to == null && from == null) return stateChanged;
     return _previousState == from && _currentState == to;

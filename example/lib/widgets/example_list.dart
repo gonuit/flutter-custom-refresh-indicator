@@ -3,22 +3,48 @@ import 'package:flutter/material.dart';
 import 'example_app_bar.dart';
 
 class ExampleList extends StatelessWidget {
+  final int itemCount;
+  final bool countElements;
+
   final Color backgroundColor;
-  const ExampleList([this.backgroundColor = appBackgroundColor]);
+  const ExampleList({
+    Key? key,
+    this.countElements = false,
+    this.backgroundColor = appBackgroundColor,
+    this.itemCount = 4,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(color: backgroundColor, boxShadow: [
-        BoxShadow(
-          blurRadius: 2,
-          color: Colors.black12,
-          spreadRadius: 0.5,
-          offset: Offset(0.0, .0),
-        )
-      ]),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 2,
+            color: Colors.black12,
+            spreadRadius: 0.5,
+            offset: Offset(0.0, .0),
+          )
+        ],
+      ),
       child: ListView.separated(
-        itemBuilder: (BuildContext context, int index) => const Element(),
-        itemCount: 4,
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
+        itemBuilder: (BuildContext context, int index) => countElements
+            ? Element(
+                child: Center(
+                  child: Text(
+                    "${index + 1}",
+                    style: const TextStyle(
+                      color: appContentColor,
+                    ),
+                  ),
+                ),
+              )
+            : const Element(),
+        itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => const Divider(
           height: 0,
           color: Color(0xFFe2d6ce),
@@ -30,7 +56,9 @@ class ExampleList extends StatelessWidget {
 }
 
 class Element extends StatelessWidget {
-  const Element();
+  final Widget? child;
+
+  const Element({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +68,14 @@ class Element extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FakeBox(height: 80, width: 80),
+          FakeBox(height: 80, width: 80, child: child),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 FakeBox(height: 8, width: double.infinity),
                 FakeBox(height: 8, width: double.infinity),
                 FakeBox(height: 8, width: 200),
@@ -61,17 +89,19 @@ class Element extends StatelessWidget {
 }
 
 class FakeBox extends StatelessWidget {
+  final Widget? child;
   const FakeBox({
     Key? key,
     required this.width,
     required this.height,
+    this.child,
   }) : super(key: key);
 
   final double width;
   final double height;
 
-  static const _boxDecoration = const BoxDecoration(
-    color: const Color(0xFFE2D8D7),
+  static const _boxDecoration = BoxDecoration(
+    color: Color(0xFFE2D8D7),
     borderRadius: BorderRadius.all(
       Radius.circular(10),
     ),
@@ -84,6 +114,7 @@ class FakeBox extends StatelessWidget {
       width: width,
       height: height,
       decoration: _boxDecoration,
+      child: child,
     );
   }
 }

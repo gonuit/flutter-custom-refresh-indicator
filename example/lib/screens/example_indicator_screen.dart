@@ -5,6 +5,8 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class ExampleIndicatorScreen extends StatelessWidget {
+  const ExampleIndicatorScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final CustomIndicatorConfig customIndicator =
@@ -14,9 +16,9 @@ class ExampleIndicatorScreen extends StatelessWidget {
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: CustomRefreshIndicator(
-          leadingGlowVisible: false,
+          leadingScrollIndicatorVisible: false,
+          trailingScrollIndicatorVisible: false,
           offsetToArmed: 200.0,
-          trailingGlowVisible: false,
           builder: customIndicator.builder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: const ExampleList(),

@@ -1,7 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
@@ -18,11 +17,9 @@ class CheckMarkIndicator extends StatefulWidget {
 class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
     with SingleTickerProviderStateMixin {
   static const _indicatorSize = 150.0;
-  final _helper = IndicatorStateHelper();
 
   /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
-
 
   ScrollDirection prevScrollDirection = ScrollDirection.idle;
 
@@ -33,6 +30,20 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
       child: widget.child,
       completeStateDuration: const Duration(seconds: 2),
+      onStateChanged: (change) {
+        /// set [_renderCompleteState] to true when controller.state become completed
+        if (change.didChange(to: IndicatorState.complete)) {
+          setState(() {
+            _renderCompleteState = true;
+          });
+
+          /// set [_renderCompleteState] to false when controller.state become idle
+        } else if (change.didChange(to: IndicatorState.idle)) {
+          setState(() {
+            _renderCompleteState = false;
+          });
+        }
+      },
       builder: (
         BuildContext context,
         Widget child,
@@ -43,8 +54,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
             AnimatedBuilder(
               animation: controller,
               builder: (BuildContext context, Widget? _) {
-                _helper.update(controller.state);
-
                 if (controller.scrollingDirection == ScrollDirection.reverse &&
                     prevScrollDirection == ScrollDirection.forward) {
                   controller.stopDrag();
@@ -52,14 +61,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
 
                 prevScrollDirection = controller.scrollingDirection;
 
-                /// set [_renderCompleteState] to true when controller.state become completed
-                if (_helper.didStateChange(to: IndicatorState.complete)) {
-                  _renderCompleteState = true;
-
-                  /// set [_renderCompleteState] to false when controller.state become idle
-                } else if (_helper.didStateChange(to: IndicatorState.idle)) {
-                  _renderCompleteState = false;
-                }
                 final containerHeight = controller.value * _indicatorSize;
 
                 return Container(
@@ -85,7 +86,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
+                                    const AlwaysStoppedAnimation(Colors.white),
                                 value:
                                     controller.isDragging || controller.isArmed
                                         ? controller.value.clamp(0.0, 1.0)

@@ -5,7 +5,7 @@ class InfiniteRatation extends StatefulWidget {
   final bool running;
   final bool reverse;
 
-  InfiniteRatation({
+  const InfiniteRatation({
     required this.child,
     required this.running,
     this.reverse = false,

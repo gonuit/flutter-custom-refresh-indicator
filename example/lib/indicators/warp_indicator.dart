@@ -15,11 +15,17 @@ typedef StarColorGetter = Color Function(int index);
 class WarpIndicator extends StatefulWidget {
   final Widget child;
   final int starsCount;
+  final OnRefresh onRefresh;
+  final IndicatorController? controller;
   final Color skyColor;
   final StarColorGetter starColorGetter;
+  final Key? indicatorKey;
 
   const WarpIndicator({
     Key? key,
+    this.indicatorKey,
+    this.controller,
+    required this.onRefresh,
     required this.child,
     this.starsCount = 30,
     this.skyColor = Colors.black,
@@ -37,15 +43,14 @@ class _WarpIndicatorState extends State<WarpIndicator>
     with SingleTickerProviderStateMixin {
   static const _indicatorSize = 150.0;
   final _random = Random();
-  final _helper = IndicatorStateHelper();
   WarpAnimationState _state = WarpAnimationState.stopped;
 
   List<Star> stars = [];
-  var _offsetTween = Tween<Offset>(
+  final _offsetTween = Tween<Offset>(
     begin: Offset.zero,
     end: Offset.zero,
   );
-  var _angleTween = Tween<double>(
+  final _angleTween = Tween<double>(
     begin: 0,
     end: 0,
   );
@@ -59,7 +64,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
   void initState() {
     shakeController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 100),
     );
     super.initState();
   }
@@ -112,10 +117,19 @@ class _WarpIndicatorState extends State<WarpIndicator>
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
+      key: widget.indicatorKey,
+      controller: widget.controller,
       offsetToArmed: _indicatorSize,
-      leadingGlowVisible: false,
-      trailingGlowVisible: false,
-      onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+      leadingScrollIndicatorVisible: false,
+      trailingScrollIndicatorVisible: false,
+      onRefresh: widget.onRefresh,
+      onStateChanged: (change) {
+        if (change.didChange(to: IndicatorState.loading)) {
+          _startShakeAnimation();
+        } else if (change.didChange(to: IndicatorState.idle)) {
+          _stopShakeAnimation();
+        }
+      },
       child: widget.child,
       builder: (
         BuildContext context,
@@ -136,7 +150,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
                           stars: stars,
                           color: widget.skyColor,
                         ),
-                        child: SizedBox.expand(),
+                        child: const SizedBox.expand(),
                       );
                     },
                   );
@@ -144,18 +158,6 @@ class _WarpIndicatorState extends State<WarpIndicator>
             AnimatedBuilder(
               animation: animation,
               builder: (context, _) {
-                _helper.update(controller.state);
-                if (_helper.didStateChange(
-                  to: IndicatorState.loading,
-                )) {
-                  SchedulerBinding.instance
-                      ?.addPostFrameCallback((_) => _startShakeAnimation());
-                } else if (_helper.didStateChange(
-                  to: IndicatorState.idle,
-                )) {
-                  SchedulerBinding.instance
-                      ?.addPostFrameCallback((_) => _stopShakeAnimation());
-                }
                 return Transform.scale(
                   scale: _scaleTween.transform(controller.value),
                   child: Builder(builder: (context) {
@@ -214,8 +216,8 @@ class Star {
     final random = Random();
     angle = random.nextDouble() * pi * 3;
     speed = Offset(cos(angle), sin(angle));
-    final minSpeedScale = 20;
-    final maxSpeedScale = 35;
+    const minSpeedScale = 20;
+    const maxSpeedScale = 35;
     final speedScale = minSpeedScale +
         random.nextInt(maxSpeedScale - minSpeedScale).toDouble();
     speed = speed.scale(
@@ -290,7 +292,7 @@ class Sky extends CustomPainter {
       return [
         CustomPainterSemantics(
           rect: rect,
-          properties: SemanticsProperties(
+          properties: const SemanticsProperties(
             label: 'Lightspeed animation.',
             textDirection: TextDirection.ltr,
           ),

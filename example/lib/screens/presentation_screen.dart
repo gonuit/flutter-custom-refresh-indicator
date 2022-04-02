@@ -3,6 +3,8 @@ import 'package:example/widgets/example_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class PresentationScreen extends StatefulWidget {
+  const PresentationScreen({Key? key}) : super(key: key);
+
   @override
   _PresentationScreenState createState() => _PresentationScreenState();
 }
@@ -25,14 +27,17 @@ class _PresentationScreenState extends State<PresentationScreen> {
           loadingToIdleDuration: const Duration(seconds: 1),
           armedToLoadingDuration: const Duration(seconds: 1),
           draggingToIdleDuration: const Duration(seconds: 1),
-          leadingGlowVisible: false,
-          trailingGlowVisible: false,
+          leadingScrollIndicatorVisible: false,
+          trailingScrollIndicatorVisible: false,
           offsetToArmed: 100.0,
           controller: _controller,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: DecoratedBox(
-            decoration: BoxDecoration(color: appBackgroundColor),
+            decoration: const BoxDecoration(color: appBackgroundColor),
             child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
               children: [
                 AnimatedBuilder(
                   animation: _controller!,
@@ -58,10 +63,10 @@ class _PresentationScreenState extends State<PresentationScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Center(
+                              const Center(
                                 child: Text(
                                   "IndicatorController",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -124,14 +129,12 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                             : Colors.lightGreen,
                                       ),
                                     ),
-                                    child: Container(
-                                      child: Text(
-                                        _controller!.isRefreshEnabled
-                                            ? "DISABLE"
-                                            : "ENABLE",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
+                                    child: Text(
+                                      _controller!.isRefreshEnabled
+                                          ? "DISABLE"
+                                          : "ENABLE",
+                                      style: const TextStyle(
+                                        color: Colors.white,
                                       ),
                                     ),
                                     onPressed: () =>
@@ -161,7 +164,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                 Container(
                   height: 100,
                   color: Colors.amber,
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "NOT ARMED",
                       style: TextStyle(
@@ -177,7 +180,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                   width: double.infinity,
                   height: 50,
                   color: Colors.greenAccent,
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "ARMED",
                       style: TextStyle(
