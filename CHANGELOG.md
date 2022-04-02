@@ -15,6 +15,8 @@
   - Use the `flutter_lints` package for analysis.
   - Deprecate `leadingGlowVisible` and `trailingGlowVisible` in favor of `leadingScrollIndicatorVisible` and `trailingScrollIndicatorVisible` arguments.
   - Added `reversed` argument that allows you to trigger a refresh indicator from the end of the list.
+  - Added `envelope` example.
+  - Added `pull to fetch more` example.
 
 ## 1.0.0
 
