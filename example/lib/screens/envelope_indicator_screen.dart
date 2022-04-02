@@ -1,4 +1,4 @@
-import 'package:example/indicators/envelop_indicator.dart';
+import 'package:example/indicators/envelope_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class EnvelopIndicatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const ExampleAppBar(
-        title: "Envelop indicator",
+        title: "Envelope indicator",
       ),
       body: EnvelopRefreshIndicator(
         child: const ExampleList(),

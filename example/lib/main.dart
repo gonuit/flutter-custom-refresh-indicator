@@ -1,4 +1,4 @@
-import 'package:example/screens/envelop_indicator_screen.dart';
+import 'package:example/screens/envelope_indicator_screen.dart';
 import 'package:example/screens/presentation_screen.dart';
 import 'package:example/screens/programmatically_controlled_indicator_screen.dart';
 import 'package:example/widgets/web_frame.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         '/presentation': (context) => const PresentationScreen(),
         '/check-mark': (context) => const CheckMarkIndicatorScreen(),
         '/warp': (context) => const WarpIndicatorScreen(),
-        '/envelop': (context) => const EnvelopIndicatorScreen(),
+        '/envelope': (context) => const EnvelopIndicatorScreen(),
         '/fetch-more': (context) => const FetchMoreScreen(),
         '/programmatically-controlled': (context) =>
             const ProgrammaticallyControlled(),
@@ -147,11 +147,11 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Envelop indicator"),
+                child: const Text("Envelope indicator"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/envelop',
+                '/envelope',
               ),
             ),
             const SizedBox(height: 15),
