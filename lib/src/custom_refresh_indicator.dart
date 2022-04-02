@@ -61,8 +61,8 @@ class CustomRefreshIndicator extends StatefulWidget {
 
   /// Function in wich custom refresh indicator should be implemented.
   ///
-  /// ### IMPORTANT: 
-  /// IT IS NOT CALLED ON EVERY [IndicatorController] DATA CHANGE.  
+  /// ### IMPORTANT:
+  /// IT IS NOT CALLED ON EVERY [IndicatorController] DATA CHANGE.
   /// To rebuild widget on every [IndicatorController] data change, consider
   /// using [IndicatorController] that is passed to this function as the third argument
   /// in combination with [AnimationBuilder].
