@@ -4,10 +4,12 @@ import 'example_app_bar.dart';
 
 class ExampleList extends StatelessWidget {
   final int itemCount;
+  final bool countElements;
 
   final Color backgroundColor;
   const ExampleList({
     Key? key,
+    this.countElements = false,
     this.backgroundColor = appBackgroundColor,
     this.itemCount = 4,
   }) : super(key: key);
@@ -30,7 +32,18 @@ class ExampleList extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(
           parent: ClampingScrollPhysics(),
         ),
-        itemBuilder: (BuildContext context, int index) => const Element(),
+        itemBuilder: (BuildContext context, int index) => countElements
+            ? Element(
+                child: Center(
+                  child: Text(
+                    "${index + 1}",
+                    style: const TextStyle(
+                      color: appContentColor,
+                    ),
+                  ),
+                ),
+              )
+            : const Element(),
         itemCount: itemCount,
         separatorBuilder: (BuildContext context, int index) => const Divider(
           height: 0,
@@ -43,7 +56,9 @@ class ExampleList extends StatelessWidget {
 }
 
 class Element extends StatelessWidget {
-  const Element({Key? key}) : super(key: key);
+  final Widget? child;
+
+  const Element({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +68,7 @@ class Element extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const FakeBox(height: 80, width: 80),
+          FakeBox(height: 80, width: 80, child: child),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
@@ -74,10 +89,12 @@ class Element extends StatelessWidget {
 }
 
 class FakeBox extends StatelessWidget {
+  final Widget? child;
   const FakeBox({
     Key? key,
     required this.width,
     required this.height,
+    this.child,
   }) : super(key: key);
 
   final double width;
@@ -97,6 +114,7 @@ class FakeBox extends StatelessWidget {
       width: width,
       height: height,
       decoration: _boxDecoration,
+      child: child,
     );
   }
 }

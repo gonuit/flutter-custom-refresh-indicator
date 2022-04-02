@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'indicators/simple_indicator.dart';
 import 'screens/example_indicator_screen.dart';
+import 'screens/fetch_more_screen.dart';
 import 'screens/ice_cream_indicator_screen.dart';
 import 'screens/plane_indicator_screen.dart';
 import 'screens/check_mark_indicator_screen.dart';
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/example': (context) => const ExampleIndicatorScreen(),
         '/plane': (context) => const PlaneIndicatorScreen(),
-        '/ice_cream': (context) => const IceCreamIndicatorScreen(),
+        '/ice-cream': (context) => const IceCreamIndicatorScreen(),
         '/presentation': (context) => const PresentationScreen(),
         '/check-mark': (context) => const CheckMarkIndicatorScreen(),
         '/warp': (context) => const WarpIndicatorScreen(),
+        '/fetch-more': (context) => const FetchMoreScreen(),
         '/programmatically-controlled': (context) =>
             const ProgrammaticallyControlled(),
       },
@@ -57,7 +59,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Presentation"),
+                child: const Text("Controller presentation"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -111,7 +113,7 @@ class MainScreen extends StatelessWidget {
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/ice_cream',
+                '/ice-cream',
               ),
             ),
             const SizedBox(height: 15),
@@ -119,7 +121,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Check mark"),
+                child: const Text("Witch complete state"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -149,6 +151,18 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/programmatically-controlled',
+              ),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Swipe to fetch more"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/fetch-more',
               ),
             ),
           ],

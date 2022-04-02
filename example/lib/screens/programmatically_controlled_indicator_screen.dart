@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/indicators/warp_indicator.dart';
+import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
@@ -33,8 +34,8 @@ class _ProgrammaticallyControlledState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Programmatically-controlled"),
+      appBar: ExampleAppBar(
+        title: "Programmatically-controlled",
         actions: [
           AnimatedBuilder(
             animation: controller,
