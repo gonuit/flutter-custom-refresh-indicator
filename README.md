@@ -102,14 +102,8 @@ CustomRefreshIndicator(
 
 The best way to understand how the _CustomRefreshIndicator_ widget changes its controller data is to see the example 😉. An example is available in the example application.
 
-<div align="center">
-  <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-    <img width="300px" src="readme/controller_data.gif" />
-  </a>
-  <p>
-    <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">Online example</a>
-  </p>
-<div>
+[![Controller data example](readme/controller_data.gif)](https://custom-refresh-indicator.klyta.it/#/presentation)
+[Online example](https://custom-refresh-indicator.klyta.it/#/presentation)
 
 | state        | value   | value description                                                                                       | Description                                                                                                                                                                                                                              |
 | ------------ | :------ | :------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
