@@ -14,6 +14,7 @@
   - Initial support for programmatically-controlled indicators has been added. Added the `show`,` hide` and `refresh` methods to the` CustomRefreshIndicatorState` class. It can be accessed via GlobalKey. Take a look at an [programmatically-controlled screen example](/example/lib/screens/programmatically_controlled_indicator_screen.dart).
   - Use the `flutter_lints` package for analysis.
   - Deprecate `leadingGlowVisible` and `trailingGlowVisible` in favor of `leadingScrollIndicatorVisible` and `trailingScrollIndicatorVisible` arguments.
+  - Added `reversed` argument that allows you to trigger a refresh indicator from the end of the list.
 
 ## 1.0.0
 

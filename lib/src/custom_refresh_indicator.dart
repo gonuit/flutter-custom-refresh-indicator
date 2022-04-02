@@ -55,12 +55,14 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// to calculate [IndicatorController] data.
   final Widget child;
 
+  /// Allows you to trigger the indicator from the other side
+  /// of the scrollview (from the end of the list).
+  final bool reversed;
+
   /// Function in wich custom refresh indicator should be implemented.
   ///
-  /// IMPORTANT:
-  /// IT IS NOT CALLED ON EVERY [IndicatorController] DATA CHANGE.
-  ///
-  /// TIP:
+  /// ### IMPORTANT: 
+  /// IT IS NOT CALLED ON EVERY [IndicatorController] DATA CHANGE.  
   /// To rebuild widget on every [IndicatorController] data change, consider
   /// using [IndicatorController] that is passed to this function as the third argument
   /// in combination with [AnimationBuilder].
@@ -89,6 +91,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     required this.child,
     required this.onRefresh,
     required this.builder,
+    this.reversed = false,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
@@ -196,8 +199,10 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollStartNotification(ScrollStartNotification notification) {
-    _canStart = notification.metrics.extentBefore == 0 &&
-        controller.state == IndicatorState.idle;
+    _canStart = controller.state == IndicatorState.idle &&
+        (widget.reversed
+            ? notification.metrics.extentAfter == 0
+            : notification.metrics.extentBefore == 0);
 
     if (_canStart) setIndicatorState(IndicatorState.dragging);
 
@@ -209,22 +214,36 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// hide when list starts to scroll
     if (controller.state == IndicatorState.dragging ||
         controller.state == IndicatorState.armed) {
-      if (notification.metrics.extentBefore > 0.0) {
-        _hide();
+      if (widget.reversed) {
+        if (notification.metrics.extentAfter > 0.0) {
+          _hide();
+        } else {
+          _dragOffset += notification.scrollDelta!;
+          _calculateDragOffset(notification.metrics.viewportDimension);
+        }
       } else {
-        _dragOffset -= notification.scrollDelta!;
-        _calculateDragOffset(notification.metrics.viewportDimension);
+        if (notification.metrics.extentBefore > 0.0) {
+          _hide();
+        } else {
+          _dragOffset -= notification.scrollDelta!;
+          _calculateDragOffset(notification.metrics.viewportDimension);
+        }
       }
       if (controller.state == IndicatorState.armed &&
           notification.dragDetails == null) {
         _start();
       }
     }
+
     return false;
   }
 
   bool _handleOverscrollNotification(OverscrollNotification notification) {
-    _dragOffset -= notification.overscroll;
+    if (widget.reversed) {
+      _dragOffset += notification.overscroll;
+    } else {
+      _dragOffset -= notification.overscroll;
+    }
     _calculateDragOffset(notification.metrics.viewportDimension);
     return false;
   }
