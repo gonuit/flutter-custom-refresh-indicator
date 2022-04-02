@@ -1,4 +1,4 @@
-![Cover image](/readme/cover.png)
+![Cover image](readme/cover.png)
 # Custom Refresh Indicator
 
 [![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
@@ -103,7 +103,8 @@ CustomRefreshIndicator(
 
 The best way to understand how the _CustomRefreshIndicator_ widget changes its controller data is to see the example 😉. An example is available in the example application.
 
-[![Controller data example](readme/controller_data.gif)](https://custom-refresh-indicator.klyta.it/#/presentation)
+[![Controller data example](readme/controller_data.gif)](https://custom-refresh-indicator.klyta.it/#/presentation)  
+  
 [Online example](https://custom-refresh-indicator.klyta.it/#/presentation)
 
 | state        | value   | value description                                                                                       | Description                                                                                                                                                                                                                              |

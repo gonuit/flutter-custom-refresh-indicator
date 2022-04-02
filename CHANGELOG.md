@@ -1,4 +1,4 @@
-## 1.1.0+2
+## 1.1.1
 ### Fixes:
   - Pub.dev readme file fix.
   - Fix code formatting issues
