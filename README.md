@@ -1,4 +1,5 @@
-# Flutter Custom Refresh Indicator
+![Cover image](/readme/cover.png)
+# Custom Refresh Indicator
 
 [![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
 
