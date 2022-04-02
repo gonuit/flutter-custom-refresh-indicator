@@ -7,6 +7,7 @@ A flutter package that allows you to easily create a custom refresh indicator wi
 ### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
 
 ---
+
 # QUICK START
 
 ```dart
@@ -54,17 +55,17 @@ CustomRefreshIndicator(
 
 Almost all of these examples are available in the example application.
 
-| Plane indicator [[SOURCE CODE](example/lib/indicators/plane_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | Ice cream [[SOURCE CODE](example/lib/indicators/ice_cream_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/ice_cream)] |
-| :--------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-|                ![plane_indicator](readme/plane_indicator.gif)                |                ![ice_cream_indicator](readme/ice_cream_indicator.gif)                |
+| Plane indicator [[SOURCE](example/lib/indicators/plane_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | Ice cream [[SOURCE](example/lib/indicators/ice_cream_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | Warp [[SOURCE](example/lib/indicators/warp_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
+| :-------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: |
+|                                             ![plane_indicator](readme/plane_indicator.gif)                                              |                                          ![ice_cream_indicator](readme/ice_cream_indicator.gif)                                           |                                        ![warp_indicator](readme/warp_indicator.gif)                                        |
 
-| Warp [[SOURCE CODE](example/lib/indicators/warp_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |                Envelope                |
-| :------------------------------------------------------------------------: | :----------------------------------------------: |
-|                ![warp_indicator](readme/warp_indicator.gif)                | ![letter_indicator](readme/letter_indicator.gif) |
+| With complete state [[SOURCE](example/lib/indicators/check_mark_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | Pull to fetch more [[SOURCE](example/lib/indicators/swipe_action.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] |                     Envelope                     |
+| :---------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------: |
+|                                      ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)                                       |                                                     ![fetch_more](readme/fetch_more.gif)                                                     | ![letter_indicator](readme/letter_indicator.gif) |
 
-| With complete state [[SOURCE CODE](example/lib/indicators/check_mark_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] |                               Your indicator                                |
-| :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
-|           ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)            | Have you created a fancy refresh indicator? This place is for you. Open PR. |
+| Programmatically controlled [[SOURCE](example/lib/screens/programmatically_controlled_indicator_screen.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] |                                                                 Your indicator                                                                  |                                                                 Your indicator                                                                  |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                               ![programmatically_controlled](readme/programmatically_controlled.gif)                                                                | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). |
 
 # Documentation
 
@@ -76,8 +77,9 @@ The _CustomRefreshIndicator_ widget provides an absolute minimum functionality t
 
 The _onStateChanged_ callback is called everytime _IndicatorState_ has been changed.  
 This is a convenient place for tracking indicator state changes. For a reference take a look at the [example check mark indicator widget](example/lib/indicators/check_mark_indicator.dart).
-  
+
 Example usage:
+
 ```dart
 CustomRefreshIndicator(
   onRefresh: onRefresh,
@@ -116,10 +118,8 @@ The best way to understand how the _CustomRefreshIndicator_ widget changes its c
 ### Support
 
 If you like this package, you have learned something from it, or you just don't know what to do with your money 😅 just buy me a cup of coffee ☕️ and this dose of caffeine will put a smile on my face which in turn will help me improve this package. Also as a thank you, you will be mentioned in this readme as a sponsor.
-  
+
 <div align="center">
 <a href="https://www.buymeacoffee.com/kamilklyta" target="_blank"><img height="60px" width="217px" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 </div>
 <p align="center">Have a nice day! 👋</p>
-
-
