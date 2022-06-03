@@ -1,3 +1,6 @@
+## 1.1.2
+### Fixes:
+  - Fixed assertion issue reported and resolved by [ziqq](https://github.com/ziqq) in [#29](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/29). For more information, please take a look at the following issue [#28](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/28)
 ## 1.1.1
 ### Fixes:
   - Pub.dev readme file fix.
