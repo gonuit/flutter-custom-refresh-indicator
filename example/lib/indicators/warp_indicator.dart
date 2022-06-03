@@ -164,7 +164,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
                     if (shakeController.value == 1.0 &&
                         _state == WarpAnimationState.playing) {
                       SchedulerBinding.instance
-                          ?.addPostFrameCallback((_) => _resetShakeAnimation());
+                          .addPostFrameCallback((_) => _resetShakeAnimation());
                     }
                     return Transform.rotate(
                       angle: _angleTween.transform(shakeController.value),
