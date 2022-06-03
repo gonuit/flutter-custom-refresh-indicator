@@ -16,7 +16,6 @@ class PositionedIndicatorContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      child: child,
       animation: controller,
       builder: (BuildContext context, Widget? child) {
         final double positionFromSide = -50 + (controller.value * 110);
@@ -50,6 +49,7 @@ class PositionedIndicatorContainer extends StatelessWidget {
           ),
         );
       },
+      child: child,
     );
   }
 }
