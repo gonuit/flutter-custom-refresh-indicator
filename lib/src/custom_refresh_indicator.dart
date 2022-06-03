@@ -206,7 +206,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (_canStart) setIndicatorState(IndicatorState.dragging);
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.setAxisDirection(notification.metrics.axisDirection);
     });
 
