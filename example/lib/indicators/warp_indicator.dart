@@ -5,6 +5,14 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
+
 enum WarpAnimationState {
   stopped,
   playing,
@@ -163,7 +171,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
                   child: Builder(builder: (context) {
                     if (shakeController.value == 1.0 &&
                         _state == WarpAnimationState.playing) {
-                      SchedulerBinding.instance
+                      _ambiguate(SchedulerBinding.instance)!
                           .addPostFrameCallback((_) => _resetShakeAnimation());
                     }
                     return Transform.rotate(
@@ -303,6 +311,7 @@ class Sky extends CustomPainter {
 
   @override
   bool shouldRepaint(Sky oldDelegate) => true;
+
   @override
   bool shouldRebuildSemantics(Sky oldDelegate) => false;
 }
