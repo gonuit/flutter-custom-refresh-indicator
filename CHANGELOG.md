@@ -1,3 +1,5 @@
+## 1.2.1
+- Flutter 3.0.0 migration backward compatibility fix ([#31](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/31)) by [Jordan1122](https://github.com/Jordan1122)
 ## 1.2.0
 ### Improvements:
 - Compatibility improvements for Flutter 3.0.
