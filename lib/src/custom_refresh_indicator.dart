@@ -1,5 +1,13 @@
 part of custom_refresh_indicator;
 
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
+
 typedef IndicatorBuilder = Widget Function(
   BuildContext context,
   Widget child,
@@ -206,7 +214,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     if (_canStart) setIndicatorState(IndicatorState.dragging);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _ambiguate(WidgetsBinding.instance)!.addPostFrameCallback((_) {
       controller.setAxisDirection(notification.metrics.axisDirection);
     });
 
