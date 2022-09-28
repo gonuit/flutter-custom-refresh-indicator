@@ -53,6 +53,17 @@ enum IndicatorState {
   complete,
 }
 
+enum IndicatorSide {
+  top,
+  bottom,
+  undetermined,
+}
+
+extension IndicatorSideGetters on IndicatorSide {
+  bool get isUndetermined => this == IndicatorSide.undetermined;
+  bool get isBottom => this == IndicatorSide.bottom;
+  bool get isTop => this == IndicatorSide.top;
+}
 class IndicatorController extends ChangeNotifier {
   double _value;
 
