@@ -96,8 +96,9 @@ class IndicatorController extends ChangeNotifier {
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
-        _refreshEnabled = refreshEnabled ?? true,
-        _shouldStopDrag = false;
+        _isRefreshEnabled = refreshEnabled ?? true,
+        _shouldStopDrag = false,
+        _side = IndicatorSide.undetermined;
 
   @protected
   @visibleForTesting
@@ -111,7 +112,6 @@ class IndicatorController extends ChangeNotifier {
   @visibleForTesting
   void setScrollingDirection(ScrollDirection userScrollDirection) {
     _scrollingDirection = userScrollDirection;
-    notifyListeners();
   }
 
   /// Direction in which user is scrolling
@@ -133,7 +133,21 @@ class IndicatorController extends ChangeNotifier {
   @visibleForTesting
   void setAxisDirection(AxisDirection direction) {
     _direction = direction;
-    notifyListeners();
+  }
+
+  /// Whether the pull to refresh gesture is triggered from the top
+  /// of the list or from the bottom.
+  ///
+  /// This is especially useful with [CustomRefreshIndicator.trigger]
+  /// set to [IndicatorTrigger.twoSided], as the gesture
+  /// can then be triggered from both sides.
+  IndicatorSide get side => _side;
+  IndicatorSide _side;
+
+  @protected
+  @visibleForTesting
+  void setIndicatorSide(IndicatorSide side) {
+    _side = side;
   }
 
   /// The direction in which list scrolls
