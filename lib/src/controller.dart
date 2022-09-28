@@ -173,14 +173,13 @@ class IndicatorController extends ChangeNotifier {
 
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _currentState;
-  bool get isArmed => _currentState == IndicatorState.armed;
-  bool get isDragging => _currentState == IndicatorState.dragging;
-  bool get isLoading => _currentState == IndicatorState.loading;
-  bool get isComplete => _currentState == IndicatorState.complete;
-  bool get isHiding => _currentState == IndicatorState.hiding;
-  bool get isIdle => _currentState == IndicatorState.idle;
+  bool get isArmed => _currentState.isArmed;
+  bool get isDragging => _currentState.isDragging;
+  bool get isLoading => _currentState.isLoading;
+  bool get isComplete => _currentState.isComplete;
+  bool get isHiding => _currentState.isHiding;
+  bool get isIdle => _currentState.isIdle;
 
-  bool _refreshEnabled;
   bool _shouldStopDrag;
 
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
