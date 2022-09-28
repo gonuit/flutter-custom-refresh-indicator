@@ -5,10 +5,11 @@ import 'example_app_bar.dart';
 class ExampleList extends StatelessWidget {
   final int itemCount;
   final bool countElements;
-
+  final bool reverse;
   final Color backgroundColor;
   const ExampleList({
     Key? key,
+    this.reverse = false,
     this.countElements = false,
     this.backgroundColor = appBackgroundColor,
     this.itemCount = 4,
@@ -29,6 +30,7 @@ class ExampleList extends StatelessWidget {
         ],
       ),
       child: ListView.separated(
+        reverse: reverse,
         physics: const AlwaysScrollableScrollPhysics(
           parent: ClampingScrollPhysics(),
         ),
