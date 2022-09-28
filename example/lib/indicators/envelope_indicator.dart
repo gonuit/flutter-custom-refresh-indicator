@@ -19,7 +19,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
     required this.child,
     required this.onRefresh,
     this.leadingScrollIndicatorVisible = false,
-    this.trailingScrollIndicatorVisible = true,
+    this.trailingScrollIndicatorVisible = false,
     this.accent,
   }) : super(key: key);
 

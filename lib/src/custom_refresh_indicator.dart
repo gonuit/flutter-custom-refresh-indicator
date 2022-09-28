@@ -71,7 +71,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   ///
   /// ### IMPORTANT:
   /// IT IS NOT CALLED ON EVERY [IndicatorController] DATA CHANGE.
-  /// To rebuild widget on every [IndicatorController] data change, consider
+  /// To rebuild widget on every change, consider
   /// using [IndicatorController] that is passed to this function as the third argument
   /// in combination with [AnimationBuilder].
   final IndicatorBuilder builder;
@@ -81,6 +81,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// The returned [Future] must complete when the refresh operation is finished.
   final OnRefresh onRefresh;
 
+  /// Called on every indicator state change.
   final OnStateChanged? onStateChanged;
 
   /// Indicator controller keeps all thata related to refresh indicator.
@@ -109,21 +110,13 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
     this.completeStateDuration,
-    @Deprecated('Deprecated in favor of leadingScrollIndicatorVisible argument.')
-        bool leadingGlowVisible = false,
-    @Deprecated('Deprecated in favor of trailingScrollIndicatorVisible argument.')
-        bool trailingGlowVisible = true,
-    bool? leadingScrollIndicatorVisible,
-    bool? trailingScrollIndicatorVisible,
+    this.leadingScrollIndicatorVisible = false,
+    this.trailingScrollIndicatorVisible = true,
   })  : assert(
           extentPercentageToArmed == null || offsetToArmed == null,
           'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
           'Remove redundant argument.',
         ),
-        leadingScrollIndicatorVisible =
-            leadingScrollIndicatorVisible ?? leadingGlowVisible,
-        trailingScrollIndicatorVisible =
-            trailingScrollIndicatorVisible ?? trailingGlowVisible,
         super(key: key);
 
   @override
