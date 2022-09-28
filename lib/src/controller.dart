@@ -53,6 +53,15 @@ enum IndicatorState {
   complete,
 }
 
+extension IndicatorStateGetters on IndicatorState {
+  bool get isIdle => this == IndicatorState.idle;
+  bool get isDragging => this == IndicatorState.dragging;
+  bool get isArmed => this == IndicatorState.armed;
+  bool get isHiding => this == IndicatorState.hiding;
+  bool get isLoading => this == IndicatorState.loading;
+  bool get isComplete => this == IndicatorState.complete;
+}
+
 enum IndicatorSide {
   top,
   bottom,
@@ -64,6 +73,7 @@ extension IndicatorSideGetters on IndicatorSide {
   bool get isBottom => this == IndicatorSide.bottom;
   bool get isTop => this == IndicatorSide.top;
 }
+
 class IndicatorController extends ChangeNotifier {
   double _value;
 
