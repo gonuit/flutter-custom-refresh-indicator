@@ -183,7 +183,8 @@ class IndicatorController extends ChangeNotifier {
   bool _shouldStopDrag;
 
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
-  bool get isRefreshEnabled => _refreshEnabled;
+  bool get isRefreshEnabled => _isRefreshEnabled;
+  bool _isRefreshEnabled;
 
   void stopDrag() {
     if (isDragging || isArmed) {
@@ -198,13 +199,13 @@ class IndicatorController extends ChangeNotifier {
 
   /// Disables list pull to refresh
   void disableRefresh() {
-    _refreshEnabled = false;
+    _isRefreshEnabled = false;
     notifyListeners();
   }
 
   /// Enables list pull to refresh
   void enableRefresh() {
-    _refreshEnabled = true;
+    _isRefreshEnabled = true;
     notifyListeners();
   }
 }
