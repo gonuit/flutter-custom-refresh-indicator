@@ -6,7 +6,8 @@ class PositionedIndicatorContainer extends StatelessWidget {
   final Widget child;
   final BoxConstraints? constraints;
 
-  /// Position child widget in a similar way to RefreshIndicator widget
+  /// Position child widget in a similar way
+  /// to the built-in [RefreshIndicator] widget.
   const PositionedIndicatorContainer({
     Key? key,
     required this.controller,
