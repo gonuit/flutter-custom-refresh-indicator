@@ -7,6 +7,7 @@
   - Replaced *reversed* argument of the *CustomRefreshIndicator* class with *edge*.
   - Added *edge* and *side* properties to the *IndicatorController* class.
 - Added extension with utility getters for *IndicatorState* class.
+- The *PositionedIndicatorContainer* class is no longer exported from this package, however the source code is available in the example application. 
 - Multiple minor fixes, improvements and optimizations.
 ## 1.2.1
 - Flutter 3.0.0 migration backward compatibility fix ([#31](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/31)) by [Jordan1122](https://github.com/Jordan1122)
