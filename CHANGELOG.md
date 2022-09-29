@@ -3,9 +3,9 @@
 - Removed deprecated `leadingGlowVisible` and `trailingGlowVisible` arguments. Instead use `leadingScrollIndicatorVisible` and  `trailingScrollIndicatorVisible` accoringly.
 - The default value of the `trailingScrollIndicatorVisible` for the `EnvelopRefreshIndicator` has been changed from `true` to `false`.
 - Allow setting the edge of the list that will trigger the pull to refresh action.
-  - Introduced *IndicatorEdge* and *IndicatorTriggerEdge* classes.
+  - Introduced *IndicatorEdge*, *IndicatorTriggerEdge* and *IndicatorSide* classes.
   - Replaced *reversed* argument of the *CustomRefreshIndicator* class with *edge*.
-  - Added *edge* property to the *IndicatorController* class.
+  - Added *edge* and *side* properties to the *IndicatorController* class.
 - Added extension with utility getters for *IndicatorState* class.
 - Multiple minor fixes, improvements and optimizations.
 ## 1.2.1
