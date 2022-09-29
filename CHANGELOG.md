@@ -1,7 +1,13 @@
-## 1.3.0
+## 2.0.0-dev.1
 - Removed deprecated `IndicatorStateHelper` class. Instead use `CustomRefreshIndicator.onStateChanged` method.
 - Removed deprecated `leadingGlowVisible` and `trailingGlowVisible` arguments. Instead use `leadingScrollIndicatorVisible` and  `trailingScrollIndicatorVisible` accoringly.
 - The default value of the `trailingScrollIndicatorVisible` for the `EnvelopRefreshIndicator` has been changed from `true` to `false`.
+- Allow setting the edge of the list that will trigger the pull to refresh action.
+  - Introduced *IndicatorEdge* and *IndicatorTriggerEdge* classes.
+  - Replaced *reversed* argument of the *CustomRefreshIndicator* class with *edge*.
+  - Added *edge* property to the *IndicatorController* class.
+- Added extension with utility getters for *IndicatorState* class.
+- Multiple minor fixes, improvements and optimizations.
 ## 1.2.1
 - Flutter 3.0.0 migration backward compatibility fix ([#31](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/31)) by [Jordan1122](https://github.com/Jordan1122)
 ## 1.2.0
