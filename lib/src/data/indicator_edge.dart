@@ -1,11 +1,11 @@
 enum IndicatorEdge {
-  begin,
+  start,
   end,
   undetermined,
 }
 
-extension IndicatorSideGetters on IndicatorEdge {
+extension IndicatorEdgeGetters on IndicatorEdge {
   bool get isUndetermined => this == IndicatorEdge.undetermined;
-  bool get isBottom => this == IndicatorEdge.end;
-  bool get isTop => this == IndicatorEdge.begin;
+  bool get isEnd => this == IndicatorEdge.end;
+  bool get isStart => this == IndicatorEdge.start;
 }

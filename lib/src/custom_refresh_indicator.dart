@@ -17,8 +17,8 @@ typedef OnStateChanged = void Function(IndicatorStateChange change);
 extension on IndicatorTriggerEdge {
   IndicatorEdge get derivedEdge {
     switch (this) {
-      case IndicatorTriggerEdge.begin:
-        return IndicatorEdge.begin;
+      case IndicatorTriggerEdge.start:
+        return IndicatorEdge.start;
       case IndicatorTriggerEdge.end:
         return IndicatorEdge.end;
 
@@ -110,7 +110,7 @@ class CustomRefreshIndicator extends StatefulWidget {
 
   /// {@macro custom_refresh_indicator.indicator_trigger_edge}
   ///
-  /// By default, the "begin" of the scrollable is used.
+  /// By default, the "start" of the scrollable is used.
   final IndicatorTriggerEdge edge;
 
   const CustomRefreshIndicator({
@@ -118,7 +118,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     required this.child,
     required this.onRefresh,
     required this.builder,
-    this.edge = IndicatorTriggerEdge.begin,
+    this.edge = IndicatorTriggerEdge.start,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
@@ -217,7 +217,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   bool _handleScrollStartNotification(ScrollStartNotification notification) {
     bool canStartFromCurrentSide(IndicatorTriggerEdge side) {
       switch (side) {
-        case IndicatorTriggerEdge.begin:
+        case IndicatorTriggerEdge.start:
           return notification.metrics.extentBefore == 0;
         case IndicatorTriggerEdge.end:
           return notification.metrics.extentAfter == 0;
@@ -244,7 +244,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// hide when list starts to scroll
     if (controller.isDragging || controller.isArmed) {
       switch (controller.edge) {
-        case IndicatorEdge.begin:
+        case IndicatorEdge.start:
           if (notification.metrics.extentBefore > 0.0) {
             _hide();
           } else {
@@ -281,12 +281,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (controller.edge.isUndetermined) {
       controller.setIndicatorEdge(
         notification.overscroll.isNegative
-            ? IndicatorEdge.begin
+            ? IndicatorEdge.start
             : IndicatorEdge.end,
       );
     }
 
-    if (controller.edge.isTop) {
+    if (controller.edge.isStart) {
       _dragOffset -= notification.overscroll;
     } else {
       _dragOffset += notification.overscroll;

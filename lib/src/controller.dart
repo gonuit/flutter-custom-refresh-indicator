@@ -61,7 +61,7 @@ class IndicatorController extends ChangeNotifier {
     _direction = direction;
   }
 
-  /// Whether the pull to refresh gesture is triggered from the begin
+  /// Whether the pull to refresh gesture is triggered from the start
   /// of the list or from the end.
   ///
   /// This is especially useful with [CustomRefreshIndicator.edge]
@@ -74,6 +74,20 @@ class IndicatorController extends ChangeNotifier {
   @visibleForTesting
   void setIndicatorEdge(IndicatorEdge edge) {
     _edge = edge;
+  }
+
+  IndicatorSide get side {
+    if (edge.isUndetermined) return IndicatorSide.none;
+    switch (direction) {
+      case AxisDirection.up:
+        return edge.isStart ? IndicatorSide.bottom : IndicatorSide.top;
+      case AxisDirection.right:
+        return edge.isStart ? IndicatorSide.right : IndicatorSide.left;
+      case AxisDirection.down:
+        return edge.isStart ? IndicatorSide.top : IndicatorSide.bottom;
+      case AxisDirection.left:
+        return edge.isStart ? IndicatorSide.left : IndicatorSide.right;
+    }
   }
 
   /// The direction in which list scrolls

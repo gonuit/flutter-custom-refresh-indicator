@@ -19,21 +19,15 @@ class PositionedIndicatorContainer extends StatelessWidget {
     return AnimatedBuilder(
       animation: controller,
       builder: (BuildContext context, Widget? child) {
+        if (controller.side.isNone) return const SizedBox();
+
         final double positionFromSide = -50 + (controller.value * 110);
 
         return Positioned(
-          top: controller.direction == AxisDirection.down
-              ? positionFromSide
-              : null,
-          bottom: controller.direction == AxisDirection.up
-              ? positionFromSide
-              : null,
-          left: controller.direction == AxisDirection.right
-              ? positionFromSide
-              : null,
-          right: controller.direction == AxisDirection.left
-              ? positionFromSide
-              : null,
+          top: controller.side.isTop ? positionFromSide : null,
+          bottom: controller.side.isBottom ? positionFromSide : null,
+          left: controller.side.isLeft ? positionFromSide : null,
+          right: controller.side.isRight ? positionFromSide : null,
           child: LayoutBuilder(
             builder: (ctx, cons) {
               return SizedBox(

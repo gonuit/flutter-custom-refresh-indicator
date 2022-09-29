@@ -2,8 +2,8 @@
 /// Defines the edge of a [Scrollable] that can trigger the pull to refresh gesture.
 /// {@endtemplate}
 ///
-/// **begin**:
-/// {@macro custom_refresh_indicator.indicator_trigger_edge.begin}
+/// **start**:
+/// {@macro custom_refresh_indicator.indicator_trigger_edge.start}
 ///
 /// **end**:
 /// {@macro custom_refresh_indicator.indicator_trigger_edge.end}
@@ -11,12 +11,12 @@
 /// **both**:
 /// {@macro custom_refresh_indicator.indicator_trigger_edge.both}
 enum IndicatorTriggerEdge {
-  /// {@template custom_refresh_indicator.indicator_trigger_edge.begin}
-  /// Pull to refresh can be triggered from the **begin** of the list.
+  /// {@template custom_refresh_indicator.indicator_trigger_edge.start}
+  /// Pull to refresh can be triggered from the **start** of the list.
   /// Mostly top side, but can be bottom for reversed ListView
   /// (with *reverse* argument set to true).
   /// {@endtemplate}
-  begin,
+  start,
 
   /// {@template custom_refresh_indicator.indicator_trigger_edge.end}
   /// Pull to refresh can be triggered from the **end** of the list.
