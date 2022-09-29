@@ -151,12 +151,6 @@ class IndicatorController extends ChangeNotifier {
     }
   }
 
-  @override
-  void notifyListeners() {
-    print("SIDE: ${describeEnum(edge)}");
-    super.notifyListeners();
-  }
-
   /// Disables list pull to refresh
   void disableRefresh() {
     _isRefreshEnabled = false;
