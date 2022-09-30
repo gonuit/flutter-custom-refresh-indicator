@@ -19,7 +19,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: CustomRefreshIndicator(
-          edge: IndicatorTriggerEdge.both,
+          trigger: IndicatorTrigger.bothEdges,
           loadingToIdleDuration: const Duration(seconds: 1),
           armedToLoadingDuration: const Duration(seconds: 1),
           draggingToIdleDuration: const Duration(seconds: 1),
@@ -122,7 +122,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                   color: appBackgroundColor,
                                 ),
                                 Text(
-                                  "edge: ${_controller.edge.name}",
+                                  "edge: ${_controller.edge?.name}",
                                   style: const TextStyle(fontSize: 18),
                                 ),
                                 const Divider(

@@ -23,8 +23,7 @@ class IndicatorController extends ChangeNotifier {
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
         _isRefreshEnabled = refreshEnabled ?? true,
-        _shouldStopDrag = false,
-        _edge = IndicatorEdge.undetermined;
+        _shouldStopDrag = false;
 
   @protected
   @visibleForTesting
@@ -64,20 +63,27 @@ class IndicatorController extends ChangeNotifier {
   /// Whether the pull to refresh gesture is triggered from the start
   /// of the list or from the end.
   ///
-  /// This is especially useful with [CustomRefreshIndicator.edge]
-  /// set to [IndicatorTriggerEdge.both], as the gesture
+  /// This is especially useful with [CustomRefreshIndicator.trigger]
+  /// set to [IndicatorTrigger.bothEdges], as the gesture
   /// can then be triggered from both edges.
-  IndicatorEdge get edge => _edge;
-  IndicatorEdge _edge;
+  ///
+  /// It is null when the edge is still not determined by
+  /// the [CustomRefreshIndicator] widget.
+  IndicatorEdge? get edge => _edge;
+  IndicatorEdge? _edge;
 
+  /// Whether the [edge] was determined by the [CustomRefreshIndicator] widget.
+  bool get hasEdge => edge != null;
+  
   @protected
   @visibleForTesting
-  void setIndicatorEdge(IndicatorEdge edge) {
+  void setIndicatorEdge(IndicatorEdge? edge) {
     _edge = edge;
   }
 
   IndicatorSide get side {
-    if (edge.isUndetermined) return IndicatorSide.none;
+    final edge = this.edge;
+    if (edge == null) return IndicatorSide.none;
     switch (direction) {
       case AxisDirection.up:
         return edge.isStart ? IndicatorSide.bottom : IndicatorSide.top;

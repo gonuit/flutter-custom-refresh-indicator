@@ -13,18 +13,18 @@ typedef IndicatorBuilder = Widget Function(
 typedef OnRefresh = Future<void> Function();
 typedef OnStateChanged = void Function(IndicatorStateChange change);
 
-extension on IndicatorTriggerEdge {
-  IndicatorEdge get derivedEdge {
+extension on IndicatorTrigger {
+  IndicatorEdge? get derivedEdge {
     switch (this) {
-      case IndicatorTriggerEdge.start:
+      case IndicatorTrigger.startEdge:
         return IndicatorEdge.start;
-      case IndicatorTriggerEdge.end:
+      case IndicatorTrigger.endEdge:
         return IndicatorEdge.end;
 
       /// In this case, the side is determined by the direction of the user's
       /// first scrolling gesture, not the trigger itself.
-      case IndicatorTriggerEdge.both:
-        return IndicatorEdge.undetermined;
+      case IndicatorTrigger.bothEdges:
+        return null;
     }
   }
 }
@@ -107,17 +107,17 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// To better understand this data, look at example app.
   final IndicatorController? controller;
 
-  /// {@macro custom_refresh_indicator.indicator_trigger_edge}
+  /// {@macro custom_refresh_indicator.indicator_trigger}
   ///
-  /// By default, the "start" of the scrollable is used.
-  final IndicatorTriggerEdge edge;
+  /// By default, the "startEdge" of the scrollable is used.
+  final IndicatorTrigger trigger;
 
   const CustomRefreshIndicator({
     Key? key,
     required this.child,
     required this.onRefresh,
     required this.builder,
-    this.edge = IndicatorTriggerEdge.start,
+    this.trigger = IndicatorTrigger.startEdge,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
@@ -214,13 +214,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollStartNotification(ScrollStartNotification notification) {
-    bool canStartFromCurrentSide(IndicatorTriggerEdge side) {
-      switch (side) {
-        case IndicatorTriggerEdge.start:
+    bool canStartFromCurrentSide(IndicatorTrigger edge) {
+      switch (edge) {
+        case IndicatorTrigger.startEdge:
           return notification.metrics.extentBefore == 0;
-        case IndicatorTriggerEdge.end:
+        case IndicatorTrigger.endEdge:
           return notification.metrics.extentAfter == 0;
-        case IndicatorTriggerEdge.both:
+        case IndicatorTrigger.bothEdges:
           return notification.metrics.extentBefore == 0 ||
               notification.metrics.extentAfter == 0;
       }
@@ -228,11 +228,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     final canStart = controller.isRefreshEnabled &&
         controller.isIdle &&
-        canStartFromCurrentSide(widget.edge);
+        canStartFromCurrentSide(widget.trigger);
 
     if (canStart) {
-      controller.setAxisDirection(notification.metrics.axisDirection);
-      controller.setIndicatorEdge(widget.edge.derivedEdge);
+      controller
+        ..setAxisDirection(notification.metrics.axisDirection)
+        ..setIndicatorEdge(widget.trigger.derivedEdge);
       setIndicatorState(IndicatorState.dragging);
     }
 
@@ -263,7 +264,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
         /// Indicator was unable to determine the side by which it was
         /// triggered, therefore indicator needs to be hidden.
-        case IndicatorEdge.undetermined:
+        case null:
           _hide();
           break;
       }
@@ -277,7 +278,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleOverscrollNotification(OverscrollNotification notification) {
-    if (controller.edge.isUndetermined) {
+    if (!controller.hasEdge) {
       controller.setIndicatorEdge(
         notification.overscroll.isNegative
             ? IndicatorEdge.start
@@ -285,7 +286,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       );
     }
 
-    if (controller.edge.isStart) {
+    if (controller.edge!.isStart) {
       _dragOffset -= notification.overscroll;
     } else {
       _dragOffset += notification.overscroll;
@@ -467,7 +468,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         duration: widget.loadingToIdleDuration);
 
     if (!mounted) return;
-    controller.setIndicatorEdge(IndicatorEdge.undetermined);
+    controller.setIndicatorEdge(null);
     setIndicatorState(IndicatorState.idle);
   }
 
@@ -481,7 +482,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     );
 
     if (!mounted) return;
-    controller.setIndicatorEdge(IndicatorEdge.undetermined);
+    controller.setIndicatorEdge(null);
     setIndicatorState(IndicatorState.idle);
   }
 

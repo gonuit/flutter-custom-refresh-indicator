@@ -17,7 +17,7 @@ class FetchMoreIndicator extends StatelessWidget {
     const height = 150.0;
     return CustomRefreshIndicator(
       onRefresh: () async => onAction(),
-      edge: IndicatorTriggerEdge.end,
+      trigger: IndicatorTrigger.endEdge,
       trailingScrollIndicatorVisible: false,
       leadingScrollIndicatorVisible: true,
       child: child,
