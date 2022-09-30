@@ -122,16 +122,19 @@ void main() {
   test("setAxisDirection works correctly", () {
     expect(listener.called, equals(0));
     controller.setAxisDirection(AxisDirection.down);
-    expect(listener.called, equals(1));
+
+    /// no need for update since this will be always called just before
+    /// the value setter
+    expect(listener.called, equals(0));
     expect(controller.direction, AxisDirection.down);
     controller.setAxisDirection(AxisDirection.up);
-    expect(listener.called, equals(2));
+    expect(listener.called, equals(0));
     expect(controller.direction, AxisDirection.up);
     controller.setAxisDirection(AxisDirection.left);
-    expect(listener.called, equals(3));
+    expect(listener.called, equals(0));
     expect(controller.direction, AxisDirection.left);
     controller.setAxisDirection(AxisDirection.right);
-    expect(listener.called, equals(4));
+    expect(listener.called, equals(0));
     expect(controller.direction, AxisDirection.right);
   });
 
@@ -160,13 +163,13 @@ void main() {
   test("setScrollDirection method works correctly", () {
     expect(listener.called, equals(0));
     controller.setScrollingDirection(ScrollDirection.forward);
-    expect(listener.called, equals(1));
+    expect(listener.called, equals(0));
     expect(controller.scrollingDirection, ScrollDirection.forward);
     controller.setScrollingDirection(ScrollDirection.idle);
-    expect(listener.called, equals(2));
+    expect(listener.called, equals(0));
     expect(controller.scrollingDirection, ScrollDirection.idle);
     controller.setScrollingDirection(ScrollDirection.reverse);
-    expect(listener.called, equals(3));
+    expect(listener.called, equals(0));
     expect(controller.scrollingDirection, ScrollDirection.reverse);
   });
 
