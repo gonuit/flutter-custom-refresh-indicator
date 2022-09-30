@@ -82,12 +82,10 @@
 
 ## BREAKING API CHANGES
 
-- Feedback improvements (thank you for your emails!):
-  - Changed long identifier names:
-    - `CustomRefreshIndicatorData` => `IndicatorController`
-    - `CustomRefreshIndicatorState` => `IndicatorState`
-- Update example app
-- ## `indicatorBuilder` argument is no longer present. Instead use `builder` argument which has some significant changes.
+- Changed long identifier names:
+  - `CustomRefreshIndicatorData` => `IndicatorController`
+  - `CustomRefreshIndicatorState` => `IndicatorState`
+- `indicatorBuilder` argument is no longer present. Instead use `builder` argument which has some significant changes.
 
 To animate indicator based on `IndicatorControler` you can use `AnimationBuilder` widget and pass `IndicatorData` object as `animation` argument. Because of that you can implement your own widget rebuild system what can improve your custom indicator performance (instead of building indicator eg. 300 times you can decide when you want to do it). Example:
 
@@ -100,9 +98,9 @@ return CustomRefreshIndicator(
       /// to child argument
       Widget child,
       /// Now all your data will be stored in controller.
-      /// To get controller outside of this function
-      /// 1. Create controller in parent widget and pass it to CustomRefreshIndicator
-      /// 2. Assign [GlobalKey] to CustomRefreshIndicator and access `key.currentState.controller`.
+      /// To get controller outside of this function you can either:
+      /// - Create controller in parent widget and pass it to CustomRefreshIndicator widget
+      /// - Assign [GlobalKey] to CustomRefreshIndicator and access `key.currentState.controller`.
       IndicatorController controller
     ) {
       return AnimatedBuilder(
