@@ -21,7 +21,9 @@ class ExampleIndicatorScreen extends StatelessWidget {
           offsetToArmed: 200.0,
           builder: customIndicator.builder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-          child: const ExampleList(),
+          child: const ExampleList(
+            itemCount: 6,
+          ),
         ),
       ),
     );

@@ -1,4 +1,4 @@
-## 2.0.0-dev.1
+## 2.0.0-dev.2
 - Removed deprecated **IndicatorStateHelper** class. Instead use **CustomRefreshIndicator.onStateChanged** method.
 - Removed deprecated **leadingGlowVisible** and **trailingGlowVisible** arguments. Instead use **leadingScrollIndicatorVisible** and  **trailingScrollIndicatorVisible** accoringly.
 - The default value of the **trailingScrollIndicatorVisible** for the **EnvelopRefreshIndicator** has been changed from **true** to **false**.
