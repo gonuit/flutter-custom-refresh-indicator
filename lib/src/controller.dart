@@ -74,7 +74,7 @@ class IndicatorController extends ChangeNotifier {
 
   /// Whether the [edge] was determined by the [CustomRefreshIndicator] widget.
   bool get hasEdge => edge != null;
-  
+
   @protected
   @visibleForTesting
   void setIndicatorEdge(IndicatorEdge? edge) {
