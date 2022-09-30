@@ -1,6 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 part 'controller.dart';
 
@@ -112,12 +112,21 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// By default, the "startEdge" of the scrollable is used.
   final IndicatorTrigger trigger;
 
+  /// Used to configure how [CustomRefreshIndicator] can be triggered.
+  ///
+  /// Works in the same way as the triggerMode of the built-in
+  /// [RefreshIndicator] widget.
+  ///
+  /// Defaults to [IndicatorTriggerMode.onEdge].
+  final IndicatorTriggerMode triggerMode;
+
   const CustomRefreshIndicator({
     Key? key,
     required this.child,
     required this.onRefresh,
     required this.builder,
     this.trigger = IndicatorTrigger.startEdge,
+    this.triggerMode = IndicatorTriggerMode.onEdge,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.controller,
     this.offsetToArmed,
@@ -213,22 +222,31 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     return true;
   }
 
-  bool _handleScrollStartNotification(ScrollStartNotification notification) {
-    bool canStartFromCurrentSide(IndicatorTrigger edge) {
-      switch (edge) {
-        case IndicatorTrigger.startEdge:
-          return notification.metrics.extentBefore == 0;
-        case IndicatorTrigger.endEdge:
-          return notification.metrics.extentAfter == 0;
-        case IndicatorTrigger.bothEdges:
-          return notification.metrics.extentBefore == 0 ||
-              notification.metrics.extentAfter == 0;
-      }
+  bool _canStartFromCurrentTrigger(
+    ScrollNotification notification,
+    IndicatorTrigger trigger,
+  ) {
+    switch (trigger) {
+      case IndicatorTrigger.startEdge:
+        return notification.metrics.extentBefore == 0;
+      case IndicatorTrigger.endEdge:
+        return notification.metrics.extentAfter == 0;
+      case IndicatorTrigger.bothEdges:
+        return notification.metrics.extentBefore == 0 ||
+            notification.metrics.extentAfter == 0;
     }
+  }
 
-    final canStart = controller.isRefreshEnabled &&
+  /// Check whether the pull to refresh gesture can be activated.
+  bool _checkCanStart(ScrollNotification notification) {
+    final isValidMode = notification is ScrollStartNotification ||
+        (notification is ScrollUpdateNotification &&
+            widget.triggerMode == IndicatorTriggerMode.anywhere);
+
+    final canStart = isValidMode &&
+        controller.isRefreshEnabled &&
         controller.isIdle &&
-        canStartFromCurrentSide(widget.trigger);
+        _canStartFromCurrentTrigger(notification, widget.trigger);
 
     if (canStart) {
       controller
@@ -237,7 +255,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       setIndicatorState(IndicatorState.dragging);
     }
 
-    return false;
+    return canStart;
   }
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
@@ -399,7 +417,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Notifications can only be handled in the "dragging" and "armed" state.
   bool canHandleNotifications(IndicatorController controller) =>
-      !(controller.isDragging || controller.isArmed);
+      controller.isDragging || controller.isArmed;
 
   bool _handleScrollNotification(ScrollNotification notification) {
     /// if notification predicate is not matched then notification
@@ -419,9 +437,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       return false;
     }
 
-    if (notification is ScrollStartNotification) {
-      return _handleScrollStartNotification(notification);
-    } else if (canHandleNotifications(controller)) {
+    if (controller.isIdle) {
+      _checkCanStart(notification);
+      return false;
+    }
+
+    if (!canHandleNotifications(controller)) {
       return false;
     } else if (notification is ScrollUpdateNotification) {
       return _handleScrollUpdateNotification(notification);
