@@ -340,7 +340,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       throw StateError(
         "Cannot show indicator. "
         "Controller must be in the idle state. "
-        "Current state: ${controller.state}.",
+        "Current state: ${controller.state.name}.",
       );
     }
     setIndicatorState(IndicatorState.dragging);
@@ -357,6 +357,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     Duration draggingDuration = const Duration(milliseconds: 300),
     Curve draggingCurve = Curves.linear,
   }) async {
+    if (!controller.isIdle) {
+      throw StateError(
+        "Cannot refresh. "
+        "Controller must be in the idle state. "
+        "Current state: ${controller.state.name}.",
+      );
+    }
+
     await show(
       draggingDuration: draggingDuration,
       draggingCurve: draggingCurve,
