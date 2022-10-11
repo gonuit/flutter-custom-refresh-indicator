@@ -239,8 +239,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Check whether the pull to refresh gesture can be activated.
   bool _checkCanStart(ScrollNotification notification) {
-    final isValidMode = notification is ScrollStartNotification ||
+    final isValidMode = (notification is ScrollStartNotification &&
+            // whether the drag was triggered by the user
+            notification.dragDetails != null) ||
         (notification is ScrollUpdateNotification &&
+            // whether the drag was triggered by the user
+            notification.dragDetails != null &&
             widget.triggerMode == IndicatorTriggerMode.anywhere);
 
     final canStart = isValidMode &&
