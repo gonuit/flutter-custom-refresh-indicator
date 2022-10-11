@@ -30,8 +30,14 @@ extension on IndicatorTrigger {
 }
 
 class CustomRefreshIndicator extends StatefulWidget {
+  /// The value from which [IndicatorController] is considered to be armed.
   static const armedFromValue = 1.0;
-  static const defaultExtentPercentageToArmed = 0.20;
+
+  /// The default distance the user must over-scroll for the indicator
+  /// to be armed, as a percentage of the scrollable's container extent.
+  ///
+  /// This value matches the extent to armed of built-in [RefreshIndicator] widget.
+  static const defaultContainerExtentPercentageToArmed = 0.25 * (1 / 1.5);
 
   /// Duration of changing [IndicatorController] value from `<1.0` to `0.0`.
   /// When user stop dragging list before it become to armed [IndicatorState].
@@ -66,9 +72,14 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Number of pixels that user should drag to change [IndicatorState] from idle to armed.
   final double? offsetToArmed;
 
-  /// Value from 0.0 to 1.0 that describes the percentage of scroll container extent
-  /// that user should drag to change [IndicatorState] from idle to armed.
-  final double? extentPercentageToArmed;
+  /// The distance the user must scroll for the indicator to be armed,
+  /// as a percentage of the scrollable's container extent.
+  ///
+  /// If the [offsetToArmed] argument is specified, it will be used instead,
+  /// and this value will not take effect.
+  ///
+  /// The default value equals `0.1(6)`.
+  final double containerExtentPercentageToArmed;
 
   /// Part of widget tree that contains scrollable element (like ListView).
   /// Scroll notifications from the first scrollable element will be used
@@ -131,7 +142,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.controller,
     this.offsetToArmed,
     this.onStateChanged,
-    this.extentPercentageToArmed,
+    double? containerExtentPercentageToArmed,
     this.draggingToIdleDuration = const Duration(milliseconds: 300),
     this.armedToLoadingDuration = const Duration(milliseconds: 200),
     this.loadingToIdleDuration = const Duration(milliseconds: 100),
@@ -139,10 +150,13 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
   })  : assert(
-          extentPercentageToArmed == null || offsetToArmed == null,
+          containerExtentPercentageToArmed == null || offsetToArmed == null,
           'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
           'Remove redundant argument.',
         ),
+        // set the default extent percentage value if not provided
+        containerExtentPercentageToArmed = containerExtentPercentageToArmed ??
+            defaultContainerExtentPercentageToArmed,
         super(key: key);
 
   @override
@@ -408,8 +422,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (offsetToArmed != null) {
       newValue = _dragOffset / offsetToArmed;
     } else {
-      final extentPercentageToArmed = widget.extentPercentageToArmed ??
-          CustomRefreshIndicator.defaultExtentPercentageToArmed;
+      final extentPercentageToArmed = widget.containerExtentPercentageToArmed;
 
       newValue = _dragOffset / (containerExtent * extentPercentageToArmed);
     }

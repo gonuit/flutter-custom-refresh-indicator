@@ -1,4 +1,7 @@
 ## 2.0.0-dev.2
+## Breaking changes
+- Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly means.
+- Changed the default value of the `defaultContainerExtentPercentageToArmed` from `0.20` to `0.1(6)` to match the behavior of the built-in indicator widget.
 - Removed deprecated **IndicatorStateHelper** class. Instead use **CustomRefreshIndicator.onStateChanged** method.
 - Removed deprecated **leadingGlowVisible** and **trailingGlowVisible** arguments. Instead use **leadingScrollIndicatorVisible** and  **trailingScrollIndicatorVisible** accoringly.
 - The default value of the **trailingScrollIndicatorVisible** for the **EnvelopRefreshIndicator** has been changed from **true** to **false**.
