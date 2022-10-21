@@ -487,9 +487,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       _dragOffset = 0;
 
       setIndicatorState(IndicatorState.loading);
-      await _animationController.animateTo(1.0,
-          duration: widget.armedToLoadingDuration);
-      await widget.onRefresh();
+      await Future.wait([
+        widget.onRefresh(),
+        _animationController.animateTo(
+          1.0,
+          duration: widget.armedToLoadingDuration,
+        ),
+      ]);
     } finally {
       await _hideAfterRefresh();
     }

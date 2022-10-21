@@ -1,6 +1,6 @@
 ## 2.0.0-dev.2
 ## Breaking changes
-- Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly means.
+- Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly does.
 - Changed the default value of the `defaultContainerExtentPercentageToArmed` from `0.20` to `0.1(6)` to match the behavior of the built-in indicator widget.
 - Removed deprecated **IndicatorStateHelper** class. Instead use **CustomRefreshIndicator.onStateChanged** method.
 - Removed deprecated **leadingGlowVisible** and **trailingGlowVisible** arguments. Instead use **leadingScrollIndicatorVisible** and  **trailingScrollIndicatorVisible** accoringly.
@@ -12,6 +12,7 @@
 - Added extension with utility getters for **IndicatorState** class.
 - Trigger mode support added. Equivalent to trigger mode of the built-in **RefreshIndicator** widget.
 - The **PositionedIndicatorContainer** class is no longer exported from this package, however the source code is available in the example application. 
+- Now the *onRefresh* function will be triggered immediately when the indicator is released in the armed state. Previously, the *onRefresh* function was triggered when the indicator reached a target value in the loading state of `1.0`.
 - Multiple minor fixes, improvements and optimizations.
 ## 1.2.1
 - Flutter 3.0.0 migration backward compatibility fix ([#31](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/31)) by [Jordan1122](https://github.com/Jordan1122)
