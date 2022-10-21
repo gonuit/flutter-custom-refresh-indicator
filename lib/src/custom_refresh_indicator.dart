@@ -277,8 +277,25 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
-    /// hide when list starts to scroll
-    if (controller.isDragging || controller.isArmed) {
+    // Calculate the edge if not defined and possible.
+    // This may apply to two-way lists on the iOS platform with bouncing physics.
+    if (!controller.hasEdge) {
+      if (notification.metrics.extentBefore == 0 &&
+          notification.scrollDelta?.isNegative == true) {
+        controller.setIndicatorEdge(IndicatorEdge.start);
+      } else if (notification.metrics.extentAfter == 0 &&
+          notification.scrollDelta?.isNegative == false) {
+        controller.setIndicatorEdge(IndicatorEdge.end);
+      }
+    }
+
+    /// When the controller is armed, but the scroll update event is not triggered
+    /// by the user, the refresh action should be triggered
+    if (controller.isArmed && notification.dragDetails == null) {
+      _start();
+
+      /// Handle the indicator state depending on scrolling direction
+    } else if (controller.isDragging || controller.isArmed) {
       switch (controller.edge) {
         case IndicatorEdge.start:
           if (notification.metrics.extentBefore > 0.0) {
@@ -303,10 +320,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         case null:
           _hide();
           break;
-      }
-
-      if (controller.isArmed && notification.dragDetails == null) {
-        _start();
       }
     }
 
