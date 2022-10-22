@@ -142,6 +142,9 @@ class IndicatorController extends ChangeNotifier {
 
   bool _shouldStopDrag;
 
+  /// Should the dragging be stopped
+  bool get shouldStopDrag => _shouldStopDrag;
+
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
   bool get isRefreshEnabled => _isRefreshEnabled;
   bool _isRefreshEnabled;

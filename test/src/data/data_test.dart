@@ -58,6 +58,22 @@ void main() {
     );
   });
 
+  test('Equality operator works correctly', () async {
+    // ignore: prefer_const_constructors
+    final a = IndicatorStateChange(
+      IndicatorState.idle,
+      IndicatorState.dragging,
+    );
+    // ignore: prefer_const_constructors
+    final b = IndicatorStateChange(
+      IndicatorState.idle,
+      IndicatorState.dragging,
+    );
+
+    expect(a, equals(b));
+    expect(a.hashCode, equals(b.hashCode));
+  });
+
   test("toString method works correctly", () {
     var change = const IndicatorStateChange(
       IndicatorState.dragging,

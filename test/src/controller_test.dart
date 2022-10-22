@@ -187,4 +187,102 @@ void main() {
     expect(controller.isScrollingReverse, isTrue);
     expect(controller.isScrollIdle, isFalse);
   });
+
+  group('IndicatorSide -', () {
+    test('AxisDirection.up - start edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.up)
+        ..setIndicatorEdge(IndicatorEdge.start);
+
+      expect(controller.side, IndicatorSide.bottom);
+    });
+    test('AxisDirection.up - end edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.up)
+        ..setIndicatorEdge(IndicatorEdge.end);
+
+      expect(controller.side, IndicatorSide.top);
+    });
+
+    test('AxisDirection.down - start edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.down)
+        ..setIndicatorEdge(IndicatorEdge.start);
+
+      expect(controller.side, IndicatorSide.top);
+    });
+    test('AxisDirection.down - end edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.down)
+        ..setIndicatorEdge(IndicatorEdge.end);
+
+      expect(controller.side, IndicatorSide.bottom);
+    });
+
+    test('AxisDirection.left - start edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.left)
+        ..setIndicatorEdge(IndicatorEdge.start);
+
+      expect(controller.side, IndicatorSide.left);
+    });
+    test('AxisDirection.left - end edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.left)
+        ..setIndicatorEdge(IndicatorEdge.end);
+
+      expect(controller.side, IndicatorSide.right);
+    });
+    test('AxisDirection.right - start edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.right)
+        ..setIndicatorEdge(IndicatorEdge.start);
+
+      expect(controller.side, IndicatorSide.right);
+    });
+    test('AxisDirection.right - end edge', () {
+      final controller = IndicatorController()
+        ..setAxisDirection(AxisDirection.right)
+        ..setIndicatorEdge(IndicatorEdge.end);
+
+      expect(controller.side, IndicatorSide.left);
+    });
+
+    test('AxisDirection.right - end none', () {
+      final controller = IndicatorController()..setIndicatorEdge(null);
+
+      expect(controller.side, IndicatorSide.none);
+    });
+  });
+
+  test('stopDrag - changes the shouldStopDrag - valid state', () {
+    var controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.dragging);
+    expect(controller.shouldStopDrag, isFalse);
+    controller.stopDrag();
+    expect(controller.shouldStopDrag, isTrue);
+
+    controller = IndicatorController()..setIndicatorState(IndicatorState.armed);
+    expect(controller.shouldStopDrag, isFalse);
+    controller.stopDrag();
+    expect(controller.shouldStopDrag, isTrue);
+  });
+
+  test('stopDrag - changes the shouldStopDrag - invalid state', () {
+    var controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.idle);
+    expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
+
+    controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.loading);
+    expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
+
+    controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.complete);
+    expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
+
+    controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.hiding);
+    expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
+  });
 }
