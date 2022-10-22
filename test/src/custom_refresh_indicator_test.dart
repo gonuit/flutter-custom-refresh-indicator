@@ -785,4 +785,131 @@ void main() {
     expect(fakeRefresh.called, isTrue);
     expect(stretchAccepted, isFalse);
   });
+
+  testWidgets(
+      'CustomRefreshIndicator - trigger - both edges  - should be shown when dragging from the start or end edge',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          trigger: IndicatorTrigger.bothEdges,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 1),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.value, greaterThan(0.0));
+    expect(indicatorController.value, lessThanOrEqualTo(1.0));
+    expect(indicatorController.edge, IndicatorEdge.start);
+    expect(fakeRefresh.called, isTrue);
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+    expect(indicatorController.edge, isNull);
+    expect(indicatorController.value, equals(0.0));
+
+    fakeRefresh.reset();
+
+    // end edge
+    await tester.fling(find.text('1'), const Offset(0.0, -300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.value, greaterThan(0.0));
+    expect(indicatorController.value, lessThanOrEqualTo(1.0));
+    expect(indicatorController.edge, IndicatorEdge.end);
+    expect(fakeRefresh.called, isTrue);
+
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+    expect(indicatorController.edge, isNull);
+    expect(indicatorController.value, equals(0.0));
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - trigger - end edge  - should be shown only when dragging from the end edge',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          trigger: IndicatorTrigger.endEdge,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 1),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+
+    expect(indicatorController.value, equals(0.0));
+    expect(fakeRefresh.called, isFalse);
+
+    // end edge
+    await tester.fling(find.text('1'), const Offset(0.0, -300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.value, greaterThan(0.0));
+    expect(indicatorController.value, lessThanOrEqualTo(1.0));
+    expect(indicatorController.edge, IndicatorEdge.end);
+    expect(fakeRefresh.called, isTrue);
+
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+    expect(indicatorController.edge, isNull);
+    expect(indicatorController.value, equals(0.0));
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - trigger - start edge  - should be shown only when dragging from the end edge',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          trigger: IndicatorTrigger.startEdge,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 1),
+        ),
+      ),
+    );
+
+    // end edge
+    await tester.fling(find.text('1'), const Offset(0.0, -300.0), 1000.0);
+
+    expect(indicatorController.value, equals(0.0));
+    expect(fakeRefresh.called, isFalse);
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.value, greaterThan(0.0));
+    expect(indicatorController.value, lessThanOrEqualTo(1.0));
+    expect(indicatorController.edge, IndicatorEdge.start);
+    expect(fakeRefresh.called, isTrue);
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+    expect(indicatorController.edge, isNull);
+    expect(indicatorController.value, equals(0.0));
+  });
 }
