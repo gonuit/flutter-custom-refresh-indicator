@@ -689,7 +689,7 @@ void main() {
     expect(fakeRefresh.called, isTrue);
   });
 
-  testWidgets('CustomRefreshIndicator - disallows indicator - glow',
+  testWidgets('CustomRefreshIndicator - disallows indicator - glow - leading',
       (WidgetTester tester) async {
     bool glowAccepted = true;
     ScrollNotification? lastNotification;
@@ -708,6 +708,55 @@ void main() {
                   final OverscrollIndicatorNotification
                       confirmationNotification =
                       OverscrollIndicatorNotification(leading: true);
+                  confirmationNotification.dispatch(context);
+                  glowAccepted = confirmationNotification.accepted;
+                }
+                lastNotification = notification;
+                return false;
+              },
+              child: const DefaultList(itemsCount: 6),
+            );
+          }),
+        ),
+      ),
+    );
+
+    expect(find.byType(StretchingOverscrollIndicator), findsNothing);
+    expect(find.byType(GlowingOverscrollIndicator), findsOneWidget);
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator settle animation
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    expect(fakeRefresh.called, isTrue);
+    expect(glowAccepted, isFalse);
+  });
+
+  testWidgets('CustomRefreshIndicator - disallows indicator - glow - trailing',
+      (WidgetTester tester) async {
+    bool glowAccepted = true;
+    ScrollNotification? lastNotification;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          leadingScrollIndicatorVisible: true,
+          trailingScrollIndicatorVisible: false,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: Builder(builder: (BuildContext context) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                if (notification is OverscrollNotification &&
+                    lastNotification is! OverscrollNotification) {
+                  final OverscrollIndicatorNotification
+                      confirmationNotification =
+                      OverscrollIndicatorNotification(leading: false);
                   confirmationNotification.dispatch(context);
                   glowAccepted = confirmationNotification.accepted;
                 }
@@ -797,7 +846,7 @@ void main() {
           builder: buildWithoutIndicator,
           trigger: IndicatorTrigger.bothEdges,
           onRefresh: fakeRefresh.instantRefresh,
-          child: const DefaultList(itemsCount: 1),
+          child: const DefaultList(itemsCount: 6),
         ),
       ),
     );
@@ -820,7 +869,11 @@ void main() {
     fakeRefresh.reset();
 
     // end edge
-    await tester.fling(find.text('1'), const Offset(0.0, -300.0), 1000.0);
+
+    // scroll to end
+    await tester.fling(find.text('1'), const Offset(0.0, -1000.0), 1000.0);
+    // trigger indicator
+    await tester.fling(find.text('6'), const Offset(0.0, -300.0), 1000.0);
     await tester.pump();
     // finish the scroll animation
     await tester.pump(const Duration(seconds: 1));
@@ -911,5 +964,110 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     expect(indicatorController.edge, isNull);
     expect(indicatorController.value, equals(0.0));
+  });
+
+  testWidgets('CustomRefreshIndicator - onStateChanged',
+      (WidgetTester tester) async {
+    final changes = <IndicatorStateChange>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          onStateChanged: (change) => changes.add(change),
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 1),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(changes, hasLength(5));
+    expect(changes, [
+      const IndicatorStateChange(
+        IndicatorState.idle,
+        IndicatorState.dragging,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.dragging,
+        IndicatorState.armed,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.armed,
+        IndicatorState.loading,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.loading,
+        IndicatorState.hiding,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.hiding,
+        IndicatorState.idle,
+      )
+    ]);
+
+    expect(fakeRefresh.called, isTrue);
+  });
+
+  testWidgets('CustomRefreshIndicator - onStateChanged - with completed state',
+      (WidgetTester tester) async {
+    final changes = <IndicatorStateChange>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          onStateChanged: (change) => changes.add(change),
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          completeStateDuration: const Duration(milliseconds: 300),
+          child: const DefaultList(itemsCount: 1),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // wait for complete state
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(changes, hasLength(6));
+    expect(changes, [
+      const IndicatorStateChange(
+        IndicatorState.idle,
+        IndicatorState.dragging,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.dragging,
+        IndicatorState.armed,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.armed,
+        IndicatorState.loading,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.loading,
+        IndicatorState.complete,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.complete,
+        IndicatorState.hiding,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.hiding,
+        IndicatorState.idle,
+      )
+    ]);
+
+    expect(fakeRefresh.called, isTrue);
   });
 }
