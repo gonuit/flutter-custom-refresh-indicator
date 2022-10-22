@@ -22,6 +22,16 @@ class IndicatorStateChange {
   }
 
   @override
+  bool operator ==(Object other) =>
+      other.runtimeType == runtimeType &&
+      other is IndicatorStateChange &&
+      other.currentState == currentState &&
+      other.newState == newState;
+
+  @override
+  int get hashCode => Object.hash(currentState, newState);
+
+  @override
   String toString() =>
       "$runtimeType(${describeEnum(currentState)} → ${describeEnum(newState)})";
 }
