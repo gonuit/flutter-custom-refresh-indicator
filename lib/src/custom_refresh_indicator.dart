@@ -279,13 +279,17 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
     // Calculate the edge if not defined and possible.
     // This may apply to two-way lists on the iOS platform with bouncing physics.
-    if (!controller.hasEdge) {
+    if (!controller.hasEdge && notification.scrollDelta != null) {
       if (notification.metrics.extentBefore == 0 &&
-          notification.scrollDelta?.isNegative == true) {
-        controller.setIndicatorEdge(IndicatorEdge.start);
+          notification.scrollDelta!.isNegative) {
+        controller
+          ..setIndicatorEdge(IndicatorEdge.start)
+          ..setIndicatorState(IndicatorState.dragging);
       } else if (notification.metrics.extentAfter == 0 &&
-          notification.scrollDelta?.isNegative == false) {
-        controller.setIndicatorEdge(IndicatorEdge.end);
+          !notification.scrollDelta!.isNegative) {
+        controller
+          ..setIndicatorEdge(IndicatorEdge.end)
+          ..setIndicatorState(IndicatorState.dragging);
       }
     }
 

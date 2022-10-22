@@ -1070,4 +1070,53 @@ void main() {
 
     expect(fakeRefresh.called, isTrue);
   });
+
+  testWidgets(
+      'CustomRefreshIndicator - BouncingPhysics - start from scroll update notification',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    final scrollController = ScrollController(initialScrollOffset: 0);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          trigger: IndicatorTrigger.bothEdges,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: DefaultList(
+            itemsCount: 1,
+            controller: scrollController,
+            physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics()),
+          ),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // wait for complete state
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    fakeRefresh.reset();
+    expect(fakeRefresh.called, isFalse);
+
+    // end edge
+    await tester.fling(find.text('1'), const Offset(0.0, -300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // wait for complete state
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+  });
 }
