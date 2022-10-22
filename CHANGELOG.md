@@ -1,4 +1,4 @@
-## 2.0.0-dev.3
+## 2.0.0-dev.4
 ## Breaking changes
 - Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly does.
 - Changed the default value of the `defaultContainerExtentPercentageToArmed` from `0.20` to `0.1(6)` to match the behavior of the built-in indicator widget.
