@@ -1,4 +1,4 @@
-## 2.0.0-dev.6
+## 2.0.0-beta.1
 ## Breaking changes
 - Added `autoRebuild` flag which is by default set to `true`.
   From now on, there is no need to wrap widgets in the builder function with the `AnimatedBuilder` widget, as it will be automatically rebuilt. For optimization purposes, you can use the old behavior by setting the `autoRebuild` argument to false.
