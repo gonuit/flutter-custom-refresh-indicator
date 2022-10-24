@@ -20,9 +20,9 @@ class _PresentationScreenState extends State<PresentationScreen> {
       body: SafeArea(
         child: CustomRefreshIndicator(
           trigger: IndicatorTrigger.bothEdges,
-          loadingToIdleDuration: const Duration(seconds: 1),
-          armedToLoadingDuration: const Duration(seconds: 1),
-          draggingToIdleDuration: const Duration(seconds: 1),
+          indicatorFinalizeDuration: const Duration(seconds: 1),
+          indicatorSettleDuration: const Duration(seconds: 1),
+          indicatorCancelDuration: const Duration(seconds: 1),
           leadingScrollIndicatorVisible: false,
           trailingScrollIndicatorVisible: false,
           offsetToArmed: 100.0,

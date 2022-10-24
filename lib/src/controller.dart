@@ -88,11 +88,11 @@ class IndicatorController extends ChangeNotifier {
       case AxisDirection.up:
         return edge.isStart ? IndicatorSide.bottom : IndicatorSide.top;
       case AxisDirection.right:
-        return edge.isStart ? IndicatorSide.right : IndicatorSide.left;
+        return edge.isStart ? IndicatorSide.left : IndicatorSide.right;
       case AxisDirection.down:
         return edge.isStart ? IndicatorSide.top : IndicatorSide.bottom;
       case AxisDirection.left:
-        return edge.isStart ? IndicatorSide.left : IndicatorSide.right;
+        return edge.isStart ? IndicatorSide.right : IndicatorSide.left;
     }
   }
 
@@ -137,7 +137,7 @@ class IndicatorController extends ChangeNotifier {
   bool get isDragging => _currentState.isDragging;
   bool get isLoading => _currentState.isLoading;
   bool get isComplete => _currentState.isComplete;
-  bool get isHiding => _currentState.isHiding;
+  bool get isFinalizing => _currentState.isFinalizing;
   bool get isIdle => _currentState.isIdle;
 
   bool _shouldStopDrag;
@@ -150,7 +150,7 @@ class IndicatorController extends ChangeNotifier {
   bool _isRefreshEnabled;
 
   void stopDrag() {
-    if (isDragging || isArmed) {
+    if (state.isDragging || state.isArmed) {
       _shouldStopDrag = true;
     } else {
       throw StateError(

@@ -34,7 +34,7 @@ void main() {
     expect(controller.direction, AxisDirection.down);
     expect(controller.isIdle, isTrue);
     expect(controller.isDragging, isFalse);
-    expect(controller.isHiding, isFalse);
+    expect(controller.isFinalizing, isFalse);
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
@@ -62,7 +62,7 @@ void main() {
     expect(controller.state, equals(IndicatorState.idle));
     expect(controller.isIdle, isTrue);
     expect(controller.isDragging, isFalse);
-    expect(controller.isHiding, isFalse);
+    expect(controller.isFinalizing, isFalse);
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
@@ -70,15 +70,15 @@ void main() {
     controller.setIndicatorState(IndicatorState.dragging);
     expect(controller.isIdle, isFalse);
     expect(controller.isDragging, isTrue);
-    expect(controller.isHiding, isFalse);
+    expect(controller.isFinalizing, isFalse);
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
 
-    controller.setIndicatorState(IndicatorState.hiding);
+    controller.setIndicatorState(IndicatorState.finalizing);
     expect(controller.isIdle, isFalse);
     expect(controller.isDragging, isFalse);
-    expect(controller.isHiding, isTrue);
+    expect(controller.isFinalizing, isTrue);
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
@@ -86,7 +86,7 @@ void main() {
     controller.setIndicatorState(IndicatorState.armed);
     expect(controller.isIdle, isFalse);
     expect(controller.isDragging, isFalse);
-    expect(controller.isHiding, isFalse);
+    expect(controller.isFinalizing, isFalse);
     expect(controller.isArmed, isTrue);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
@@ -94,7 +94,7 @@ void main() {
     controller.setIndicatorState(IndicatorState.loading);
     expect(controller.isIdle, isFalse);
     expect(controller.isDragging, isFalse);
-    expect(controller.isHiding, isFalse);
+    expect(controller.isFinalizing, isFalse);
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isTrue);
     expect(controller.isComplete, isFalse);
@@ -102,7 +102,7 @@ void main() {
     controller.setIndicatorState(IndicatorState.complete);
     expect(controller.isIdle, isFalse);
     expect(controller.isDragging, isFalse);
-    expect(controller.isHiding, isFalse);
+    expect(controller.isFinalizing, isFalse);
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isTrue);
@@ -224,28 +224,28 @@ void main() {
         ..setAxisDirection(AxisDirection.left)
         ..setIndicatorEdge(IndicatorEdge.start);
 
-      expect(controller.side, IndicatorSide.left);
+      expect(controller.side, IndicatorSide.right);
     });
     test('AxisDirection.left - end edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.left)
         ..setIndicatorEdge(IndicatorEdge.end);
 
-      expect(controller.side, IndicatorSide.right);
+      expect(controller.side, IndicatorSide.left);
     });
     test('AxisDirection.right - start edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.right)
         ..setIndicatorEdge(IndicatorEdge.start);
 
-      expect(controller.side, IndicatorSide.right);
+      expect(controller.side, IndicatorSide.left);
     });
     test('AxisDirection.right - end edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.right)
         ..setIndicatorEdge(IndicatorEdge.end);
 
-      expect(controller.side, IndicatorSide.left);
+      expect(controller.side, IndicatorSide.right);
     });
 
     test('AxisDirection.right - end none', () {
@@ -282,7 +282,7 @@ void main() {
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
 
     controller = IndicatorController()
-      ..setIndicatorState(IndicatorState.hiding);
+      ..setIndicatorState(IndicatorState.finalizing);
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
   });
 }

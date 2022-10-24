@@ -418,6 +418,30 @@ void main() {
   );
 
   testWidgets(
+      'CustomRefreshIndicator - hide (programmatically) - when not shown',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 1),
+        ),
+      ),
+    );
+
+    final state = tester.state<CustomRefreshIndicatorState>(
+      find.byType(CustomRefreshIndicator),
+    );
+
+    expect(indicatorController.state.isIdle, isTrue);
+    expect(() => state.hide(), throwsA(isA<StateError>()));
+  });
+
+  testWidgets(
     'CustomRefreshIndicator - refresh starts while scroll view moves back to 0.0 after overscroll',
     (WidgetTester tester) async {
       final scrollController = ScrollController();
@@ -428,7 +452,7 @@ void main() {
           home: CustomRefreshIndicator(
             controller: indicatorController,
             builder: buildWithoutIndicator,
-            armedToLoadingDuration: const Duration(milliseconds: 300),
+            indicatorSettleDuration: const Duration(milliseconds: 150),
             onRefresh: fakeRefresh.instantRefresh,
             child: DefaultList(itemsCount: 6, controller: scrollController),
           ),
@@ -436,7 +460,7 @@ void main() {
       );
 
       if (debugDefaultTargetPlatformOverride == TargetPlatform.macOS) {
-        await tester.fling(find.text('1'), const Offset(0.0, 1500.0), 10000.0);
+        await tester.fling(find.text('1'), const Offset(0.0, 1500.0), 1000.0);
       } else {
         await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
       }
@@ -445,9 +469,11 @@ void main() {
       final lastScrollOffset = scrollController.offset;
       expect(lastScrollOffset, lessThan(0.0));
       expect(fakeRefresh.called, isFalse);
+      // start loading
+      await tester.pump(const Duration(milliseconds: 300));
+      // settle indicator
       await tester.pump(const Duration(milliseconds: 300));
       expect(scrollController.offset, greaterThan(lastScrollOffset));
-
       expect(fakeRefresh.called, isTrue);
       expect(scrollController.offset, lessThan(0.0));
     },
@@ -1004,10 +1030,10 @@ void main() {
       ),
       const IndicatorStateChange(
         IndicatorState.loading,
-        IndicatorState.hiding,
+        IndicatorState.finalizing,
       ),
       const IndicatorStateChange(
-        IndicatorState.hiding,
+        IndicatorState.finalizing,
         IndicatorState.idle,
       )
     ]);
@@ -1060,10 +1086,10 @@ void main() {
       ),
       const IndicatorStateChange(
         IndicatorState.complete,
-        IndicatorState.hiding,
+        IndicatorState.finalizing,
       ),
       const IndicatorStateChange(
-        IndicatorState.hiding,
+        IndicatorState.finalizing,
         IndicatorState.idle,
       )
     ]);
@@ -1118,5 +1144,91 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(fakeRefresh.called, isTrue);
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - autoRebuild - true - rebuilds the builder function with each change',
+      (WidgetTester tester) async {
+    int indicatorChangesCount = 0;
+    int rebuildsCount = 0;
+
+    final indicatorController = IndicatorController();
+    indicatorController.addListener(() => indicatorChangesCount++);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: (
+            BuildContext context,
+            Widget child,
+            IndicatorController controller,
+          ) {
+            rebuildsCount++;
+            return child;
+          },
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // wait for complete state
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(rebuildsCount, greaterThan(10));
+    expect(indicatorChangesCount, greaterThan(10));
+    // A single change only marks the widget as ready for rebuilding, so the number of rebuilds will be less than updates.
+    expect(rebuildsCount, lessThan(indicatorChangesCount));
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - autoRebuild - false - does not rebuilds the builder function with each change',
+      (WidgetTester tester) async {
+    int indicatorChangesCount = 0;
+    int rebuildsCount = 0;
+
+    final indicatorController = IndicatorController();
+    indicatorController.addListener(() => indicatorChangesCount++);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          autoRebuild: false,
+          controller: indicatorController,
+          builder: (
+            BuildContext context,
+            Widget child,
+            IndicatorController controller,
+          ) {
+            rebuildsCount++;
+            return child;
+          },
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    // start edge
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    // finish the scroll animation
+    await tester.pump(const Duration(seconds: 1));
+    // wait for complete state
+    await tester.pump(const Duration(seconds: 1));
+    // finish the indicator
+    await tester.pump(const Duration(seconds: 1));
+
+    /// Builder methos is called only once
+    expect(rebuildsCount, equals(1));
+    expect(indicatorChangesCount, greaterThan(10));
   });
 }

@@ -21,14 +21,12 @@ enum IndicatorState {
   /// (`CustomRefreshIndicatorData.value >= 1`)
   armed,
 
-  /// #### [CustomRefreshIndicator] is hiding indicator
-  /// when `onRefresh` future is resolved or indicator was canceled
-  /// (scroll ended when [IndicatorState] was equal to `dragging`
-  /// so `value` was less than `1` or the user started scrolling through the list)
-  ///
-  /// (`CustomRefreshIndicatorData.value` decreases to `0`
-  /// in duration specified by `CustomRefreshIndicator.draggingToIdleDuration`)
-  hiding,
+  /// Hiding the indicator after the onRefresh future completes.
+  finalizing,
+
+  /// Hiding the indicator after end of the user drag.
+  /// The onRefresh function was not triggered.
+  canceling,
 
   /// #### [CustomRefreshIndicator] is awaiting on `onRefresh` call result
   /// When `onRefresh` will resolve [CustomRefreshIndicator] will change state
@@ -55,7 +53,8 @@ extension IndicatorStateGetters on IndicatorState {
   bool get isIdle => this == IndicatorState.idle;
   bool get isDragging => this == IndicatorState.dragging;
   bool get isArmed => this == IndicatorState.armed;
-  bool get isHiding => this == IndicatorState.hiding;
+  bool get isFinalizing => this == IndicatorState.finalizing;
+  bool get isCanceling => this == IndicatorState.canceling;
   bool get isLoading => this == IndicatorState.loading;
   bool get isComplete => this == IndicatorState.complete;
 }

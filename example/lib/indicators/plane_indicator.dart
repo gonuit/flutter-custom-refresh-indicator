@@ -186,10 +186,9 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                   _startCloudAnimation();
                   _startPlaneAnimation();
                 } else if (_prevState == IndicatorState.loading &&
-                    currentState == IndicatorState.hiding) {
+                    _prevState != currentState) {
                   _stopPlaneAnimation();
-                } else if (_prevState == IndicatorState.hiding &&
-                    currentState != _prevState) {
+                } else if (_prevState != currentState && currentState.isIdle) {
                   _stopCloudAnimation();
                 }
 
