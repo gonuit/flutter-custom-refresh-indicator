@@ -38,12 +38,16 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
   /// Builds the scrollable.
   final IndicatorBuilder scrollableBuilder;
 
+  /// When set to *true*, the indicator will rotate in the [IndicatorState.loading] state.
+  final bool withRotation;
+
   const MaterialIndicatorDelegate({
     required this.builder,
     this.scrollableBuilder = _defaultBuilder,
     this.backgroundColor,
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
+    this.withRotation = true,
   });
 
   static Widget _defaultBuilder(
@@ -82,7 +86,10 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
                 type: MaterialType.circle,
                 color: backgroundColor,
                 elevation: 2.0,
-                child: builder(context, controller),
+                child: _InfiniteRotation(
+                  running: withRotation && controller.isLoading,
+                  child: builder(context, controller),
+                ),
               ),
             ),
           ),
@@ -189,4 +196,64 @@ class _PositionedIndicatorContainer extends StatelessWidget {
       ),
     );
   }
+}
+
+class _InfiniteRotation extends StatefulWidget {
+  final Widget? child;
+  final bool running;
+
+  const _InfiniteRotation({
+    required this.child,
+    required this.running,
+    Key? key,
+  }) : super(key: key);
+  @override
+  _InfiniteRotationState createState() => _InfiniteRotationState();
+}
+
+class _InfiniteRotationState extends State<_InfiniteRotation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _rotationController;
+
+  @override
+  void didUpdateWidget(_InfiniteRotation oldWidget) {
+    if (oldWidget.running != widget.running) {
+      if (widget.running) {
+        _startAnimation();
+      } else {
+        _rotationController
+          ..stop()
+          ..value = 0.0;
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    _rotationController = AnimationController(
+      duration: const Duration(milliseconds: 750),
+      vsync: this,
+    );
+
+    if (widget.running) {
+      _startAnimation();
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _rotationController.dispose();
+    super.dispose();
+  }
+
+  void _startAnimation() {
+    _rotationController.repeat();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      RotationTransition(turns: _rotationController, child: widget.child);
 }

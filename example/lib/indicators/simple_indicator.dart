@@ -1,5 +1,4 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:example/utils/infinite_rotation.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_indicator.dart';
@@ -7,13 +6,10 @@ import 'custom_indicator.dart';
 final simpleIndicator = CustomIndicatorConfig(
   builder: MaterialIndicatorDelegate(
     builder: (context, controller) {
-      return InfiniteRatation(
-        running: controller.isLoading,
-        child: Icon(
-          Icons.ac_unit,
-          color: Theme.of(context).colorScheme.primary,
-          size: 30,
-        ),
+      return Icon(
+        Icons.ac_unit,
+        color: Theme.of(context).colorScheme.primary,
+        size: 30,
       );
     },
   ),
@@ -22,13 +18,10 @@ final simpleIndicator = CustomIndicatorConfig(
 final simpleIndicatorWithOpacity = CustomIndicatorConfig(
   builder: MaterialIndicatorDelegate(
     builder: (context, controller) {
-      return InfiniteRatation(
-        running: controller.isLoading,
-        child: Icon(
-          Icons.ac_unit,
-          color: Theme.of(context).colorScheme.primary,
-          size: 30,
-        ),
+      return Icon(
+        Icons.ac_unit,
+        color: Theme.of(context).colorScheme.primary,
+        size: 30,
       );
     },
     scrollableBuilder: (context, child, controller) {

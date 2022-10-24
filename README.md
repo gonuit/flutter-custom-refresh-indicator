@@ -44,6 +44,28 @@ CustomRefreshIndicator(
 )
 ```
 
+## MaterialIndicatorDelegate
+If you just want to replace the content of the material indicator, you can use *MaterialIndicatorDelegate*, which builds a material container.
+```dart
+CustomRefreshIndicator(
+  /// Scrollable widget
+  child: ListView.builder(
+    itemBuilder: (BuildContext context, int index) => Text(index.toString()),
+  ),
+  /// delegate with configuration
+  builder: MaterialIndicatorDelegate(
+    builder: (context, controller) {
+      return Icon(
+        Icons.ac_unit,
+        color: Colors.black,
+        size: 30,
+      );
+    },
+  ),
+  onRefresh: myAsyncRefreshMethod,
+)
+```
+
 # Examples
 
 Almost all of these examples are available in the example application.
