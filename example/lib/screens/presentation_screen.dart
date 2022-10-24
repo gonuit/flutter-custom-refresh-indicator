@@ -43,9 +43,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                     AnimatedBuilder(
                       animation: _controller,
                       builder: (BuildContext context, Widget? child) {
-                        return AnimatedAlign(
-                          curve: Curves.easeInOut,
-                          duration: const Duration(seconds: 1),
+                        return Align(
                           alignment: _controller.side.isNone
                               ? Alignment.center
                               : _controller.side.isBottom

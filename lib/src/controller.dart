@@ -39,7 +39,7 @@ class IndicatorController extends ChangeNotifier {
     _scrollingDirection = userScrollDirection;
   }
 
-  /// Direction in which user is scrolling
+  /// The direction in which the user scrolls.
   ScrollDirection get scrollingDirection => _scrollingDirection;
 
   /// Scrolling is happening in the positive scroll offset direction.
@@ -81,6 +81,7 @@ class IndicatorController extends ChangeNotifier {
     _edge = edge;
   }
 
+  /// The side of the scrollable on which the indicator should be displayed.
   IndicatorSide get side {
     final edge = this.edge;
     if (edge == null) return IndicatorSide.none;
@@ -96,7 +97,7 @@ class IndicatorController extends ChangeNotifier {
     }
   }
 
-  /// The direction in which list scrolls
+  /// The direction in which the list scrolls
   ///
   /// For example:
   /// ```

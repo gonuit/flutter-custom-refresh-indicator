@@ -1,4 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -10,7 +11,6 @@ typedef IndicatorBuilder = Widget Function(
   IndicatorController controller,
 );
 
-typedef OnRefresh = Future<void> Function();
 typedef OnStateChanged = void Function(IndicatorStateChange change);
 
 extension on IndicatorTrigger {
@@ -39,15 +39,17 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// This value matches the extent to armed of built-in [RefreshIndicator] widget.
   static const defaultContainerExtentPercentageToArmed = 0.25 * (1 / 1.5);
 
-  /// Duration of changing [IndicatorController] value from `<1.0` to `0.0`.
-  /// When user stop dragging list before it become to armed [IndicatorState].
+  /// Duration of hiding the indicator when dragging was stopped before
+  /// the indicator was armed (the *onRefresh* callback was not called).
+  ///
+  /// The default is 300 milliseconds.
   final Duration indicatorCancelDuration;
 
   /// The time of settling the pointer on the target location after releasing
   /// the pointer in the armed state.
   ///
   /// During this process, the value of the indicator decreases from its current value,
-  /// which can be greater than or equal to 1.0 but less than 1.5,
+  /// which can be greater than or equal to 1.0 but less or equal to 1.5,
   /// to a target value of `1.0`.
   /// During this process, the state is set to [IndicatorState.loading].
   ///
@@ -57,19 +59,20 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Duration of hiding the pointer after the [onRefresh] function completes.
   ///
   /// During this time, the value of the controller decreases from `1.0` to `0.0`
-  /// with a state set to [IndicatorState.hiding].
+  /// with a state set to [IndicatorState.finalizing].
   ///
   /// The default is 100 milliseconds.
   final Duration indicatorFinalizeDuration;
 
-  /// {@macro custom_refresh_indicator.complete_state}
+  /// Duration for which the indicator remains at value of *1.0* and
+  /// [IndicatorState.complete] state after the [onRefresh] function completes.
   final Duration? completeStateDuration;
 
-  /// A check that specifies whether a [ScrollNotification] should be
-  /// handled by this widget.
+  /// Determines whether the received [ScrollNotification] should
+  /// be handled by this widget.
   ///
-  /// By default, checks whether `notification.depth == 0`. Set it to something
-  /// else for more complicated layouts.
+  /// By default, it only accepts *0* depth level notifications. This can be helpful
+  /// for more complex layouts with nested scrollviews.
   final ScrollNotificationPredicate notificationPredicate;
 
   /// Whether to display leading scroll indicator
@@ -93,28 +96,22 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// The default value equals `0.1(6)`.
   final double containerExtentPercentageToArmed;
 
-  /// Part of widget tree that contains scrollable element (like ListView).
-  /// Scroll notifications from the first scrollable element will be used
-  /// to calculate [IndicatorController] data.
+  /// Part of widget tree that contains scrollable widget (like ListView).
   final Widget child;
 
-  /// Allows you to trigger the indicator from the other side
-  /// of the scrollview (from the end of the list).
-  // final bool? reversed;
-
-  /// Function that builds the custom refresh indicator
+  /// Function that builds the custom refresh indicator.
   final IndicatorBuilder builder;
 
-  /// A function that's called when the user has dragged the refresh indicator
-  /// far enough to demonstrate that they want the app to refresh.
-  /// The returned [Future] must complete when the refresh operation is finished.
-  final OnRefresh onRefresh;
+  /// A function that is called when the user drags the refresh indicator
+  /// far enough to trigger a "pull to refresh" action.
+  final AsyncCallback onRefresh;
 
   /// Called on every indicator state change.
   final OnStateChanged? onStateChanged;
 
-  /// Indicator controller keeps all thata related to refresh indicator.
-  /// It extends [ChangeNotifier] so that it could be listen for changes.
+  /// The indicator controller stores all the data related
+  /// to the refresh indicator widget.
+  /// It extends the [ChangeNotifier] class.
   ///
   /// TIP:
   /// Consider using it in combination with [AnimationBuilder] as animation argument
@@ -129,7 +126,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// By default, the "startEdge" of the scrollable is used.
   final IndicatorTrigger trigger;
 
-  /// Used to configure how [CustomRefreshIndicator] can be triggered.
+  /// Configures how [CustomRefreshIndicator] can be triggered.
   ///
   /// Works in the same way as the triggerMode of the built-in
   /// [RefreshIndicator] widget.
@@ -142,7 +139,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   ///
   /// This can be useful for optimizing performance in complex widgets.
   /// When setting this to false, you can manage which part of the ui you want to rebuild,
-  /// such as using the AnimationBuilder widget.
+  /// such as using the [AnimationBuilder] widget in conjunction with [IndicatorController].
   final bool autoRebuild;
 
   const CustomRefreshIndicator({

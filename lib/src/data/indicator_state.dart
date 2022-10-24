@@ -1,52 +1,39 @@
-/// Describes state of CustomRefreshIndicator
+/// Describes state of CustomRefreshIndicator widget.
 enum IndicatorState {
-  /// #### [CustomRefreshIndicator] is idle (There is no action)
-  ///
-  /// (`CustomRefreshIndicatorData.value == 0`)
+  ///In this state, the indicator is not visible.
+  ///No user action is performed. Value remains at *0.0*.
   idle,
 
-  /// #### Whether user is dragging [CustomRefreshIndicator]
-  /// ending the scroll **WILL NOT** result in `onRefresh` call
-  ///
-  /// (`CustomRefreshIndicatorData.value < 1`)
+  /// The user starts scrolling/dragging the pointer to refresh.
+  /// Releasing the pointer in this state will not trigger
+  /// the *onRefresh* function. The controller value changes
+  /// from *0.0* to *1.0*.
   dragging,
 
-  /// #### [CustomRefreshIndicator] is armed
-  /// ending the scroll **WILL** result in:
-  /// - `CustomRefreshIndicator.onRefresh` call
-  /// - change of status to `loading`
-  /// - decreasing `CustomRefreshIndicatorData.value` to `1` in
-  /// duration specified by `CustomRefreshIndicator.armedToLoadingDuration`)
-  ///
-  /// (`CustomRefreshIndicatorData.value >= 1`)
-  armed,
-
-  /// Hiding the indicator after the onRefresh future completes.
-  finalizing,
-
-  /// Hiding the indicator after end of the user drag.
-  /// The onRefresh function was not triggered.
+  /// The function *onRefresh* **has not been executed**,
+  /// and the indicator is hidding from its current value
+  /// that is lower than *1.0* to *0.0*.
   canceling,
 
-  /// #### [CustomRefreshIndicator] is awaiting on `onRefresh` call result
-  /// When `onRefresh` will resolve [CustomRefreshIndicator] will change state
-  /// from `loading` to `finalizing` and decrease `CustomRefreshIndicatorData.value`
-  /// from `1` to `0` in duration specified by `CustomRefreshIndicator.loadingToIdleDuration`
-  ///
-  /// (`CustomRefreshIndicatorData.value == 1`)
+  /// The user has dragged the pointer further than the distance
+  /// declared by *containerExtentPercentageToArmed* or *offsetToArmed*
+  /// (over the value of *1.0*). Releasing the pointer in this state will
+  /// trigger the *onRefresh* function.
+  armed,
+
+  /// The user has released the indicator in the armed state.
+  /// The indicator settles on its target value *1.0* and
+  /// the *onRefresh* function is called.
   loading,
 
-  /// ### IMPORTANT
-  /// This state is skipped by default.
-  ///
-  /// {@template custom_refresh_indicator.complete_state}
-  /// If [CustomRefreshIndicator.completeStateDuration] argument is provided to CustomRefreshIndicator,
-  /// state will changed from [loading] to [complete] for duration of [CustomRefreshIndicator.completeStateDuration].
-  ///
-  /// If [CustomRefreshIndicator.completeStateDuration] equals `null`, state
-  /// will skip [complete] state and will immediately become [hidding].
-  /// {@endtemplate}
+  /// **OPTIONAL** - Provide `completeStateDuration` argument to enable it.
+  /// The *onRefresh* callback has completed and the pointer remains
+  /// at value *1.0* for the specified duration.
   complete,
+
+  /// The *onRefresh* function **has been executed**, and the indicator
+  /// hides from the value *1.0* to *0.0*.
+  finalizing,
 }
 
 extension IndicatorStateGetters on IndicatorState {
