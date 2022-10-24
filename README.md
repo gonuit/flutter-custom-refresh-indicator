@@ -147,11 +147,11 @@ The default value equals `0.1(6)`.
 
 ### trigger (IndicatorTrigger)
 Defines the trigger for the pull to refresh gesture.
-| value         | Description                                                                                                                                                                |
-| ------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **startEdge** | Pull to refresh can be triggered only from the **start** edge of the list. Mostly top side, but can be bottom for reversed ListView (with *reverse* argument set to true). |
-| **endEdge**   | Pull to refresh can be triggered only from the **end** edge of the list. Mostly bottom, but can be top for reversed ListView (with *reverse* argument set to true).        |
-| **bothEdges** | Pull to refresh can be triggered from **both edges** of the list.                                                                                                          |
+| value            | Description                                                                                                                                                                  |
+| ---------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **leadingEdge**  | Pull to refresh can be triggered only from the **leading** edge of the list. Mostly top side, but can be bottom for reversed ListView (with *reverse* argument set to true). |
+| **trailingEdge** | Pull to refresh can be triggered only from the **trailing** edge of the list. Mostly bottom, but can be top for reversed ListView (with *reverse* argument set to true).     |
+| **bothEdges**    | Pull to refresh can be triggered from **both edges** of the list.                                                                                                            |
 
 ### triggerMode (IndicatorTriggerMode)
 Configures how *CustomRefreshIndicator* widget can be triggered. Works in the same way as the triggerMode of the built-in *RefreshIndicator* widget.
@@ -177,7 +177,7 @@ Open the sample application and try it yourself ([online example](https://custom
 
 [![Controller data example](readme/controller_data.gif)](https://custom-refresh-indicator.klyta.it/#/presentation)  
 
-### state
+### state (IndicatorState)
 The following table describes each state of the indicator controller.
 
 | value          | Description                                                                                                                                                                                                                        |

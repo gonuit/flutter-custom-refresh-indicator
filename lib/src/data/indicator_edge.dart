@@ -1,9 +1,9 @@
 enum IndicatorEdge {
-  start,
-  end,
+  leading,
+  trailing,
 }
 
 extension IndicatorEdgeGetters on IndicatorEdge {
-  bool get isEnd => this == IndicatorEdge.end;
-  bool get isStart => this == IndicatorEdge.start;
+  bool get isTrailing => this == IndicatorEdge.trailing;
+  bool get isLeading => this == IndicatorEdge.leading;
 }

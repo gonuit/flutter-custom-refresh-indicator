@@ -189,61 +189,61 @@ void main() {
   });
 
   group('IndicatorSide -', () {
-    test('AxisDirection.up - start edge', () {
+    test('AxisDirection.up - leading edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.up)
-        ..setIndicatorEdge(IndicatorEdge.start);
+        ..setIndicatorEdge(IndicatorEdge.leading);
 
       expect(controller.side, IndicatorSide.bottom);
     });
-    test('AxisDirection.up - end edge', () {
+    test('AxisDirection.up - trailing edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.up)
-        ..setIndicatorEdge(IndicatorEdge.end);
+        ..setIndicatorEdge(IndicatorEdge.trailing);
 
       expect(controller.side, IndicatorSide.top);
     });
 
-    test('AxisDirection.down - start edge', () {
+    test('AxisDirection.down - leading edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.down)
-        ..setIndicatorEdge(IndicatorEdge.start);
+        ..setIndicatorEdge(IndicatorEdge.leading);
 
       expect(controller.side, IndicatorSide.top);
     });
-    test('AxisDirection.down - end edge', () {
+    test('AxisDirection.down - trailing edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.down)
-        ..setIndicatorEdge(IndicatorEdge.end);
+        ..setIndicatorEdge(IndicatorEdge.trailing);
 
       expect(controller.side, IndicatorSide.bottom);
     });
 
-    test('AxisDirection.left - start edge', () {
+    test('AxisDirection.left - leading edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.left)
-        ..setIndicatorEdge(IndicatorEdge.start);
+        ..setIndicatorEdge(IndicatorEdge.leading);
 
       expect(controller.side, IndicatorSide.right);
     });
-    test('AxisDirection.left - end edge', () {
+    test('AxisDirection.left - trailing edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.left)
-        ..setIndicatorEdge(IndicatorEdge.end);
+        ..setIndicatorEdge(IndicatorEdge.trailing);
 
       expect(controller.side, IndicatorSide.left);
     });
-    test('AxisDirection.right - start edge', () {
+    test('AxisDirection.right - leading edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.right)
-        ..setIndicatorEdge(IndicatorEdge.start);
+        ..setIndicatorEdge(IndicatorEdge.leading);
 
       expect(controller.side, IndicatorSide.left);
     });
-    test('AxisDirection.right - end edge', () {
+    test('AxisDirection.right - trailing edge', () {
       final controller = IndicatorController()
         ..setAxisDirection(AxisDirection.right)
-        ..setIndicatorEdge(IndicatorEdge.end);
+        ..setIndicatorEdge(IndicatorEdge.trailing);
 
       expect(controller.side, IndicatorSide.right);
     });

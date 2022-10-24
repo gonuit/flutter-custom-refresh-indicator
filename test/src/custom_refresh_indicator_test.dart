@@ -205,7 +205,7 @@ void main() {
     expect(controller.value, equals(1.0));
     expect(controller.state, equals(IndicatorState.loading));
     expect(controller.hasEdge, isTrue);
-    expect(controller.edge, IndicatorEdge.start);
+    expect(controller.edge, IndicatorEdge.leading);
     expect(controller.side, IndicatorSide.top);
     expect(controller.direction, AxisDirection.down);
     expect(controller.scrollingDirection, ScrollDirection.forward);
@@ -235,7 +235,7 @@ void main() {
     expect(controller.value, equals(1.0));
     expect(controller.state, equals(IndicatorState.loading));
     expect(controller.hasEdge, isTrue);
-    expect(controller.edge, IndicatorEdge.start);
+    expect(controller.edge, IndicatorEdge.leading);
     expect(controller.side, IndicatorSide.bottom);
     expect(controller.direction, AxisDirection.up);
     expect(controller.scrollingDirection, ScrollDirection.forward);
@@ -885,7 +885,7 @@ void main() {
 
     expect(indicatorController.value, greaterThan(0.0));
     expect(indicatorController.value, lessThanOrEqualTo(1.0));
-    expect(indicatorController.edge, IndicatorEdge.start);
+    expect(indicatorController.edge, IndicatorEdge.leading);
     expect(fakeRefresh.called, isTrue);
     // finish the indicator
     await tester.pump(const Duration(seconds: 1));
@@ -906,7 +906,7 @@ void main() {
 
     expect(indicatorController.value, greaterThan(0.0));
     expect(indicatorController.value, lessThanOrEqualTo(1.0));
-    expect(indicatorController.edge, IndicatorEdge.end);
+    expect(indicatorController.edge, IndicatorEdge.trailing);
     expect(fakeRefresh.called, isTrue);
 
     // finish the indicator
@@ -924,7 +924,7 @@ void main() {
         home: CustomRefreshIndicator(
           controller: indicatorController,
           builder: buildWithoutIndicator,
-          trigger: IndicatorTrigger.endEdge,
+          trigger: IndicatorTrigger.trailingEdge,
           onRefresh: fakeRefresh.instantRefresh,
           child: const DefaultList(itemsCount: 1),
         ),
@@ -945,7 +945,7 @@ void main() {
 
     expect(indicatorController.value, greaterThan(0.0));
     expect(indicatorController.value, lessThanOrEqualTo(1.0));
-    expect(indicatorController.edge, IndicatorEdge.end);
+    expect(indicatorController.edge, IndicatorEdge.trailing);
     expect(fakeRefresh.called, isTrue);
 
     // finish the indicator
@@ -963,7 +963,7 @@ void main() {
         home: CustomRefreshIndicator(
           controller: indicatorController,
           builder: buildWithoutIndicator,
-          trigger: IndicatorTrigger.startEdge,
+          trigger: IndicatorTrigger.leadingEdge,
           onRefresh: fakeRefresh.instantRefresh,
           child: const DefaultList(itemsCount: 1),
         ),
@@ -984,7 +984,7 @@ void main() {
 
     expect(indicatorController.value, greaterThan(0.0));
     expect(indicatorController.value, lessThanOrEqualTo(1.0));
-    expect(indicatorController.edge, IndicatorEdge.start);
+    expect(indicatorController.edge, IndicatorEdge.leading);
     expect(fakeRefresh.called, isTrue);
     // finish the indicator
     await tester.pump(const Duration(seconds: 1));

@@ -16,10 +16,10 @@ typedef OnStateChanged = void Function(IndicatorStateChange change);
 extension on IndicatorTrigger {
   IndicatorEdge? get derivedEdge {
     switch (this) {
-      case IndicatorTrigger.startEdge:
-        return IndicatorEdge.start;
-      case IndicatorTrigger.endEdge:
-        return IndicatorEdge.end;
+      case IndicatorTrigger.leadingEdge:
+        return IndicatorEdge.leading;
+      case IndicatorTrigger.trailingEdge:
+        return IndicatorEdge.trailing;
 
       /// In this case, the side is determined by the direction of the user's
       /// first scrolling gesture, not the trigger itself.
@@ -148,7 +148,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     required this.onRefresh,
     required this.builder,
     this.controller,
-    this.trigger = IndicatorTrigger.startEdge,
+    this.trigger = IndicatorTrigger.leadingEdge,
     this.triggerMode = IndicatorTriggerMode.onEdge,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.autoRebuild = true,
@@ -253,9 +253,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     IndicatorTrigger trigger,
   ) {
     switch (trigger) {
-      case IndicatorTrigger.startEdge:
+      case IndicatorTrigger.leadingEdge:
         return notification.metrics.extentBefore == 0;
-      case IndicatorTrigger.endEdge:
+      case IndicatorTrigger.trailingEdge:
         return notification.metrics.extentAfter == 0;
       case IndicatorTrigger.bothEdges:
         return notification.metrics.extentBefore == 0 ||
@@ -295,12 +295,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       if (notification.metrics.extentBefore == 0 &&
           notification.scrollDelta!.isNegative) {
         controller
-          ..setIndicatorEdge(IndicatorEdge.start)
+          ..setIndicatorEdge(IndicatorEdge.leading)
           ..setIndicatorState(IndicatorState.dragging);
       } else if (notification.metrics.extentAfter == 0 &&
           !notification.scrollDelta!.isNegative) {
         controller
-          ..setIndicatorEdge(IndicatorEdge.end)
+          ..setIndicatorEdge(IndicatorEdge.trailing)
           ..setIndicatorState(IndicatorState.dragging);
       }
     }
@@ -313,7 +313,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       /// Handle the indicator state depending on scrolling direction
     } else if (controller.state.isDragging || controller.state.isArmed) {
       switch (controller.edge) {
-        case IndicatorEdge.start:
+        case IndicatorEdge.leading:
           if (notification.metrics.extentBefore > 0.0) {
             _hide();
           } else {
@@ -323,7 +323,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           }
           break;
 
-        case IndicatorEdge.end:
+        case IndicatorEdge.trailing:
           if (notification.metrics.extentAfter > 0.0) {
             _hide();
           } else {
@@ -347,12 +347,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     if (!controller.hasEdge) {
       controller.setIndicatorEdge(
         notification.overscroll.isNegative
-            ? IndicatorEdge.start
-            : IndicatorEdge.end,
+            ? IndicatorEdge.leading
+            : IndicatorEdge.trailing,
       );
     }
 
-    if (controller.edge!.isStart) {
+    if (controller.edge!.isLeading) {
       _dragOffset -= notification.overscroll;
     } else {
       _dragOffset += notification.overscroll;

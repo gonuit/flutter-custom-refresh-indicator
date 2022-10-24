@@ -87,13 +87,13 @@ class IndicatorController extends ChangeNotifier {
     if (edge == null) return IndicatorSide.none;
     switch (direction) {
       case AxisDirection.up:
-        return edge.isStart ? IndicatorSide.bottom : IndicatorSide.top;
+        return edge.isLeading ? IndicatorSide.bottom : IndicatorSide.top;
       case AxisDirection.right:
-        return edge.isStart ? IndicatorSide.left : IndicatorSide.right;
+        return edge.isLeading ? IndicatorSide.left : IndicatorSide.right;
       case AxisDirection.down:
-        return edge.isStart ? IndicatorSide.top : IndicatorSide.bottom;
+        return edge.isLeading ? IndicatorSide.top : IndicatorSide.bottom;
       case AxisDirection.left:
-        return edge.isStart ? IndicatorSide.right : IndicatorSide.left;
+        return edge.isLeading ? IndicatorSide.right : IndicatorSide.left;
     }
   }
 
