@@ -64,9 +64,8 @@ CustomRefreshIndicator(
 )
 ```
 ### Effect:
-![simple_indicator](readme/simple_indicator.gif)      
-
-
+![simple_indicator](readme/simple_indicator.gif)
+  
 # Examples
 
 Almost all of these examples are available in the example application.

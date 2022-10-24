@@ -1,6 +1,6 @@
 name: custom_refresh_indicator
 description: Flutter Widget that make it easy to implement custom refresh indicator.
-version: 2.0.0-beta.1
+version: 2.0.0-dev.6
 repository: https://github.com/gonuit/flutter-custom-refresh-indicator
 issue_tracker: https://github.com/gonuit/flutter-custom-refresh-indicator/issues
 homepage: https://github.com/gonuit/flutter-custom-refresh-indicator
