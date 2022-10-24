@@ -30,7 +30,7 @@ enum IndicatorState {
 
   /// #### [CustomRefreshIndicator] is awaiting on `onRefresh` call result
   /// When `onRefresh` will resolve [CustomRefreshIndicator] will change state
-  /// from `loading` to `hiding` and decrease `CustomRefreshIndicatorData.value`
+  /// from `loading` to `finalizing` and decrease `CustomRefreshIndicatorData.value`
   /// from `1` to `0` in duration specified by `CustomRefreshIndicator.loadingToIdleDuration`
   ///
   /// (`CustomRefreshIndicatorData.value == 1`)

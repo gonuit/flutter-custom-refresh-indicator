@@ -1,7 +1,8 @@
-## 2.0.0-dev.4
+## 2.0.0-dev.5
 ## Breaking changes
 - Added `autoRebuild` flag which is by default set to `true`.
   From now on, there is no need to wrap widgets in the builder function with the `AnimatedBuilder` widget, as it will be automatically rebuilt. For optimization purposes, you can use the old behavior by setting the `autoRebuild` argument to false.
+- Remove *IndicatorState.hiding* state. Instead introduced *IndicatorState.finalizing* and *IndicatorState.canceling*.
 - Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly does.
 - Changed the default value of the `defaultContainerExtentPercentageToArmed` from `0.20` to `0.1(6)` to match the behavior of the built-in indicator widget.
 - Removed deprecated **IndicatorStateHelper** class. Instead use **CustomRefreshIndicator.onStateChanged** method.
