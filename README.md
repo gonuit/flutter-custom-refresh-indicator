@@ -60,6 +60,7 @@ Almost all of these examples are available in the example application.
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: |
 |                                                             ![programmatically_controlled](readme/programmatically_controlled.gif)                                                             | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). |
 
+___
 # Documentation
 
 ## CustomRefreshIndicator
@@ -166,6 +167,8 @@ Defaults to *IndicatorTriggerMode.onEdge*.
 When set to *true*, the *builder* function will be triggered whenever the controller changes. This can be useful for optimizing performance in complex widgets. When setting this to *false*, you can manage which part of the ui you want to rebuild, such as using the *AnimationBuilder* widget in conjunction with *IndicatorController*.
   
 The default is *true*.
+
+___
 
 ## IndicatorController
 

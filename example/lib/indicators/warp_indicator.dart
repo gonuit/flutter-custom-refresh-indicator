@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/rendering.dart';
@@ -23,7 +24,7 @@ typedef StarColorGetter = Color Function(int index);
 class WarpIndicator extends StatefulWidget {
   final Widget child;
   final int starsCount;
-  final OnRefresh onRefresh;
+  final AsyncCallback onRefresh;
   final IndicatorController? controller;
   final Color skyColor;
   final StarColorGetter starColorGetter;
