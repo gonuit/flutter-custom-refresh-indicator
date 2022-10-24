@@ -20,9 +20,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
           trailingScrollIndicatorVisible: false,
           builder: customIndicator.builder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-          child: const ExampleList(
-            itemCount: 6,
-          ),
+          child: const ExampleList(itemCount: 6),
         ),
       ),
     );
