@@ -93,6 +93,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
     return CustomRefreshIndicator(
       offsetToArmed: _indicatorSize,
       onRefresh: () => Future.delayed(const Duration(seconds: 4)),
+      autoRebuild: false,
       child: widget.child,
       builder: (
         BuildContext context,

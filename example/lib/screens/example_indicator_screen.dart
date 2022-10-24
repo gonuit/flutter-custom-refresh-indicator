@@ -19,6 +19,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
           leadingScrollIndicatorVisible: false,
           trailingScrollIndicatorVisible: false,
           offsetToArmed: 200.0,
+          autoRebuild: true,
           builder: customIndicator.builder,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: const ExampleList(

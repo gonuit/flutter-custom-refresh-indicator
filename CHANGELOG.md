@@ -1,10 +1,11 @@
 ## 2.0.0-dev.4
 ## Breaking changes
+- Added `autoRebuild` flag which is by default set to `true`.
+  From now on, there is no need to wrap widgets in the builder function with the `AnimatedBuilder` widget, as it will be automatically rebuilt. For optimization purposes, you can use the old behavior by setting the `autoRebuild` argument to false.
 - Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly does.
 - Changed the default value of the `defaultContainerExtentPercentageToArmed` from `0.20` to `0.1(6)` to match the behavior of the built-in indicator widget.
 - Removed deprecated **IndicatorStateHelper** class. Instead use **CustomRefreshIndicator.onStateChanged** method.
 - Removed deprecated **leadingGlowVisible** and **trailingGlowVisible** arguments. Instead use **leadingScrollIndicatorVisible** and  **trailingScrollIndicatorVisible** accoringly.
-- The default value of the **trailingScrollIndicatorVisible** for the **EnvelopRefreshIndicator** has been changed from **true** to **false**.
 - Allow setting the edge of the list that will trigger the pull to refresh action.
   - Introduced **IndicatorEdge**, **IndicatorTrigger**, **IndicatorSide** and **IndicatorTriggerMode** classes.
   - Replaced **reversed** argument of the **CustomRefreshIndicator** class with **trigger**.
@@ -15,6 +16,7 @@
 - Now the *onRefresh* function will be triggered immediately when the indicator is released in the armed state. Previously, the *onRefresh* function was triggered when the indicator reached a target value in the loading state of `1.0`.
 - Fixed a bug causing the *onRefresh* method not to be triggered on the iOS platform due to bounce physics.
 - Implemented equality operator for *IndicatorStateChange* class.
+- Improved code coverage with tests
 - Multiple minor fixes, improvements and optimizations.
 ## 1.2.1
 - Flutter 3.0.0 migration backward compatibility fix ([#31](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/31)) by [Jordan1122](https://github.com/Jordan1122)

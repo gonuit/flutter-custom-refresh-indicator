@@ -30,97 +30,92 @@ class EnvelopRefreshIndicator extends StatelessWidget {
       trailingScrollIndicatorVisible: trailingScrollIndicatorVisible,
       builder: (context, child, controller) =>
           LayoutBuilder(builder: (context, constraints) {
-        return AnimatedBuilder(
-            animation: controller,
-            builder: (context, _) {
-              final widgetWidth = constraints.maxWidth;
-              final widgetHeight = constraints.maxHeight;
-              final letterTopWidth = (widgetWidth / 2) + 50;
+        final widgetWidth = constraints.maxWidth;
+        final widgetHeight = constraints.maxHeight;
+        final letterTopWidth = (widgetWidth / 2) + 50;
 
-              final leftValue =
-                  (widgetWidth - (letterTopWidth * controller.value / 1))
-                      .clamp(letterTopWidth - 100, double.infinity);
+        final leftValue =
+            (widgetWidth - (letterTopWidth * controller.value / 1))
+                .clamp(letterTopWidth - 100, double.infinity);
 
-              final rightValue =
-                  (widgetWidth - (widgetWidth * controller.value / 1))
-                      .clamp(0.0, double.infinity);
+        final rightValue = (widgetWidth - (widgetWidth * controller.value / 1))
+            .clamp(0.0, double.infinity);
 
-              final opacity = (controller.value - 1).clamp(0, 0.5) / 0.5;
-              return Stack(
-                children: <Widget>[
-                  Transform.scale(
-                    scale: 1 - 0.1 * controller.value.clamp(0.0, 1.0),
-                    child: child,
-                  ),
-                  Positioned(
-                    right: rightValue,
-                    child: Container(
-                      height: widgetHeight,
-                      width: widgetWidth,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: _defaultShadow,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: leftValue,
-                    child: CustomPaint(
-                      painter: TrianglePainter(
-                        strokeColor: Colors.white,
-                        paintingStyle: PaintingStyle.fill,
-                      ),
-                      child: SizedBox(
-                        height: widgetHeight,
-                        width: letterTopWidth,
-                      ),
-                    ),
-                  ),
-                  if (controller.value >= 1)
-                    Container(
-                      padding: const EdgeInsets.only(right: 100),
-                      child: Transform.scale(
-                        scale: controller.value,
-                        child: Opacity(
-                          opacity: controller.isLoading ? 1 : opacity,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: _circleSize,
-                              height: _circleSize,
-                              decoration: BoxDecoration(
-                                boxShadow: _defaultShadow,
-                                color: accent ??
-                                    Theme.of(context).colorScheme.primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    child: CircularProgressIndicator(
-                                      valueColor: const AlwaysStoppedAnimation(
-                                          Colors.black),
-                                      value: controller.isLoading ? null : 0,
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.mail_outline,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ),
-                                ],
+        final opacity = (controller.value - 1).clamp(0, 0.5) / 0.5;
+        return Stack(
+          children: <Widget>[
+            Transform.scale(
+              scale: 1 - 0.1 * controller.value.clamp(0.0, 1.0),
+              child: child,
+            ),
+            Positioned(
+              right: rightValue,
+              child: Container(
+                height: widgetHeight,
+                width: widgetWidth,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: _defaultShadow,
+                ),
+              ),
+            ),
+            Positioned(
+              left: leftValue,
+              child: CustomPaint(
+                painter: TrianglePainter(
+                  strokeColor: Colors.white,
+                  paintingStyle: PaintingStyle.fill,
+                ),
+                child: SizedBox(
+                  height: widgetHeight,
+                  width: letterTopWidth,
+                ),
+              ),
+            ),
+            if (controller.value >= 1)
+              Container(
+                padding: const EdgeInsets.only(right: 100),
+                child: Transform.scale(
+                  scale: controller.value,
+                  child: Opacity(
+                    opacity: controller.isLoading ? 1 : opacity,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: _circleSize,
+                        height: _circleSize,
+                        decoration: BoxDecoration(
+                          boxShadow: _defaultShadow,
+                          color:
+                              accent ?? Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    const AlwaysStoppedAnimation(Colors.black),
+                                value: controller.isLoading ? null : 0,
                               ),
                             ),
-                          ),
+                            const Icon(
+                              Icons.mail_outline,
+                              color: Colors.white,
+                              size: 35,
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                ],
-              );
-            });
+                    ),
+                  ),
+                ),
+              )
+          ],
+        );
       }),
       child: child,
       onRefresh: () => Future<void>.delayed(const Duration(seconds: 2)),

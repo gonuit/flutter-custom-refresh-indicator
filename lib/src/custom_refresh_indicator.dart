@@ -134,15 +134,24 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Defaults to [IndicatorTriggerMode.onEdge].
   final IndicatorTriggerMode triggerMode;
 
+  /// When set to true, the [builder] function will be called whenever the controller changes.
+  /// It is set to `true` by default.
+  ///
+  /// This can be useful for optimizing performance in complex widgets.
+  /// When setting this to false, you can manage which part of the ui you want to rebuild,
+  /// such as using the AnimationBuilder widget.
+  final bool autoRebuild;
+
   const CustomRefreshIndicator({
     Key? key,
     required this.child,
     required this.onRefresh,
     required this.builder,
+    this.controller,
     this.trigger = IndicatorTrigger.startEdge,
     this.triggerMode = IndicatorTriggerMode.onEdge,
     this.notificationPredicate = defaultScrollNotificationPredicate,
-    this.controller,
+    this.autoRebuild = true,
     this.offsetToArmed,
     this.onStateChanged,
     double? containerExtentPercentageToArmed,
@@ -558,17 +567,26 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(
-      context,
-      NotificationListener<ScrollNotification>(
-        onNotification: _handleScrollNotification,
-        child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: _handleScrollIndicatorNotification,
-          child: widget.child,
-        ),
+    final child = NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: _handleScrollIndicatorNotification,
+        child: widget.child,
       ),
-      controller,
     );
+
+    if (widget.autoRebuild) {
+      return AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => widget.builder(context, child, controller),
+      );
+    } else {
+      return widget.builder(
+        context,
+        child,
+        controller,
+      );
+    }
   }
 
   @override

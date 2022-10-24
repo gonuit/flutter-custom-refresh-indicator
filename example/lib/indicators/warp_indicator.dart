@@ -131,6 +131,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
       leadingScrollIndicatorVisible: false,
       trailingScrollIndicatorVisible: false,
       onRefresh: widget.onRefresh,
+      autoRebuild: false,
       onStateChanged: (change) {
         if (change.didChange(to: IndicatorState.loading)) {
           _startShakeAnimation();

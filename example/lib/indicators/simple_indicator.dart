@@ -72,13 +72,9 @@ final simpleIndicatorWithOpacity = CustomIndicatorConfig(
   builder: (context, child, controller) =>
       LayoutBuilder(builder: (context, constraints) {
     return Stack(children: <Widget>[
-      AnimatedBuilder(
+      Opacity(
+        opacity: 1.0 - controller.value.clamp(0.0, 1.0),
         child: child,
-        animation: controller,
-        builder: (context, child) => Opacity(
-          opacity: 1.0 - controller.value.clamp(0.0, 1.0),
-          child: child,
-        ),
       ),
       PositionedIndicatorContainer(
         constraints: constraints,

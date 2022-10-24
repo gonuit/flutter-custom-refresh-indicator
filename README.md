@@ -14,14 +14,13 @@ A flutter package that allows you to easily create a custom refresh indicator wi
 ```dart
 CustomRefreshIndicator(
   /// Scrollable widget
-  child: ListView.separated(
-    itemBuilder: (BuildContext context, int index) => const SizedBox(
+  child: ListView.builder(
+    itemBuilder: (BuildContext context, int index) => Container(
+      child: Text(index.toString()),
       height: 100,
     ),
-    separatorBuilder: (BuildContext context, int index) =>
-        const SizedBox(height: 20),
   ),
-  /// Custom indicator builder function
+  /// The function that builds the indicator
   builder: (
     BuildContext context,
     Widget child,
@@ -30,13 +29,9 @@ CustomRefreshIndicator(
       /// TODO: Implement your own refresh indicator
       return Stack(
         children: <Widget>[
-          AnimatedBuilder(
-            animation: controller,
-            builder: (BuildContext context, _) {
-              /// This part will be rebuild on every controller change
-              return MyIndicator();
-            },
-          ),
+          /// Your indicator implementation
+          return MyIndicator(value: controller.value, loading: controller.state.isLoading);
+
           /// Scrollable widget that was provided as [child] argument
           ///
           /// TIP:
@@ -45,8 +40,8 @@ CustomRefreshIndicator(
         ],
       );
     }
-  /// A function that's called when the user has dragged the refresh indicator
-  /// far enough to demonstrate that they want the app to refresh.
+  /// A function that is called when the user drags the refresh indicator
+  /// far enough to show that they want to refresh the list.
   /// Should return [Future].
   onRefresh: myAsyncRefreshMethod,
 )

@@ -172,6 +172,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
         return CustomRefreshIndicator(
           offsetToArmed: _offsetToArmed,
           child: widget.child,
+          autoRebuild: false,
           onRefresh: () => Future.delayed(const Duration(seconds: 3)),
           builder: (BuildContext context, Widget child,
               IndicatorController controller) {
