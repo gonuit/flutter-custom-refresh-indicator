@@ -69,7 +69,10 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// Whether to display trailing scroll indicator
   final bool trailingScrollIndicatorVisible;
 
-  /// Number of pixels that user should drag to change [IndicatorState] from idle to armed.
+  /// The distance in number of pixels that the user should drag to arm the indicator.
+  /// The armed indicator will trigger the [onRefresh] function when the gesture is completed.
+  ///
+  /// If not specified, [containerExtentPercentageToArmed] will be used instead.
   final double? offsetToArmed;
 
   /// The distance the user must scroll for the indicator to be armed,
