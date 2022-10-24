@@ -220,13 +220,15 @@ Whether the pull to refresh gesture is triggered from the start of the list or f
 This is especially useful with the *trigger* argument set to `IndicatorTrigger.bothEdges`, as the gesture can then be triggered from start and end edge.
   
 It is null when the edge is still not determined by the *CustomRefreshIndicator* widget.
+  
 | value     | Description                                               |
 | --------- | :-------------------------------------------------------- |
 | **start** | The indicator was started from the beginning of the list. |
 | **end**   | The indicator was started from the end of the list.       |
-
+  
 ### side (IndicatorSide)
 The side of the scrollable on which the indicator should be displayed.
+  
 | value      | Description                                                            |
 | ---------- | :--------------------------------------------------------------------- |
 | **top**    | The indicator should be displayed on the **top** of the scrollable.    |
@@ -234,6 +236,7 @@ The side of the scrollable on which the indicator should be displayed.
 | **left**   | The indicator should be displayed on the **left** of the scrollable.   |
 | **right**  | The indicator should be displayed on the **right** of the scrollable.  |
 | **none**   | The indicator should not be displayed.                                 |
+  
 ### direction (AxisDirection)
 The direction in which the list scrolls. 
 
