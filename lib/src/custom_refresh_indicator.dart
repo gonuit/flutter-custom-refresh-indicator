@@ -394,6 +394,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       curve: draggingCurve,
     );
     setIndicatorState(IndicatorState.armed);
+    setIndicatorState(IndicatorState.settling);
     setIndicatorState(IndicatorState.loading);
   }
 
@@ -518,12 +519,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     try {
       _dragOffset = 0;
 
-      setIndicatorState(IndicatorState.loading);
+      setIndicatorState(IndicatorState.settling);
 
       await _animationController.animateTo(
         1.0,
         duration: widget.indicatorSettleDuration,
       );
+      setIndicatorState(IndicatorState.loading);
       await widget.onRefresh();
     } finally {
       await _hideAfterRefresh();

@@ -4,6 +4,11 @@
 [![Tests](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml/badge.svg)](https://github.com/gonuit/flutter-custom-refresh-indicator/actions/workflows/test.yml)
 
 Create your own custom refresh indicator widget in the blink of an eye!
+### Features: 
+- [Create a **COMPLETELY** custom refresh indicator widget.](#examples)
+- [Quickly change the content of the material refresh indicator.](#materialindicatordelegate)
+- Trigger refresh indicator on horizontal lists.
+- Trigger the refresh indicator from the leading, trailing, or both scroll edges.
 
 ### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it)**!
 
@@ -37,15 +42,13 @@ CustomRefreshIndicator(
         ],
       );
     }
-  /// A function that is called when the user drags the refresh indicator
-  /// far enough to show that they want to refresh the list.
-  /// Should return [Future].
-  onRefresh: myAsyncRefreshMethod,
+  /// A function that is called when the user drags the refresh indicator.
+  onRefresh: myAsyncRefreshFunction,
 )
 ```
 
 ## MaterialIndicatorDelegate
-If you just want to replace the content of the material indicator, you can use *MaterialIndicatorDelegate*, which builds a material container.
+If you just want to replace the content of the material indicator, you can use *MaterialIndicatorDelegate*, which builds a material container. In addition to the built in RefreshIndicator it supports horizontal lists and triggering from both edges (see the [trigger argument](#trigger-indicatortrigger)).
 ### Code:
 ```dart
 CustomRefreshIndicator(
@@ -59,7 +62,7 @@ CustomRefreshIndicator(
       );
     },
   ),
-  onRefresh: myAsyncRefreshMethod,
+  onRefresh: myAsyncRefreshFunction,
   child: scrollable,
 )
 ```
@@ -208,7 +211,8 @@ The following table describes each state of the indicator controller.
 | **dragging**   | The user starts scrolling/dragging the pointer to refresh. Releasing the pointer in this state will not trigger the *onRefresh* function. The controller value changes from *0.0* to *1.0*.                                        |
 | **canceling**  | The function *onRefresh* **has not been executed**, and the indicator is hidding from its current value that is lower than *1.0* to *0.0*.                                                                                         |
 | **armed**      | The user has dragged the pointer further than the distance declared by *containerExtentPercentageToArmed* or *offsetToArmed* (over the value of *1.0*). Releasing the pointer in this state will trigger the *onRefresh* function. |
-| **loading**    | The user has released the indicator in the armed state. The indicator settles on its target value *1.0* and the *onRefresh* function is called.                                                                                    |
+| **settling**   | The user has released the indicator in the armed state. The indicator settles on its target value *1.0*.                                                                                                                           |
+| **loading**    | The indicator has a target value of *1.0*. The *onRefresh* function is triggered.                                                                                                                                                  |
 | **complete**   | **OPTIONAL** - Provide `completeStateDuration` argument to enable it. The *onRefresh* callback has completed and the pointer remains at value *1.0* for the specified duration.                                                    |
 | **finalizing** | The *onRefresh* function **has been executed**, and the indicator hides from the value *1.0* to *0.0*.                                                                                                                             |
 

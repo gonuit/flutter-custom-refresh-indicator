@@ -22,8 +22,11 @@ enum IndicatorState {
   armed,
 
   /// The user has released the indicator in the armed state.
-  /// The indicator settles on its target value *1.0* and
-  /// the *onRefresh* function is called.
+  /// The indicator settles on its target value *1.0*.
+  settling,
+
+  /// The indicator is in its target value *1.0*.
+  /// The *onRefresh* function is triggered.
   loading,
 
   /// **OPTIONAL** - Provide `completeStateDuration` argument to enable it.

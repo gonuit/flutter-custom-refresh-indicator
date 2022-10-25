@@ -1014,7 +1014,6 @@ void main() {
     // finish the indicator
     await tester.pump(const Duration(seconds: 1));
 
-    expect(changes, hasLength(5));
     expect(changes, [
       const IndicatorStateChange(
         IndicatorState.idle,
@@ -1026,6 +1025,10 @@ void main() {
       ),
       const IndicatorStateChange(
         IndicatorState.armed,
+        IndicatorState.settling,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.settling,
         IndicatorState.loading,
       ),
       const IndicatorStateChange(
@@ -1066,7 +1069,6 @@ void main() {
     // finish the indicator
     await tester.pump(const Duration(seconds: 1));
 
-    expect(changes, hasLength(6));
     expect(changes, [
       const IndicatorStateChange(
         IndicatorState.idle,
@@ -1078,6 +1080,10 @@ void main() {
       ),
       const IndicatorStateChange(
         IndicatorState.armed,
+        IndicatorState.settling,
+      ),
+      const IndicatorStateChange(
+        IndicatorState.settling,
         IndicatorState.loading,
       ),
       const IndicatorStateChange(
