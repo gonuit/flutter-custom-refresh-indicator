@@ -7,8 +7,8 @@ Create your own custom refresh indicator widget in the blink of an eye!
 ### Features: 
 - [Create a **COMPLETELY** custom refresh indicator widget.](#examples)
 - [Quickly change the content of the material refresh indicator.](#materialindicatordelegate)
-- [Trigger refresh indicator on horizontal lists.](https://custom-refresh-indicator.klyta.it/#/horizontal)
-- [Trigger the refresh indicator from the leading, trailing, or both scroll edges.](https://custom-refresh-indicator.klyta.it/#/horizontal)
+- [Trigger refresh indicator on horizontal lists (online example).](https://custom-refresh-indicator.klyta.it/#/horizontal)
+- [Trigger the refresh indicator from the leading, trailing, or both scroll edges.](#trigger-indicatortrigger)
 
 ### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it/#/plane)**!
 
@@ -92,19 +92,24 @@ ___
 
 The _CustomRefreshIndicator_ widget provides an absolute minimum functionality that allows you to create and set your own custom indicators.
 
+___
 ### child (Widget)
 The widget tree that contains scrollable widget (eg. *ListView*).
+___
 ### builder (IndicatorBuilder)
 Function that builds the custom refresh indicator.
 
+___
 ### onRefresh (AsyncCallback)
 A function that is called when the user drags the refresh indicator far enough to trigger a "pull to refresh" action.
 
+___
 ### controller (IndicatorController?)
 The indicator controller stores all the data related to the refresh indicator widget. It will be passed as the third argument to the *builder* function.
   
 If not specified, it will be created by the *CustomRefreshIndicator* widget.
 
+___
 ### onStateChanged
 
 The _onStateChanged_ function is called whenever _IndicatorState_ has changed.  
@@ -127,15 +132,18 @@ CustomRefreshIndicator(
   // ...
 )
 ```
+___
 ### indicatorCancelDuration (Duration)
 Duration of hiding the indicator when dragging was stopped before the indicator was armed (the *onRefresh* callback was not called).
   
 The default is 300 milliseconds.
+___
 ### indicatorSettleDuration (Duration)
 The time of settling the pointer on the target location after releasing the pointer in the armed state. During this process, the value of the indicator decreases from its current value, which can be greater than or equal to *1.0* but less or equal to *1.5*, to a target value of *1.0*.
   
 The default is 150 milliseconds.
 
+___
 ### indicatorFinalizeDuration (Duration)
 Duration of hiding the pointer after the *onRefresh* function completes.
   
@@ -143,26 +151,32 @@ During this time, the value of the controller decreases from *1.0* to *0.0* with
   
 The default is 100 milliseconds.
 
+___
 ### completeStateDuration (Duration?)
 The duration the indicator remains at value *1.0* and the *IndicatorState.complete* state after the [onRefresh] function completes.
   
 This value is optional, specifying it will enable the optional *IndicatorState.complete* state.
 
+___
 ### notificationPredicate (ScrollNotificationPredicate)
 Determines whether the received [ScrollNotification] should be handled by this widget.
   
 By default, it only accepts *0* depth level notifications. This can be helpful for more complex layouts with nested scrollviews.
 
+___
 ### leadingScrollIndicatorVisible (bool)
 Whether to display leading scroll indicator (glow or stretch effect).
+___
 ### trailingScrollIndicatorVisible (bool)
 Whether to display trailing scroll indicator (glow or stretch effect).
 
+___
 ### offsetToArmed (double?)
 The distance in number of pixels that the user should drag to arm the indicator. The armed indicator will trigger the *onRefresh* function when the gesture is completed.
   
 If not specified, *containerExtentPercentageToArmed* argument will be used instead.
 
+___
 ### containerExtentPercentageToArmed (double)
 The distance the user must scroll for the indicator to be armed, as a percentage of the scrollable's container extent.
   
@@ -170,14 +184,17 @@ If the *offsetToArmed* argument is specified, it will be used instead, and this 
   
 The default value equals `0.1(6)`.
 
+___
 ### trigger (IndicatorTrigger)
 Defines the trigger for the pull to refresh gesture.
+  
 | value            | Description                                                                                                                                                                  |
 | ---------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **leadingEdge**  | Pull to refresh can be triggered only from the **leading** edge of the list. Mostly top side, but can be bottom for reversed ListView (with *reverse* argument set to true). |
 | **trailingEdge** | Pull to refresh can be triggered only from the **trailing** edge of the list. Mostly bottom, but can be top for reversed ListView (with *reverse* argument set to true).     |
 | **bothEdges**    | Pull to refresh can be triggered from **both edges** of the list.                                                                                                            |
-
+  
+___
 ### triggerMode (IndicatorTriggerMode)
 Configures how *CustomRefreshIndicator* widget can be triggered. Works in the same way as the triggerMode of the built-in *RefreshIndicator* widget.
   
@@ -188,6 +205,7 @@ Defaults to *IndicatorTriggerMode.onEdge*.
 | **anywhere** | The indicator can be triggered regardless of the scroll position of the *Scrollable* when the drag starts. |
 | **onEdge**   | The indicator can only be triggered if the *Scrollable* is at the edge when the drag starts.               |
 
+___
 ### autoRebuild (bool)
 When set to *true*, the *builder* function will be triggered whenever the controller changes. This can be useful for optimizing performance in complex widgets. When setting this to *false*, you can manage which part of the ui you want to rebuild, such as using the *AnimationBuilder* widget in conjunction with *IndicatorController*.
   
@@ -230,6 +248,7 @@ It is null when the edge is still not determined by the *CustomRefreshIndicator*
 | **start** | The indicator was started from the beginning of the list. |
 | **end**   | The indicator was started from the end of the list.       |
   
+___
 ### side (IndicatorSide)
 The side of the scrollable on which the indicator should be displayed.
   
@@ -241,9 +260,11 @@ The side of the scrollable on which the indicator should be displayed.
 | **right**  | The indicator should be displayed on the **right** of the scrollable.  |
 | **none**   | The indicator should not be displayed.                                 |
   
+___
 ### direction (AxisDirection)
 The direction in which the list scrolls. 
 
+___
 ### scrollingDirection (ScrollDirection)
 The direction in which the user scrolls.
 
