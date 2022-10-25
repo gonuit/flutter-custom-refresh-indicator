@@ -1,3 +1,25 @@
+## 2.0.0
+## Breaking changes
+- Added `autoRebuild` flag which is by default set to `true`.
+  From now on, there is no need to wrap widgets in the builder function with the `AnimatedBuilder` widget, as it will be automatically rebuilt. For optimization purposes, you can use the old behavior by setting the `autoRebuild` argument to false.
+- Remove *IndicatorState.hiding* state. Instead introduced *IndicatorState.finalizing* and *IndicatorState.canceling*.
+- Splited *IndicatorState.loading* state into two phases: *IndicatorState.settling* and *IndicatorState.loading*.
+- Renamed `extentPercentageToArmed` argument to `containerExtentPercentageToArmed` which better describes what it exactly does.
+- Changed the default value of the `defaultContainerExtentPercentageToArmed` from `0.20` to `0.1(6)` to match the behavior of the built-in indicator widget.
+- Removed deprecated **IndicatorStateHelper** class. Instead use **CustomRefreshIndicator.onStateChanged** method.
+- Removed deprecated **leadingGlowVisible** and **trailingGlowVisible** arguments. Instead use **leadingScrollIndicatorVisible** and  **trailingScrollIndicatorVisible** accoringly.
+- Allow setting the edge of the list that will trigger the pull to refresh action.
+  - Introduced **IndicatorEdge**, **IndicatorTrigger**, **IndicatorSide** and **IndicatorTriggerMode** classes.
+  - Replaced **reversed** argument of the **CustomRefreshIndicator** class with **trigger**.
+  - Added **edge** and **side** properties to the **IndicatorController** class.
+- Added extension with utility getters for **IndicatorState** class.
+- Trigger mode support added. Equivalent to trigger mode of the built-in **RefreshIndicator** widget.
+- The **PositionedIndicatorContainer** class is no longer exported from this package, however the source code is available in the example application. 
+- Now the *onRefresh* function will be triggered immediately when the indicator is released in the armed state. Previously, the *onRefresh* function was triggered when the indicator reached a target value in the loading state of `1.0`.
+- Fixed a bug causing the *onRefresh* method not to be triggered on the iOS platform due to bounce physics.
+- Implemented equality operator for *IndicatorStateChange* class.
+- Improved code coverage with tests
+- Multiple minor fixes, improvements and optimizations.
 ## 1.2.1
 - Flutter 3.0.0 migration backward compatibility fix ([#31](https://github.com/gonuit/flutter-custom-refresh-indicator/pull/31)) by [Jordan1122](https://github.com/Jordan1122)
 ## 1.2.0
@@ -70,12 +92,10 @@
 
 ## BREAKING API CHANGES
 
-- Feedback improvements (thank you for your emails!):
-  - Changed long identifier names:
-    - `CustomRefreshIndicatorData` => `IndicatorController`
-    - `CustomRefreshIndicatorState` => `IndicatorState`
-- Update example app
-- ## `indicatorBuilder` argument is no longer present. Instead use `builder` argument which has some significant changes.
+- Changed long identifier names:
+  - `CustomRefreshIndicatorData` => `IndicatorController`
+  - `CustomRefreshIndicatorState` => `IndicatorState`
+- `indicatorBuilder` argument is no longer present. Instead use `builder` argument which has some significant changes.
 
 To animate indicator based on `IndicatorControler` you can use `AnimationBuilder` widget and pass `IndicatorData` object as `animation` argument. Because of that you can implement your own widget rebuild system what can improve your custom indicator performance (instead of building indicator eg. 300 times you can decide when you want to do it). Example:
 
@@ -88,9 +108,9 @@ return CustomRefreshIndicator(
       /// to child argument
       Widget child,
       /// Now all your data will be stored in controller.
-      /// To get controller outside of this function
-      /// 1. Create controller in parent widget and pass it to CustomRefreshIndicator
-      /// 2. Assign [GlobalKey] to CustomRefreshIndicator and access `key.currentState.controller`.
+      /// To get controller outside of this function you can either:
+      /// - Create controller in parent widget and pass it to CustomRefreshIndicator widget
+      /// - Assign [GlobalKey] to CustomRefreshIndicator and access `key.currentState.controller`.
       IndicatorController controller
     ) {
       return AnimatedBuilder(

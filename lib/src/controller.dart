@@ -1,57 +1,4 @@
-part of custom_refresh_indicator;
-
-/// Describes state of CustomRefreshIndicator
-enum IndicatorState {
-  /// #### [CustomRefreshIndicator] is idle (There is no action)
-  ///
-  /// (`CustomRefreshIndicatorData.value == 0`)
-  idle,
-
-  /// #### Whether user is dragging [CustomRefreshIndicator]
-  /// ending the scroll **WILL NOT** result in `onRefresh` call
-  ///
-  /// (`CustomRefreshIndicatorData.value < 1`)
-  dragging,
-
-  /// #### [CustomRefreshIndicator] is armed
-  /// ending the scroll **WILL** result in:
-  /// - `CustomRefreshIndicator.onRefresh` call
-  /// - change of status to `loading`
-  /// - decreasing `CustomRefreshIndicatorData.value` to `1` in
-  /// duration specified by `CustomRefreshIndicator.armedToLoadingDuration`)
-  ///
-  /// (`CustomRefreshIndicatorData.value >= 1`)
-  armed,
-
-  /// #### [CustomRefreshIndicator] is hiding indicator
-  /// when `onRefresh` future is resolved or indicator was canceled
-  /// (scroll ended when [IndicatorState] was equal to `dragging`
-  /// so `value` was less than `1` or the user started scrolling through the list)
-  ///
-  /// (`CustomRefreshIndicatorData.value` decreases to `0`
-  /// in duration specified by `CustomRefreshIndicator.draggingToIdleDuration`)
-  hiding,
-
-  /// #### [CustomRefreshIndicator] is awaiting on `onRefresh` call result
-  /// When `onRefresh` will resolve [CustomRefreshIndicator] will change state
-  /// from `loading` to `hiding` and decrease `CustomRefreshIndicatorData.value`
-  /// from `1` to `0` in duration specified by `CustomRefreshIndicator.loadingToIdleDuration`
-  ///
-  /// (`CustomRefreshIndicatorData.value == 1`)
-  loading,
-
-  /// ### IMPORTANT
-  /// This state is skipped by default.
-  ///
-  /// {@template custom_refresh_indicator.complete_state}
-  /// If [CustomRefreshIndicator.completeStateDuration] argument is provided to CustomRefreshIndicator,
-  /// state will changed from [loading] to [complete] for duration of [CustomRefreshIndicator.completeStateDuration].
-  ///
-  /// If [CustomRefreshIndicator.completeStateDuration] equals `null`, state
-  /// will skip [complete] state and will immediately become [hidding].
-  /// {@endtemplate}
-  complete,
-}
+part of 'custom_refresh_indicator.dart';
 
 class IndicatorController extends ChangeNotifier {
   double _value;
@@ -75,7 +22,7 @@ class IndicatorController extends ChangeNotifier {
         _scrollingDirection = scrollingDirection ?? ScrollDirection.idle,
         _direction = direction ?? AxisDirection.down,
         _value = value ?? 0.0,
-        _refreshEnabled = refreshEnabled ?? true,
+        _isRefreshEnabled = refreshEnabled ?? true,
         _shouldStopDrag = false;
 
   @protected
@@ -90,10 +37,9 @@ class IndicatorController extends ChangeNotifier {
   @visibleForTesting
   void setScrollingDirection(ScrollDirection userScrollDirection) {
     _scrollingDirection = userScrollDirection;
-    notifyListeners();
   }
 
-  /// Direction in which user is scrolling
+  /// The direction in which the user scrolls.
   ScrollDirection get scrollingDirection => _scrollingDirection;
 
   /// Scrolling is happening in the positive scroll offset direction.
@@ -112,10 +58,46 @@ class IndicatorController extends ChangeNotifier {
   @visibleForTesting
   void setAxisDirection(AxisDirection direction) {
     _direction = direction;
-    notifyListeners();
   }
 
-  /// The direction in which list scrolls
+  /// Whether the pull to refresh gesture is triggered from the start
+  /// of the list or from the end.
+  ///
+  /// This is especially useful with [CustomRefreshIndicator.trigger]
+  /// set to [IndicatorTrigger.bothEdges], as the gesture
+  /// can then be triggered from both edges.
+  ///
+  /// It is null when the edge is still not determined by
+  /// the [CustomRefreshIndicator] widget.
+  IndicatorEdge? get edge => _edge;
+  IndicatorEdge? _edge;
+
+  /// Whether the [edge] was determined by the [CustomRefreshIndicator] widget.
+  bool get hasEdge => edge != null;
+
+  @protected
+  @visibleForTesting
+  void setIndicatorEdge(IndicatorEdge? edge) {
+    _edge = edge;
+  }
+
+  /// The side of the scrollable on which the indicator should be displayed.
+  IndicatorSide get side {
+    final edge = this.edge;
+    if (edge == null) return IndicatorSide.none;
+    switch (direction) {
+      case AxisDirection.up:
+        return edge.isLeading ? IndicatorSide.bottom : IndicatorSide.top;
+      case AxisDirection.right:
+        return edge.isLeading ? IndicatorSide.left : IndicatorSide.right;
+      case AxisDirection.down:
+        return edge.isLeading ? IndicatorSide.top : IndicatorSide.bottom;
+      case AxisDirection.left:
+        return edge.isLeading ? IndicatorSide.right : IndicatorSide.left;
+    }
+  }
+
+  /// The direction in which the list scrolls
   ///
   /// For example:
   /// ```
@@ -152,21 +134,24 @@ class IndicatorController extends ChangeNotifier {
 
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _currentState;
-  bool get isArmed => _currentState == IndicatorState.armed;
-  bool get isDragging => _currentState == IndicatorState.dragging;
-  bool get isLoading => _currentState == IndicatorState.loading;
-  bool get isComplete => _currentState == IndicatorState.complete;
-  bool get isHiding => _currentState == IndicatorState.hiding;
-  bool get isIdle => _currentState == IndicatorState.idle;
+  bool get isArmed => _currentState.isArmed;
+  bool get isDragging => _currentState.isDragging;
+  bool get isLoading => _currentState.isLoading;
+  bool get isComplete => _currentState.isComplete;
+  bool get isFinalizing => _currentState.isFinalizing;
+  bool get isIdle => _currentState.isIdle;
 
-  bool _refreshEnabled;
   bool _shouldStopDrag;
 
+  /// Should the dragging be stopped
+  bool get shouldStopDrag => _shouldStopDrag;
+
   /// Whether custom refresh indicator can change [IndicatorState] from `idle` to `dragging`
-  bool get isRefreshEnabled => _refreshEnabled;
+  bool get isRefreshEnabled => _isRefreshEnabled;
+  bool _isRefreshEnabled;
 
   void stopDrag() {
-    if (isDragging || isArmed) {
+    if (state.isDragging || state.isArmed) {
       _shouldStopDrag = true;
     } else {
       throw StateError(
@@ -178,13 +163,13 @@ class IndicatorController extends ChangeNotifier {
 
   /// Disables list pull to refresh
   void disableRefresh() {
-    _refreshEnabled = false;
+    _isRefreshEnabled = false;
     notifyListeners();
   }
 
   /// Enables list pull to refresh
   void enableRefresh() {
-    _refreshEnabled = true;
+    _isRefreshEnabled = true;
     notifyListeners();
   }
 }

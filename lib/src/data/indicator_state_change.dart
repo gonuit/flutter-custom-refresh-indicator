@@ -1,4 +1,5 @@
-part of custom_refresh_indicator;
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/foundation.dart';
 
 /// Describes [IndicatorState] change.
 @immutable
@@ -19,6 +20,16 @@ class IndicatorStateChange {
     if (to == null && from == null) return stateChanged;
     return currentState == from && newState == to;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other.runtimeType == runtimeType &&
+      other is IndicatorStateChange &&
+      other.currentState == currentState &&
+      other.newState == newState;
+
+  @override
+  int get hashCode => Object.hash(currentState, newState);
 
   @override
   String toString() =>

@@ -19,13 +19,9 @@ final testIndicator = CustomIndicatorConfig(
       width: double.infinity,
       color: Colors.red,
     ),
-    AnimatedBuilder(
+    Transform.translate(
+      offset: Offset(0, controller.value * 100),
       child: child,
-      animation: controller,
-      builder: (context, child) => Transform.translate(
-        offset: Offset(0, controller.value * 100),
-        child: child,
-      ),
     ),
   ]),
 );

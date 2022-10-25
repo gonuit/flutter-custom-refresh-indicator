@@ -45,7 +45,6 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
     with TickerProviderStateMixin {
   static final _planeTween = CurveTween(curve: Curves.easeInOut);
   late AnimationController _planeController;
-  IndicatorState? _prevState;
 
   @override
   void initState() {
@@ -172,6 +171,26 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
         return CustomRefreshIndicator(
           offsetToArmed: _offsetToArmed,
           child: widget.child,
+          autoRebuild: false,
+          onStateChanged: (change) {
+            if (change.didChange(
+              from: IndicatorState.armed,
+              to: IndicatorState.settling,
+            )) {
+              _startCloudAnimation();
+              _startPlaneAnimation();
+            }
+            if (change.didChange(
+              from: IndicatorState.loading,
+            )) {
+              _stopPlaneAnimation();
+            }
+            if (change.didChange(
+              to: IndicatorState.idle,
+            )) {
+              _stopCloudAnimation();
+            }
+          },
           onRefresh: () => Future.delayed(const Duration(seconds: 3)),
           builder: (BuildContext context, Widget child,
               IndicatorController controller) {
@@ -179,25 +198,10 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
               animation: controller,
               child: child,
               builder: (context, child) {
-                final currentState = controller.state;
-                if (_prevState == IndicatorState.armed &&
-                    currentState == IndicatorState.loading) {
-                  _startCloudAnimation();
-                  _startPlaneAnimation();
-                } else if (_prevState == IndicatorState.loading &&
-                    currentState == IndicatorState.hiding) {
-                  _stopPlaneAnimation();
-                } else if (_prevState == IndicatorState.hiding &&
-                    currentState != _prevState) {
-                  _stopCloudAnimation();
-                }
-
-                _prevState = currentState;
-
                 return Stack(
                   clipBehavior: Clip.hardEdge,
                   children: <Widget>[
-                    if (_prevState != IndicatorState.idle)
+                    if (!controller.side.isNone)
                       Container(
                         height: _offsetToArmed * controller.value,
                         color: const Color(0xFFFDFEFF),

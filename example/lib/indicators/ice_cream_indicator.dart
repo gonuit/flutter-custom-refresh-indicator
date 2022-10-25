@@ -59,7 +59,6 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
   static const _indicatorSize = 150.0;
   static const _imageSize = 140.0;
 
-  IndicatorState? _prevState;
   late AnimationController _spoonController;
   static final _spoonTween = CurveTween(curve: Curves.easeInOut);
 
@@ -93,7 +92,17 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
     return CustomRefreshIndicator(
       offsetToArmed: _indicatorSize,
       onRefresh: () => Future.delayed(const Duration(seconds: 4)),
+      autoRebuild: false,
       child: widget.child,
+      onStateChanged: (change) {
+        if (change.didChange(to: IndicatorState.loading)) {
+          _spoonController.repeat(reverse: true);
+        } else if (change.didChange(from: IndicatorState.loading)) {
+          _spoonController.stop();
+        } else if (change.didChange(to: IndicatorState.idle)) {
+          _spoonController.value = 0.0;
+        }
+      },
       builder: (
         BuildContext context,
         Widget child,
@@ -104,19 +113,6 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
             AnimatedBuilder(
               animation: controller,
               builder: (BuildContext context, Widget? _) {
-                final currentState = controller.state;
-                if (_prevState == IndicatorState.armed &&
-                    currentState == IndicatorState.loading) {
-                  _spoonController.repeat(reverse: true);
-                } else if (_prevState == IndicatorState.loading &&
-                    _prevState != currentState) {
-                  _spoonController.stop();
-                } else if (currentState == IndicatorState.idle &&
-                    _prevState != currentState) {
-                  _spoonController.value = 0.0;
-                }
-
-                _prevState = currentState;
                 return SizedBox(
                   height: controller.value * _indicatorSize,
                   child: Stack(
