@@ -1,10 +1,10 @@
 import 'package:example/screens/envelope_indicator_screen.dart';
+import 'package:example/screens/horizontal_screen.dart';
 import 'package:example/screens/presentation_screen.dart';
 import 'package:example/screens/programmatically_controlled_indicator_screen.dart';
 import 'package:example/widgets/web_frame.dart';
 import 'package:flutter/material.dart';
 
-import 'indicators/simple_indicator.dart';
 import 'screens/example_indicator_screen.dart';
 import 'screens/fetch_more_screen.dart';
 import 'screens/ice_cream_indicator_screen.dart';
@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/warp': (context) => const WarpIndicatorScreen(),
         '/envelope': (context) => const EnvelopIndicatorScreen(),
         '/fetch-more': (context) => const FetchMoreScreen(),
+        '/horizontal': (context) => const HorizontalScreen(),
         '/programmatically-controlled': (context) =>
             const ProgrammaticallyControlled(),
       },
@@ -73,12 +74,11 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Simple"),
+                child: const Text("Multidirectional indicator"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/example',
-                arguments: simpleIndicator,
+                '/horizontal',
               ),
             ),
             const SizedBox(height: 15),
@@ -86,12 +86,12 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Simple with list opacity"),
+                child:
+                    const Text("Custom material indicator with list opacity"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/example',
-                arguments: simpleIndicatorWithOpacity,
               ),
             ),
             const SizedBox(height: 15),

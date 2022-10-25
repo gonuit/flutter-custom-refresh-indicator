@@ -120,3 +120,51 @@ class FakeBox extends StatelessWidget {
     );
   }
 }
+
+class ExampleHorizontalList extends StatelessWidget {
+  final int itemCount;
+  final bool reverse;
+  final Color backgroundColor;
+  final bool isHorizontal;
+
+  const ExampleHorizontalList({
+    Key? key,
+    this.reverse = false,
+    this.backgroundColor = appBackgroundColor,
+    this.itemCount = 4,
+    this.isHorizontal = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 2,
+            color: Colors.black12,
+            spreadRadius: 0.5,
+            offset: Offset(0.0, .0),
+          )
+        ],
+      ),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        reverse: reverse,
+        scrollDirection: isHorizontal ? Axis.horizontal : Axis.vertical,
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
+        itemBuilder: (BuildContext context, int index) => const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: FakeBox(
+            width: 300,
+            height: 300,
+          ),
+        ),
+        itemCount: itemCount,
+      ),
+    );
+  }
+}

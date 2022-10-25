@@ -221,9 +221,10 @@ class _InfiniteRotationState extends State<_InfiniteRotation>
       if (widget.running) {
         _startAnimation();
       } else {
-        _rotationController
-          ..stop()
-          ..value = 0.0;
+        _rotationController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 50),
+        );
       }
     }
     super.didUpdateWidget(oldWidget);
