@@ -38,6 +38,8 @@ void main() {
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
     expect(controller.isRefreshEnabled, isTrue);
     expect(controller.isScrollIdle, isTrue);
     expect(controller.isScrollingForward, isFalse);
@@ -66,6 +68,8 @@ void main() {
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
 
     controller.setIndicatorState(IndicatorState.dragging);
     expect(controller.isIdle, isFalse);
@@ -74,6 +78,8 @@ void main() {
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
 
     controller.setIndicatorState(IndicatorState.finalizing);
     expect(controller.isIdle, isFalse);
@@ -82,6 +88,8 @@ void main() {
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
 
     controller.setIndicatorState(IndicatorState.armed);
     expect(controller.isIdle, isFalse);
@@ -90,6 +98,8 @@ void main() {
     expect(controller.isArmed, isTrue);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
 
     controller.setIndicatorState(IndicatorState.loading);
     expect(controller.isIdle, isFalse);
@@ -98,6 +108,8 @@ void main() {
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isTrue);
     expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
 
     controller.setIndicatorState(IndicatorState.complete);
     expect(controller.isIdle, isFalse);
@@ -106,6 +118,28 @@ void main() {
     expect(controller.isArmed, isFalse);
     expect(controller.isLoading, isFalse);
     expect(controller.isComplete, isTrue);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isFalse);
+
+    controller.setIndicatorState(IndicatorState.settling);
+    expect(controller.isIdle, isFalse);
+    expect(controller.isDragging, isFalse);
+    expect(controller.isFinalizing, isFalse);
+    expect(controller.isArmed, isFalse);
+    expect(controller.isLoading, isFalse);
+    expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isFalse);
+    expect(controller.isSettling, isTrue);
+
+    controller.setIndicatorState(IndicatorState.canceling);
+    expect(controller.isIdle, isFalse);
+    expect(controller.isDragging, isFalse);
+    expect(controller.isFinalizing, isFalse);
+    expect(controller.isArmed, isFalse);
+    expect(controller.isLoading, isFalse);
+    expect(controller.isComplete, isFalse);
+    expect(controller.isCanceling, isTrue);
+    expect(controller.isSettling, isFalse);
   });
 
   test("refresh changes correctly and notifies listeners", () {

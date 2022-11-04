@@ -134,12 +134,30 @@ class IndicatorController extends ChangeNotifier {
 
   /// Describes current [CustomRefreshIndicator] state
   IndicatorState get state => _currentState;
-  bool get isArmed => _currentState.isArmed;
-  bool get isDragging => _currentState.isDragging;
-  bool get isLoading => _currentState.isLoading;
-  bool get isComplete => _currentState.isComplete;
-  bool get isFinalizing => _currentState.isFinalizing;
+
+  /// {@macro custom_refresh_indicator.indicator_state.idle}
   bool get isIdle => _currentState.isIdle;
+
+  /// {@macro custom_refresh_indicator.indicator_state.dragging}
+  bool get isDragging => _currentState.isDragging;
+
+  /// {@macro custom_refresh_indicator.indicator_state.canceling}
+  bool get isCanceling => _currentState.isCanceling;
+
+  /// {@macro custom_refresh_indicator.indicator_state.armed}
+  bool get isArmed => _currentState.isArmed;
+
+  /// {@macro custom_refresh_indicator.indicator_state.settling}
+  bool get isSettling => _currentState.isSettling;
+
+  /// {@macro custom_refresh_indicator.indicator_state.loading}
+  bool get isLoading => _currentState.isLoading;
+
+  /// {@macro custom_refresh_indicator.indicator_state.complete}
+  bool get isComplete => _currentState.isComplete;
+
+  /// {@macro custom_refresh_indicator.indicator_state.finalizing}
+  bool get isFinalizing => _currentState.isFinalizing;
 
   bool _shouldStopDrag;
 

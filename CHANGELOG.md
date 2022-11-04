@@ -1,3 +1,5 @@
+## 2.0.1
+- Added missing *isCanceling* and *isSettling* getters for *IndicatorState* and *IndicatorController* enum.
 ## 2.0.0
 ## Breaking changes
 - Added `autoRebuild` flag which is by default set to `true`.
