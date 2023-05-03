@@ -31,6 +31,9 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
 
   /// The indicator background color
   final Color? backgroundColor;
+  
+  /// The indicator elevation
+  final double elevation;
 
   /// Builds the content for the indicator container
   final MaterialIndicatorBuilder builder;
@@ -48,6 +51,7 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
     this.withRotation = true,
+    this.elevation = 2.0,
   });
 
   static Widget _defaultBuilder(
@@ -85,7 +89,7 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
               child: Material(
                 type: MaterialType.circle,
                 color: backgroundColor,
-                elevation: 2.0,
+                elevation: elevation,
                 child: _InfiniteRotation(
                   running: withRotation && controller.isLoading,
                   child: builder(context, controller),
