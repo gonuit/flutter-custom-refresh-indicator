@@ -1,12 +1,12 @@
 name: custom_refresh_indicator
 description: Flutter Widget that make it easy to implement custom refresh indicator.
-version: 2.0.1
+version: 2.1.0
 repository: https://github.com/gonuit/flutter-custom-refresh-indicator
 issue_tracker: https://github.com/gonuit/flutter-custom-refresh-indicator/issues
 homepage: https://github.com/gonuit/flutter-custom-refresh-indicator
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.15.0 <4.0.0"
   flutter: ">=1.16.0"
 
 dependencies:
@@ -19,3 +19,18 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+
+funding:
+- https://www.paypal.com/donate/?hosted_button_id=Z82R98MAR4URE
+- https://www.buymeacoffee.com/kamilklyta
+
+topics:
+ - widgets
+ - animation
+ - pull-to-refresh
+ - refresh-indicator
+ - p2r
+
+screenshots:
+  - description: The custom refresh indicator package thumbnail.
+    path: screenshots/thumbnail.png

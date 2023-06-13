@@ -10,7 +10,7 @@ Create your own custom refresh indicator widget in the blink of an eye!
 - [Trigger refresh indicator on horizontal lists (online example).](https://custom-refresh-indicator.klyta.it/#/horizontal)
 - [Trigger the refresh indicator from the leading, trailing, or both scroll edges.](#trigger-indicatortrigger)
 
-### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it/#/plane)**!
+### **TLDR; [ONLINE DEMO](https://custom-refresh-indicator.klyta.it/#)**!
 
 ---
 
