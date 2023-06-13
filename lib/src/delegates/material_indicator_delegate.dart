@@ -31,8 +31,13 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
 
   /// The indicator background color
   final Color? backgroundColor;
-  
-  /// The indicator elevation
+
+  /// The z-coordinate at which to place this material relative to its parent.
+  /// 
+  /// This controls the size of the shadow below the material and
+  /// the opacity of the elevation overlay color if it is applied.
+  /// 
+  /// Defaults to `2.0`.
   final double elevation;
 
   /// Builds the content for the indicator container
@@ -41,8 +46,14 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
   /// Builds the scrollable.
   final IndicatorBuilder scrollableBuilder;
 
-  /// When set to *true*, the indicator will rotate in the [IndicatorState.loading] state.
+  /// When set to *true*, the indicator will rotate
+  /// in the [IndicatorState.loading] state.
   final bool withRotation;
+
+  /// The content will be clipped (or not) according to this option.
+  ///
+  /// Defaults to [Clip.none].
+  final Clip clipBehavior;
 
   const MaterialIndicatorDelegate({
     required this.builder,
@@ -52,6 +63,7 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
     this.edgeOffset = 0.0,
     this.withRotation = true,
     this.elevation = 2.0,
+    this.clipBehavior = Clip.none,
   });
 
   static Widget _defaultBuilder(
@@ -88,6 +100,7 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
               margin: const EdgeInsets.all(4.0),
               child: Material(
                 type: MaterialType.circle,
+                clipBehavior: clipBehavior,
                 color: backgroundColor,
                 elevation: elevation,
                 child: _InfiniteRotation(

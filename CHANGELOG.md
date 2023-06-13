@@ -1,3 +1,5 @@
+## 2.2.0
+- Added *clipBehavior* and the *elevation* arguments of the *MaterialIndicatorDelegate* class.
 ## 2.1.0
 - Updated the dart sdk constraints
 ## 2.0.1

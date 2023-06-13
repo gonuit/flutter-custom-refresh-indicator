@@ -72,12 +72,12 @@ class Element extends StatelessWidget {
         children: <Widget>[
           FakeBox(height: 80, width: 80, child: child),
           const SizedBox(width: 20),
-          Expanded(
+          const Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 FakeBox(height: 8, width: double.infinity),
                 FakeBox(height: 8, width: double.infinity),
                 FakeBox(height: 8, width: 200),
