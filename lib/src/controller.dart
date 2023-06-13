@@ -75,6 +75,15 @@ class IndicatorController extends ChangeNotifier {
   /// Whether the [edge] was determined by the [CustomRefreshIndicator] widget.
   bool get hasEdge => edge != null;
 
+  DragUpdateDetails? get dragDetails => _dragDetails;
+  DragUpdateDetails? _dragDetails;
+
+  @protected
+  @visibleForTesting
+  void setIndicatorDragDetails(DragUpdateDetails? dragDetails) {
+    _dragDetails = dragDetails;
+  }
+
   @protected
   @visibleForTesting
   void setIndicatorEdge(IndicatorEdge? edge) {

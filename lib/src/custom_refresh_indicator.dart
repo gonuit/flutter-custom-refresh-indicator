@@ -295,11 +295,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       if (notification.metrics.extentBefore == 0 &&
           notification.scrollDelta!.isNegative) {
         controller
+          ..setIndicatorDragDetails(notification.dragDetails)
           ..setIndicatorEdge(IndicatorEdge.leading)
           ..setIndicatorState(IndicatorState.dragging);
       } else if (notification.metrics.extentAfter == 0 &&
           !notification.scrollDelta!.isNegative) {
         controller
+          ..setIndicatorDragDetails(notification.dragDetails)
           ..setIndicatorEdge(IndicatorEdge.trailing)
           ..setIndicatorState(IndicatorState.dragging);
       }
@@ -308,10 +310,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     /// When the controller is armed, but the scroll update event is not triggered
     /// by the user, the refresh action should be triggered
     if (controller.state.isArmed && notification.dragDetails == null) {
+      controller.setIndicatorDragDetails(null);
       _start();
 
       /// Handle the indicator state depending on scrolling direction
     } else if (controller.state.isDragging || controller.state.isArmed) {
+      controller.setIndicatorDragDetails(notification.dragDetails);
+
       switch (controller.edge) {
         case IndicatorEdge.leading:
           if (notification.metrics.extentBefore > 0.0) {
