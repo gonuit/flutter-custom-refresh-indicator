@@ -185,7 +185,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   // bool _canStart = false;
 
   /// Indicating that indicator is currently stopping drag.
-  /// When true, user is not able to performe any action.
+  /// When true, user is not able to perform any action.
   bool _isStopingDrag = false;
 
   late double _dragOffset;
@@ -450,7 +450,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     final offsetToArmed = widget.offsetToArmed;
 
-    /// If [offestToArmed] is provided then it will be used otherwise
+    /// If [offsetToArmed] is provided then it will be used otherwise
     /// [extentPercentageToArmed]
     if (offsetToArmed != null) {
       newValue = _dragOffset / offsetToArmed;
