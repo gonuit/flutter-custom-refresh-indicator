@@ -33,10 +33,10 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
   final Color? backgroundColor;
 
   /// The z-coordinate at which to place this material relative to its parent.
-  /// 
+  ///
   /// This controls the size of the shadow below the material and
   /// the opacity of the elevation overlay color if it is applied.
-  /// 
+  ///
   /// Defaults to `2.0`.
   final double elevation;
 

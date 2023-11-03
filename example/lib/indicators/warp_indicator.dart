@@ -6,14 +6,6 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
-/// This allows a value of type T or T?
-/// to be treated as a value of type T?.
-///
-/// We use this so that APIs that have become
-/// non-nullable can still be used with `!` and `?`
-/// to support older versions of the API as well.
-T? _ambiguate<T>(T? value) => value;
-
 enum WarpAnimationState {
   stopped,
   playing,
@@ -31,7 +23,7 @@ class WarpIndicator extends StatefulWidget {
   final Key? indicatorKey;
 
   const WarpIndicator({
-    Key? key,
+    super.key,
     this.indicatorKey,
     this.controller,
     required this.onRefresh,
@@ -39,13 +31,13 @@ class WarpIndicator extends StatefulWidget {
     this.starsCount = 30,
     this.skyColor = Colors.black,
     this.starColorGetter = _defaultStarColorGetter,
-  }) : super(key: key);
+  });
 
   static Color _defaultStarColorGetter(int index) =>
       HSLColor.fromAHSL(1, Random().nextDouble() * 360, 1, 0.98).toColor();
 
   @override
-  _WarpIndicatorState createState() => _WarpIndicatorState();
+  State<WarpIndicator> createState() => _WarpIndicatorState();
 }
 
 class _WarpIndicatorState extends State<WarpIndicator>
@@ -173,7 +165,7 @@ class _WarpIndicatorState extends State<WarpIndicator>
                   child: Builder(builder: (context) {
                     if (shakeController.value == 1.0 &&
                         _state == WarpAnimationState.playing) {
-                      _ambiguate(SchedulerBinding.instance)!
+                      SchedulerBinding.instance
                           .addPostFrameCallback((_) => _resetShakeAnimation());
                     }
                     return Transform.rotate(
@@ -181,10 +173,10 @@ class _WarpIndicatorState extends State<WarpIndicator>
                       child: Transform.translate(
                         offset: _offsetTween.transform(shakeController.value),
                         child: ClipRRect(
-                          child: child,
                           borderRadius: BorderRadius.circular(
                             _radiusTween.transform(controller.value),
                           ),
+                          child: child,
                         ),
                       ),
                     );
@@ -303,7 +295,7 @@ class Sky extends CustomPainter {
         CustomPainterSemantics(
           rect: rect,
           properties: const SemanticsProperties(
-            label: 'Lightspeed animation.',
+            label: 'light speed animation.',
             textDirection: TextDirection.ltr,
           ),
         ),

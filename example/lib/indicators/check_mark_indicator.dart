@@ -6,12 +6,12 @@ class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
 
   const CheckMarkIndicator({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  _CheckMarkIndicatorState createState() => _CheckMarkIndicatorState();
+  State<CheckMarkIndicator> createState() => _CheckMarkIndicatorState();
 }
 
 class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
@@ -28,7 +28,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
     return CustomRefreshIndicator(
       offsetToArmed: _indicatorSize,
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-      child: widget.child,
       completeStateDuration: const Duration(seconds: 2),
       onStateChanged: (change) {
         /// set [_renderCompleteState] to true when controller.state become completed
@@ -75,6 +74,12 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),
                       alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: _renderCompleteState
+                            ? Colors.greenAccent
+                            : Colors.black,
+                        shape: BoxShape.circle,
+                      ),
                       child: _renderCompleteState
                           ? const Icon(
                               Icons.check,
@@ -93,12 +98,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
                                         : null,
                               ),
                             ),
-                      decoration: BoxDecoration(
-                        color: _renderCompleteState
-                            ? Colors.greenAccent
-                            : Colors.black,
-                        shape: BoxShape.circle,
-                      ),
                     ),
                   ),
                 );
@@ -116,6 +115,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
           ],
         );
       },
+      child: widget.child,
     );
   }
 }

@@ -7,10 +7,10 @@ class FetchMoreIndicator extends StatelessWidget {
   final VoidCallback onAction;
 
   const FetchMoreIndicator({
-    Key? key,
+    super.key,
     required this.child,
     required this.onAction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

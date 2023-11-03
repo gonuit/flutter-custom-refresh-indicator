@@ -3,10 +3,10 @@ import 'package:example/widgets/example_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class PresentationScreen extends StatefulWidget {
-  const PresentationScreen({Key? key}) : super(key: key);
+  const PresentationScreen({super.key});
 
   @override
-  _PresentationScreenState createState() => _PresentationScreenState();
+  State<PresentationScreen> createState() => _PresentationScreenState();
 }
 
 class _PresentationScreenState extends State<PresentationScreen> {

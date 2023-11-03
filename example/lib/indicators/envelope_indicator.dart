@@ -15,13 +15,13 @@ class EnvelopRefreshIndicator extends StatelessWidget {
   ];
 
   const EnvelopRefreshIndicator({
-    Key? key,
+    super.key,
     required this.child,
     required this.onRefresh,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = false,
     this.accent,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

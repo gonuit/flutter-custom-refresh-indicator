@@ -1,11 +1,11 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
-class ParalaxConfig {
+class ParallaxConfig {
   final int? level;
   final AssetImage? image;
 
-  const ParalaxConfig({
+  const ParallaxConfig({
     this.level,
     this.image,
   });
@@ -15,42 +15,42 @@ class IceCreamIndicator extends StatefulWidget {
   final Widget child;
 
   const IceCreamIndicator({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  _IceCreamIndicatorState createState() => _IceCreamIndicatorState();
+  State<IceCreamIndicator> createState() => _IceCreamIndicatorState();
 }
 
 class _IceCreamIndicatorState extends State<IceCreamIndicator>
     with SingleTickerProviderStateMixin {
-  static const _assets = <ParalaxConfig>[
-    ParalaxConfig(
+  static const _assets = <ParallaxConfig>[
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/cup2.png"),
       level: 0,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/spoon.png"),
       level: 1,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/ice1.png"),
       level: 3,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/ice3.png"),
       level: 4,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/ice2.png"),
       level: 2,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/cup.png"),
       level: 0,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/mint.png"),
       level: 5,
     ),
@@ -69,7 +69,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
     super.initState();
   }
 
-  Widget _buildImage(IndicatorController controller, ParalaxConfig asset) {
+  Widget _buildImage(IndicatorController controller, ParallaxConfig asset) {
     return Transform.translate(
       offset: Offset(
         0,
@@ -119,7 +119,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
                     children: <Widget>[
                       for (int i = 0; i < _assets.length; i++)
 
-                        /// check if it is a spoon build animated builed and attach spoon controller
+                        /// checking for spoon build animation and attaching the spoon controller
                         if (i == 1)
                           AnimatedBuilder(
                             animation: _spoonController,

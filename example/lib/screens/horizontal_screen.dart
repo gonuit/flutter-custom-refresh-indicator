@@ -4,7 +4,7 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class HorizontalScreen extends StatefulWidget {
-  const HorizontalScreen({Key? key}) : super(key: key);
+  const HorizontalScreen({super.key});
 
   @override
   State<HorizontalScreen> createState() => _HorizontalScreenState();
@@ -46,7 +46,7 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
                 size: 30,
               );
             },
-          ),
+          ).call,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ExampleHorizontalList(
             itemCount: 4,

@@ -7,7 +7,7 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class ProgrammaticallyControlled extends StatefulWidget {
-  const ProgrammaticallyControlled({Key? key}) : super(key: key);
+  const ProgrammaticallyControlled({super.key});
 
   @override
   State<ProgrammaticallyControlled> createState() =>

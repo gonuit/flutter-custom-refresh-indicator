@@ -4,7 +4,7 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class ExampleIndicatorScreen extends StatelessWidget {
-  const ExampleIndicatorScreen({Key? key}) : super(key: key);
+  const ExampleIndicatorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ExampleIndicatorScreen extends StatelessWidget {
                 child: child,
               );
             },
-          ),
+          ).call,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: const ExampleList(itemCount: 6),
         ),

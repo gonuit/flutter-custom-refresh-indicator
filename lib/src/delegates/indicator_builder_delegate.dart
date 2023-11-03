@@ -20,7 +20,6 @@ abstract class IndicatorBuilderDelegate {
     IndicatorController controller,
   );
 
-  @visibleForTesting
   Widget call(
     BuildContext context,
     Widget child,

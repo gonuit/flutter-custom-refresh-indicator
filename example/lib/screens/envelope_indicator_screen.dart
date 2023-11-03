@@ -4,7 +4,7 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class EnvelopIndicatorScreen extends StatelessWidget {
-  const EnvelopIndicatorScreen({Key? key}) : super(key: key);
+  const EnvelopIndicatorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +13,9 @@ class EnvelopIndicatorScreen extends StatelessWidget {
         title: "Envelope indicator",
       ),
       body: EnvelopRefreshIndicator(
-        child: const ExampleList(),
         accent: appContentColor,
         onRefresh: () => Future<void>.delayed(const Duration(seconds: 2)),
+        child: const ExampleList(),
       ),
     );
   }

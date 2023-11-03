@@ -33,12 +33,12 @@ class _Cloud {
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
   const PlaneIndicator({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  _PlaneIndicatorState createState() => _PlaneIndicatorState();
+  State<PlaneIndicator> createState() => _PlaneIndicatorState();
 }
 
 class _PlaneIndicatorState extends State<PlaneIndicator>
@@ -170,7 +170,6 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
         );
         return CustomRefreshIndicator(
           offsetToArmed: _offsetToArmed,
-          child: widget.child,
           autoRebuild: false,
           onStateChanged: (change) {
             if (change.didChange(
@@ -237,12 +236,12 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                 /// plane
                                 Center(
                                   child: OverflowBox(
-                                    child: plane,
                                     maxWidth: 172,
                                     minWidth: 172,
                                     maxHeight: 50,
                                     minHeight: 50,
                                     alignment: Alignment.center,
+                                    child: plane,
                                   ),
                                 ),
                               ],
@@ -259,6 +258,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
               },
             );
           },
+          child: widget.child,
         );
       },
     );

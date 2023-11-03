@@ -7,13 +7,14 @@ class ExampleList extends StatelessWidget {
   final bool countElements;
   final bool reverse;
   final Color backgroundColor;
+
   const ExampleList({
-    Key? key,
+    super.key,
     this.reverse = false,
     this.countElements = false,
     this.backgroundColor = appBackgroundColor,
     this.itemCount = 4,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class ExampleList extends StatelessWidget {
 class Element extends StatelessWidget {
   final Widget? child;
 
-  const Element({Key? key, this.child}) : super(key: key);
+  const Element({super.key, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -92,15 +93,15 @@ class Element extends StatelessWidget {
 
 class FakeBox extends StatelessWidget {
   final Widget? child;
+  final double width;
+  final double height;
+
   const FakeBox({
-    Key? key,
+    super.key,
     required this.width,
     required this.height,
     this.child,
-  }) : super(key: key);
-
-  final double width;
-  final double height;
+  });
 
   static const _boxDecoration = BoxDecoration(
     color: Color(0xFFE2D8D7),
@@ -128,12 +129,12 @@ class ExampleHorizontalList extends StatelessWidget {
   final bool isHorizontal;
 
   const ExampleHorizontalList({
-    Key? key,
+    super.key,
     this.reverse = false,
     this.backgroundColor = appBackgroundColor,
     this.itemCount = 4,
     this.isHorizontal = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

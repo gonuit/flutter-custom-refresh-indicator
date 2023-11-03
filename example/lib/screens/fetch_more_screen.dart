@@ -4,7 +4,7 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class FetchMoreScreen extends StatefulWidget {
-  const FetchMoreScreen({Key? key}) : super(key: key);
+  const FetchMoreScreen({super.key});
 
   @override
   State<FetchMoreScreen> createState() => _FetchMoreScreenState();
@@ -29,11 +29,11 @@ class _FetchMoreScreenState extends State<FetchMoreScreen> {
     return Scaffold(
       appBar: const ExampleAppBar(title: "Scroll to fetch more"),
       body: FetchMoreIndicator(
+        onAction: _fetchMore,
         child: ExampleList(
           itemCount: _itemsCount,
           countElements: true,
         ),
-        onAction: _fetchMore,
       ),
     );
   }

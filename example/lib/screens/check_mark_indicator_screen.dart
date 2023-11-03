@@ -4,10 +4,10 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class CheckMarkIndicatorScreen extends StatefulWidget {
-  const CheckMarkIndicatorScreen({Key? key}) : super(key: key);
+  const CheckMarkIndicatorScreen({super.key});
 
   @override
-  _CheckMarkIndicatorScreenState createState() =>
+  State<CheckMarkIndicatorScreen> createState() =>
       _CheckMarkIndicatorScreenState();
 }
 
