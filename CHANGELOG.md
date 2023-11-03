@@ -1,7 +1,8 @@
 ## 2.3.0
 - The drag details have been exposed to allow animations based on the position of the pointer.
-- Examples:
+- Example app:
   - The checkmark indicator example has been simplified.
+  - Removed unused code.
 ## 2.2.1
 - Fixed typos in documentation
 ## 2.2.0
