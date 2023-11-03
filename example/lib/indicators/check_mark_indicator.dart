@@ -2,22 +2,46 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+class CheckMarkColors {
+  final Color content;
+  final Color background;
+
+  const CheckMarkColors({
+    required this.content,
+    required this.background,
+  });
+}
+
+class CheckMarkStyle {
+  final CheckMarkColors loading;
+  final CheckMarkColors completed;
+
+  const CheckMarkStyle({
+    required this.loading,
+    required this.completed,
+  });
+
+  static const defaultStyle = CheckMarkStyle(
+    loading: CheckMarkColors(content: Colors.white, background: Colors.black),
+    completed: CheckMarkColors(content: Colors.white, background: Colors.greenAccent),
+  );
+}
+
 class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
+  final CheckMarkStyle style;
 
   const CheckMarkIndicator({
     super.key,
     required this.child,
+    this.style = CheckMarkStyle.defaultStyle,
   });
 
   @override
   State<CheckMarkIndicator> createState() => _CheckMarkIndicatorState();
 }
 
-class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
-    with SingleTickerProviderStateMixin {
-  static const _indicatorSize = 150.0;
-
+class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTickerProviderStateMixin {
   /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
 
@@ -26,7 +50,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
-      offsetToArmed: _indicatorSize,
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
       completeStateDuration: const Duration(seconds: 2),
       onStateChanged: (change) {
@@ -43,78 +66,37 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
           });
         }
       },
-      builder: (
-        BuildContext context,
-        Widget child,
-        IndicatorController controller,
-      ) {
-        return Stack(
-          children: <Widget>[
-            AnimatedBuilder(
-              animation: controller,
-              builder: (BuildContext context, Widget? _) {
-                if (controller.scrollingDirection == ScrollDirection.reverse &&
-                    prevScrollDirection == ScrollDirection.forward) {
-                  controller.stopDrag();
-                }
-
-                prevScrollDirection = controller.scrollingDirection;
-
-                final containerHeight = controller.value * _indicatorSize;
-
-                return Container(
-                  alignment: Alignment.center,
-                  height: containerHeight,
-                  child: OverflowBox(
-                    maxHeight: 40,
-                    minHeight: 40,
-                    maxWidth: 40,
-                    minWidth: 40,
-                    alignment: Alignment.center,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: _renderCompleteState
-                            ? Colors.greenAccent
-                            : Colors.black,
-                        shape: BoxShape.circle,
-                      ),
-                      child: _renderCompleteState
-                          ? const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            )
-                          : SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    const AlwaysStoppedAnimation(Colors.white),
-                                value:
-                                    controller.isDragging || controller.isArmed
-                                        ? controller.value.clamp(0.0, 1.0)
-                                        : null,
-                              ),
-                            ),
+      builder: MaterialIndicatorDelegate(
+        withRotation: false,
+        builder: (
+          BuildContext context,
+          IndicatorController controller,
+        ) {
+          final style = _renderCompleteState ? widget.style.completed : widget.style.loading;
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: style.background,
+              shape: BoxShape.circle,
+            ),
+            child: _renderCompleteState
+                ? const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  )
+                : SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: style.content,
+                      value: controller.isDragging || controller.isArmed ? controller.value.clamp(0.0, 1.0) : null,
                     ),
                   ),
-                );
-              },
-            ),
-            AnimatedBuilder(
-              builder: (context, _) {
-                return Transform.translate(
-                  offset: Offset(0.0, controller.value * _indicatorSize),
-                  child: child,
-                );
-              },
-              animation: controller,
-            ),
-          ],
-        );
-      },
+          );
+        },
+      ).call,
       child: widget.child,
     );
   }
