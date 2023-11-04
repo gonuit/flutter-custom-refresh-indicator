@@ -12,25 +12,21 @@ class ExampleIndicatorScreen extends StatelessWidget {
       backgroundColor: appBackgroundColor,
       appBar: const ExampleAppBar(),
       body: SafeArea(
-        child: CustomRefreshIndicator(
-          leadingScrollIndicatorVisible: false,
-          trailingScrollIndicatorVisible: false,
-          builder: MaterialIndicatorDelegate(
-            builder: (context, controller) {
-              return Icon(
-                Icons.ac_unit,
-                color: Theme.of(context).colorScheme.primary,
-                size: 30,
-              );
-            },
-            scrollableBuilder: (context, child, controller) {
-              return Opacity(
-                opacity: 1.0 - controller.value.clamp(0.0, 1.0),
-                child: child,
-              );
-            },
-          ).call,
+        child: CustomMaterialIndicator(
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+          indicatorBuilder: (context, controller) {
+            return Icon(
+              Icons.ac_unit,
+              color: Theme.of(context).colorScheme.primary,
+              size: 30,
+            );
+          },
+          scrollableBuilder: (context, child, controller) {
+            return FadeTransition(
+              opacity: Tween(begin: 1.0, end: 0.0).animate(controller.clamp(0.0, 1.0)),
+              child: child,
+            );
+          },
           child: const ExampleList(itemCount: 6),
         ),
       ),

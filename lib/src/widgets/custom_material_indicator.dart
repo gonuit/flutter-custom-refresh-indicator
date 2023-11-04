@@ -1,9 +1,16 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-/// Builds a container that behaves similarly to the material refresh indicator
-@Deprecated('In favor of CustomMaterialIndicator widget.')
-class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
+typedef MaterialIndicatorBuilder = Widget Function(
+  BuildContext context,
+  IndicatorController controller,
+);
+
+class CustomMaterialIndicator extends StatelessWidget {
+  final Widget child;
+  final AsyncCallback onRefresh;
+
   /// The distance from the child's top or bottom [edgeOffset] where
   /// the refresh indicator will settle. During the drag that exposes the refresh
   /// indicator, its actual displacement may significantly exceed this value.
@@ -36,7 +43,7 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
   final double elevation;
 
   /// Builds the content for the indicator container
-  final MaterialIndicatorBuilder builder;
+  final MaterialIndicatorBuilder indicatorBuilder;
 
   /// Builds the scrollable.
   final IndicatorBuilder scrollableBuilder;
@@ -50,8 +57,11 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
   /// Defaults to [Clip.none].
   final Clip clipBehavior;
 
-  const MaterialIndicatorDelegate({
-    required this.builder,
+  const CustomMaterialIndicator({
+    Key? key,
+    required this.child,
+    required this.onRefresh,
+    required this.indicatorBuilder,
     this.scrollableBuilder = _defaultBuilder,
     this.backgroundColor,
     this.displacement = 40.0,
@@ -59,58 +69,53 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
     this.withRotation = true,
     this.elevation = 2.0,
     this.clipBehavior = Clip.none,
-  });
+  }) : super(key: key);
 
-  static Widget _defaultBuilder(
-    BuildContext context,
-    Widget child,
-    IndicatorController controller,
-  ) =>
-      child;
+  static Widget _defaultBuilder(BuildContext context, Widget child, IndicatorController controller) => child;
 
   @override
-  Widget build(
-    BuildContext context,
-    Widget child,
-    IndicatorController controller,
-  ) {
-    final Color backgroundColor = this.backgroundColor ??
-        ProgressIndicatorTheme.of(context).refreshBackgroundColor ??
-        Theme.of(context).canvasColor;
+  Widget build(BuildContext context) {
+    return CustomRefreshIndicator(
+      autoRebuild: false,
+      leadingScrollIndicatorVisible: false,
+      onRefresh: onRefresh,
+      builder: (context, child, controller) {
+        final Color backgroundColor = this.backgroundColor ??
+            ProgressIndicatorTheme.of(context).refreshBackgroundColor ??
+            Theme.of(context).canvasColor;
 
-    return Stack(
-      clipBehavior: Clip.hardEdge,
-      children: <Widget>[
-        scrollableBuilder(context, child, controller),
-        _PositionedIndicatorContainer(
-          edgeOffset: edgeOffset,
-          displacement: displacement,
-          controller: controller,
-          child: Transform.scale(
-            scale: controller.isFinalizing ? controller.value.clamp(0.0, 1.0) : 1.0,
-            child: Container(
-              width: 41,
-              height: 41,
-              margin: const EdgeInsets.all(4.0),
-              child: Material(
-                type: MaterialType.circle,
-                clipBehavior: clipBehavior,
-                color: backgroundColor,
-                elevation: elevation,
-                child: _InfiniteRotation(
-                  running: withRotation && controller.isLoading,
-                  child: builder(context, controller),
+        return Stack(
+          children: <Widget>[
+            scrollableBuilder(context, child, controller),
+            _PositionedIndicatorContainer(
+              edgeOffset: edgeOffset,
+              displacement: displacement,
+              controller: controller,
+              child: ScaleTransition(
+                scale: controller.isFinalizing ? controller.clamp(0.0, 1.0) : const AlwaysStoppedAnimation(1.0),
+                child: Container(
+                  width: 41,
+                  height: 41,
+                  margin: const EdgeInsets.all(4.0),
+                  child: Material(
+                    type: MaterialType.circle,
+                    clipBehavior: clipBehavior,
+                    color: backgroundColor,
+                    elevation: elevation,
+                    child: _InfiniteRotation(
+                      running: withRotation && controller.isLoading,
+                      child: indicatorBuilder(context, controller),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
+      child: child,
     );
   }
-
-  @override
-  bool get autoRebuild => true;
 }
 
 class _PositionedIndicatorContainer extends StatelessWidget {

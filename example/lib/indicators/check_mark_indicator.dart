@@ -55,15 +55,11 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
       onStateChanged: (change) {
         /// set [_renderCompleteState] to true when controller.state become completed
         if (change.didChange(to: IndicatorState.complete)) {
-          setState(() {
-            _renderCompleteState = true;
-          });
+          _renderCompleteState = true;
 
           /// set [_renderCompleteState] to false when controller.state become idle
         } else if (change.didChange(to: IndicatorState.idle)) {
-          setState(() {
-            _renderCompleteState = false;
-          });
+          _renderCompleteState = false;
         }
       },
       builder: MaterialIndicatorDelegate(

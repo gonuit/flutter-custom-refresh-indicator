@@ -107,6 +107,8 @@ class CustomRefreshIndicator extends StatefulWidget {
   final AsyncCallback onRefresh;
 
   /// Called on every indicator state change.
+  ///
+  /// There is no need to use setState in this function, as the indicator will be rebuilt automatically.
   final OnStateChanged? onStateChanged;
 
   /// The indicator controller stores all the data related
@@ -232,11 +234,11 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     final onStateChanged = widget.onStateChanged;
     if (onStateChanged != null && controller.state != newState) {
       onStateChanged(IndicatorStateChange(controller.state, newState));
-      // Triggers a rebuild of the widget to ensure that the new state
-      // will be handled correctly by the indicator widget.
-      _update();
     }
     controller.setIndicatorState(newState);
+    // Triggers a rebuild of the widget to ensure that the new state
+    // will be handled correctly by the indicator widget.
+    _update();
   }
 
   /// Notifies the listeners of the controller
