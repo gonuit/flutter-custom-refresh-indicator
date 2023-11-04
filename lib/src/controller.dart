@@ -1,9 +1,11 @@
 part of 'custom_refresh_indicator.dart';
 
-class IndicatorController extends ChangeNotifier {
+class IndicatorController extends Animation<double>
+    with AnimationEagerListenerMixin, AnimationLocalListenersMixin, AnimationLocalStatusListenersMixin {
   double _value;
 
   /// Current indicator value / progress
+  @override
   double get value => _value;
 
   /// Creates [CustomRefreshIndicator] controller class
@@ -121,14 +123,12 @@ class IndicatorController extends ChangeNotifier {
   /// Whether list scrolls horrizontally
   ///
   /// (direction equals `AxisDirection.left` or `AxisDirection.right`)
-  bool get isHorizontalDirection =>
-      direction == AxisDirection.left || direction == AxisDirection.right;
+  bool get isHorizontalDirection => direction == AxisDirection.left || direction == AxisDirection.right;
 
   /// Whether list scrolls vertically
   ///
   /// (direction equals `AxisDirection.up` or `AxisDirection.down`)
-  bool get isVerticalDirection =>
-      direction == AxisDirection.up || direction == AxisDirection.down;
+  bool get isVerticalDirection => direction == AxisDirection.up || direction == AxisDirection.down;
 
   IndicatorState _currentState;
 
@@ -199,4 +199,23 @@ class IndicatorController extends ChangeNotifier {
     _isRefreshEnabled = true;
     notifyListeners();
   }
+
+  /// Provides the status of the animation: [AnimationStatus.dismissed] when
+  /// the indicator [state] is [IndicatorState.idle],
+  /// and [AnimationStatus.forward] otherwise.
+  @override
+  AnimationStatus get status => state.isIdle ? AnimationStatus.dismissed : AnimationStatus.forward;
+
+  /// Returns a [ClampedAnimation] that constrains the animation value of its parent
+  /// within the given [min] and [max] range.
+  ///
+  /// - [min] represents the smallest value the animation can have. If the parent
+  ///   animation's value falls below this, it will be clamped to this minimum value.
+  /// - [max] represents the largest value the animation can have. If the parent
+  ///   animation's value exceeds this, it will be clamped to this maximum value.
+  Animation<double> clamp(double min, double max) => ClampedAnimation(
+        parent: this,
+        min: min,
+        max: max,
+      );
 }

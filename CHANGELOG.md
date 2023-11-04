@@ -1,5 +1,7 @@
 ## 2.3.0
-- The drag details have been exposed to allow animations based on the position of the pointer.
+- The controller now extends the *Animation<double>*.
+- New *ClampedAnimation* class for constraining the *IndicatorController* animation value within a specific range using the *clamp* method.
+- Drag interaction details are now available, enabling pointer-position-based animations.
 - Example app:
   - The checkmark indicator example has been simplified.
   - Minor corrections to the envelope indicator.
