@@ -2,6 +2,7 @@
 - The drag details have been exposed to allow animations based on the position of the pointer.
 - Example app:
   - The checkmark indicator example has been simplified.
+  - Minor corrections to the envelope indicator.
   - Removed unused code.
 ## 2.2.1
 - Fixed typos in documentation
