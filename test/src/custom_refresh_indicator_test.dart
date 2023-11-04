@@ -1011,7 +1011,7 @@ void main() {
           onStateChanged: (change) => changes.add(change),
           builder: buildWithoutIndicator,
           onRefresh: fakeRefresh.instantRefresh,
-          completeStateDuration: const Duration(milliseconds: 300),
+          completeDuration: const Duration(milliseconds: 300),
           child: const DefaultList(itemsCount: 1),
         ),
       ),

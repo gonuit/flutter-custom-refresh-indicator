@@ -51,7 +51,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-      completeStateDuration: const Duration(seconds: 2),
+      completeDuration: const Duration(seconds: 2),
       onStateChanged: (change) {
         /// set [_renderCompleteState] to true when controller.state become completed
         if (change.didChange(to: IndicatorState.complete)) {

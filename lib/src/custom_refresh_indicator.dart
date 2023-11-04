@@ -66,7 +66,7 @@ class CustomRefreshIndicator extends StatefulWidget {
 
   /// Duration for which the indicator remains at value of *1.0* and
   /// [IndicatorState.complete] state after the [onRefresh] function completes.
-  final Duration? completeStateDuration;
+  final Duration? completeDuration;
 
   /// Determines whether the received [ScrollNotification] should
   /// be handled by this widget.
@@ -161,7 +161,8 @@ class CustomRefreshIndicator extends StatefulWidget {
     Duration settleDuration = const Duration(milliseconds: 150),
     @Deprecated('In favor of finalizeDuration') Duration? indicatorFinalizeDuration,
     Duration finalizeDuration = const Duration(milliseconds: 100),
-    this.completeStateDuration,
+    @Deprecated('In favor of completeDuration') Duration? completeStateDuration,
+    Duration? completeDuration,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
   })  : assert(
@@ -172,6 +173,7 @@ class CustomRefreshIndicator extends StatefulWidget {
         cancelDuration = indicatorCancelDuration ?? cancelDuration,
         finalizeDuration = indicatorFinalizeDuration ?? finalizeDuration,
         settleDuration = indicatorSettleDuration ?? settleDuration,
+        completeDuration = completeStateDuration ?? completeDuration,
         // set the default extent percentage value if not provided
         containerExtentPercentageToArmed = containerExtentPercentageToArmed ?? defaultContainerExtentPercentageToArmed,
         super(key: key);
@@ -542,7 +544,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     if (!mounted) return;
 
     /// optional complete state
-    final completeStateDuration = widget.completeStateDuration;
+    final completeStateDuration = widget.completeDuration;
     if (completeStateDuration != null) {
       setIndicatorState(IndicatorState.complete);
       await Future.delayed(completeStateDuration);
