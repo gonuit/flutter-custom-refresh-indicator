@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
 class ParallaxConfig {
-  final int? level;
-  final AssetImage? image;
+  final int level;
+  final AssetImage image;
 
   const ParallaxConfig({
-    this.level,
-    this.image,
+    required this.level,
+    required this.image,
   });
 }
 
@@ -23,8 +25,7 @@ class IceCreamIndicator extends StatefulWidget {
   State<IceCreamIndicator> createState() => _IceCreamIndicatorState();
 }
 
-class _IceCreamIndicatorState extends State<IceCreamIndicator>
-    with SingleTickerProviderStateMixin {
+class _IceCreamIndicatorState extends State<IceCreamIndicator> with SingleTickerProviderStateMixin {
   static const _assets = <ParallaxConfig>[
     ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/cup2.png"),
@@ -64,22 +65,28 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
 
   @override
   void initState() {
-    _spoonController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _spoonController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    WidgetsBinding.instance.addPostFrameCallback((_) => _precacheImages());
     super.initState();
+  }
+
+  void _precacheImages() {
+    for (final config in _assets) {
+      unawaited(precacheImage(config.image, context));
+    }
   }
 
   Widget _buildImage(IndicatorController controller, ParallaxConfig asset) {
     return Transform.translate(
       offset: Offset(
         0,
-        -(asset.level! * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
+        -(asset.level * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
       ),
       child: OverflowBox(
         maxHeight: _imageSize,
         minHeight: _imageSize,
         child: Image(
-          image: asset.image!,
+          image: asset.image,
           fit: BoxFit.contain,
           height: _imageSize,
         ),
@@ -126,9 +133,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
                             child: _buildImage(controller, _assets[i]),
                             builder: (context, child) {
                               return Transform.rotate(
-                                angle: (-_spoonTween
-                                        .transform(_spoonController.value)) *
-                                    1.25,
+                                angle: (-_spoonTween.transform(_spoonController.value)) * 1.25,
                                 child: child,
                               );
                             },

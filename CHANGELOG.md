@@ -6,6 +6,7 @@
   - The checkmark indicator example has been simplified.
   - Minor corrections to the envelope indicator.
   - Removed unused code.
+  - Added image precaching.
 ## 2.2.1
 - Fixed typos in documentation
 ## 2.2.0
