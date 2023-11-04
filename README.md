@@ -161,13 +161,15 @@ CustomRefreshIndicator(
 
 CustomRefreshIndicator manages various states to provide feedback on the refresh process. Understanding these states will help you customize the behavior and appearance of your refresh indicator.
 
-- **idle**: The default state when no interaction is happening. The indicator is not visible, and the value is `0.0`.
-- **dragging**: The user is pulling down, but the pull distance hasn't reached the threshold to trigger a refresh. The value transitions from `0.0` to `1.0` as the user drags further down.
-- **armed**: The pull-down action has passed the threshold. If the user releases the scroll view now, the _onRefresh_ callback will be triggered. The value is at or above `1.0`.
-- **canceling**: The user stopped dragging before the threshold. The refresh operation is not triggered, and the indicator will shrink back to its initial state. The value animates back to `0.0`.
-- **loading**: The _onRefresh_ callback has been triggered, and the refresh operation is in progress. The value is steady at `1.0`, indicating an active refresh.
-- **complete**: Indicates that the refresh operation is finished successfully. This state is only enabled if a _completeDuration_ is provided via the _durations_ parameter. The indicator stays fully visible for the duration specified.
-- **finalizing**: The refresh operation is complete, and the indicator is animating away. The value animates from `1.0` back to `0.0`.
+| State        | Value Range            | Description                                                                                   |
+| ------------ | ---------------------- | --------------------------------------------------------------------------------------------- |
+| `idle`       | `0.0`                  | The default state when no interaction is happening. The indicator is not visible.             |
+| `dragging`   | `0.0` to `1.0`         | The user is pulling down, but hasn't yet reached the threshold to trigger a refresh.          |
+| `armed`      | At or above `1.0`      | Pull-down has passed the threshold. Releasing now will trigger the _onRefresh_ callback.      |
+| `canceling`  | Animates back to `0.0` | Pull-down stopped before the threshold; no refresh is triggered, and the indicator retracts.  |
+| `loading`    | Steady at `1.0`        | The _onRefresh_ callback is active, indicating an ongoing refresh operation.                  |
+| `complete`   | Steady at `1.0`        | Refresh is complete, and the indicator stays fully visible if _completeDuration_ is set.      |
+| `finalizing` | `1.0` to `0.0`         | The refresh operation has finished, and the indicator is animating back to its initial state. |
 
 Each state transition provides an opportunity to animate or adjust the UI accordingly, giving users a seamless and interactive experience.
 
