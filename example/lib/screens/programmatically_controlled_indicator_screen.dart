@@ -10,12 +10,10 @@ class ProgrammaticallyControlled extends StatefulWidget {
   const ProgrammaticallyControlled({super.key});
 
   @override
-  State<ProgrammaticallyControlled> createState() =>
-      _ProgrammaticallyControlledState();
+  State<ProgrammaticallyControlled> createState() => _ProgrammaticallyControlledState();
 }
 
-class _ProgrammaticallyControlledState
-    extends State<ProgrammaticallyControlled> {
+class _ProgrammaticallyControlledState extends State<ProgrammaticallyControlled> {
   final key = GlobalKey<CustomRefreshIndicatorState>();
 
   final controller = IndicatorController(refreshEnabled: false);

@@ -1,12 +1,16 @@
-## 2.3.0
-- The controller now extends the *Animation<double>*.
-- New *ClampedAnimation* class for constraining the *IndicatorController* animation value within a specific range using the *clamp* method.
-- Drag interaction details are now available, enabling pointer-position-based animations.
-- Example app:
+## 3.0.0
+- **CustomRefreshIndicator**:
+  - Deprecated *indicatorFinalizeDuration*, *indicatorSettleDuration* and *indicatorCancelDuration* parameters in favor of *finalizeDuration*, *settleDuration* and *cancelDuration*.
+  - The indicator widget will now be rebuilt every time *state* changes, even if the *autoRebuilt* parameter is set to false. This will make managing the state of the indicator widget simpler.
+- **IndicatorController**:
+  - The controller now extends *Animation<double>*. This allows it to be used directly with *Transition* widgets to further improve animation performance.
+  - New *ClampedAnimation* class for constraining the *IndicatorController* animation value within a specific range using the *clamp* method.
+  - Drag interaction details are now available, enabling pointer-position-based animations.
+- **Example app**:
   - The checkmark indicator example has been simplified.
   - Minor corrections to the envelope indicator.
-  - Removed unused code.
   - Added image precaching.
+  - Removed unused code.
 ## 2.2.1
 - Fixed typos in documentation
 ## 2.2.0

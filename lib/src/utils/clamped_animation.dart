@@ -17,8 +17,7 @@ import 'package:flutter/animation.dart';
 /// );
 /// ```
 /// Here `clampedAnimation.value` will always be between 0.0 and 1.0, inclusive.
-class ClampedAnimation extends Animation<double>
-    with AnimationWithParentMixin<double> {
+class ClampedAnimation extends Animation<double> with AnimationWithParentMixin<double> {
   /// Creates a clamped animation with an invariant range.
   ///
   /// The [parent] animation is the source of values for this animation.

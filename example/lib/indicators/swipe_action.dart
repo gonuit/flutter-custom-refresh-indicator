@@ -29,8 +29,7 @@ class FetchMoreIndicator extends StatelessWidget {
         return AnimatedBuilder(
             animation: controller,
             builder: (context, _) {
-              final dy = controller.value.clamp(0.0, 1.25) *
-                  -(height - (height * 0.25));
+              final dy = controller.value.clamp(0.0, 1.25) * -(height - (height * 0.25));
               return Stack(
                 children: [
                   Transform.translate(
@@ -64,9 +63,7 @@ class FetchMoreIndicator extends StatelessWidget {
                               color: appContentColor,
                             ),
                           Text(
-                            controller.isLoading
-                                ? "Fetching..."
-                                : "Pull to fetch more",
+                            controller.isLoading ? "Fetching..." : "Pull to fetch more",
                             style: const TextStyle(
                               color: appContentColor,
                             ),

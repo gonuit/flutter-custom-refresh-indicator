@@ -11,9 +11,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
   static const _circleSize = 70.0;
 
   static const _blurRadius = 10.0;
-  static const _defaultShadow = [
-    BoxShadow(blurRadius: _blurRadius, color: Colors.black26)
-  ];
+  static const _defaultShadow = [BoxShadow(blurRadius: _blurRadius, color: Colors.black26)];
 
   const EnvelopRefreshIndicator({
     super.key,
@@ -29,20 +27,16 @@ class EnvelopRefreshIndicator extends StatelessWidget {
     return CustomRefreshIndicator(
       leadingScrollIndicatorVisible: leadingScrollIndicatorVisible,
       trailingScrollIndicatorVisible: trailingScrollIndicatorVisible,
-      builder: (context, child, controller) =>
-          LayoutBuilder(builder: (context, constraints) {
+      builder: (context, child, controller) => LayoutBuilder(builder: (context, constraints) {
         final widgetWidth = constraints.maxWidth;
         final widgetHeight = constraints.maxHeight;
         final letterTopWidth = (widgetWidth / 2) + 50;
 
-        final leftValue = (widgetWidth +
-                _blurRadius -
-                ((letterTopWidth + _blurRadius) * controller.value / 1))
+        final leftValue = (widgetWidth + _blurRadius - ((letterTopWidth + _blurRadius) * controller.value / 1))
             .clamp(letterTopWidth - 100, double.infinity);
 
         final rightShift = widgetWidth + _blurRadius;
-        final rightValue = (rightShift - (rightShift * controller.value / 1))
-            .clamp(0.0, double.infinity);
+        final rightValue = (rightShift - (rightShift * controller.value / 1)).clamp(0.0, double.infinity);
 
         final opacity = (controller.value - 1).clamp(0, 0.5) / 0.5;
 
@@ -85,9 +79,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                 child: Transform.scale(
                   scale: controller.value,
                   child: Opacity(
-                    opacity: controller.isLoading || controller.state.isSettling
-                        ? 1
-                        : opacity,
+                    opacity: controller.isLoading || controller.state.isSettling ? 1 : opacity,
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(
@@ -95,8 +87,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                         height: _circleSize,
                         decoration: BoxDecoration(
                           boxShadow: _defaultShadow,
-                          color:
-                              accent ?? Theme.of(context).colorScheme.primary,
+                          color: accent ?? Theme.of(context).colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
                         child: Stack(
@@ -104,8 +95,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                           alignment: Alignment.center,
                           children: <Widget>[
                             CircularProgressIndicator(
-                              valueColor:
-                                  const AlwaysStoppedAnimation(Colors.black),
+                              valueColor: const AlwaysStoppedAnimation(Colors.black),
                               value: controller.isLoading ? null : 0,
                             ),
                             const Icon(
@@ -138,10 +128,7 @@ class TrianglePainter extends CustomPainter {
     return radius * 0.57735 + 0.5;
   }
 
-  TrianglePainter(
-      {this.strokeColor = Colors.black,
-      this.strokeWidth = 3,
-      this.paintingStyle = PaintingStyle.stroke});
+  TrianglePainter({this.strokeColor = Colors.black, this.strokeWidth = 3, this.paintingStyle = PaintingStyle.stroke});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -152,8 +139,7 @@ class TrianglePainter extends CustomPainter {
     final path = getTrianglePath(size.width, size.height);
     final shadowPaint = Paint()
       ..color = Colors.black.withAlpha(50)
-      ..maskFilter =
-          MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(10));
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(10));
     canvas.drawPath(path, shadowPaint);
 
     canvas.drawPath(path, paint);
