@@ -77,6 +77,7 @@ class IndicatorController extends Animation<double>
   /// Whether the [edge] was determined by the [CustomRefreshIndicator] widget.
   bool get hasEdge => edge != null;
 
+  @experimental
   DragUpdateDetails? get dragDetails => _dragDetails;
   DragUpdateDetails? _dragDetails;
 

@@ -427,7 +427,9 @@ void main() {
           home: CustomRefreshIndicator(
             controller: indicatorController,
             builder: buildWithoutIndicator,
-            settleDuration: const Duration(milliseconds: 150),
+            durations: const RefreshIndicatorDurations(
+              settleDuration: Duration(milliseconds: 150),
+            ),
             onRefresh: fakeRefresh.instantRefresh,
             child: DefaultList(itemsCount: 6, controller: scrollController),
           ),
@@ -1011,7 +1013,9 @@ void main() {
           onStateChanged: (change) => changes.add(change),
           builder: buildWithoutIndicator,
           onRefresh: fakeRefresh.instantRefresh,
-          completeDuration: const Duration(milliseconds: 300),
+          durations: const RefreshIndicatorDurations(
+            completeDuration: Duration(milliseconds: 300),
+          ),
           child: const DefaultList(itemsCount: 1),
         ),
       ),
@@ -1150,10 +1154,12 @@ void main() {
     expect(rebuildsCount, lessThan(indicatorChangesCount));
   });
 
-  testWidgets('CustomRefreshIndicator - autoRebuild - false - does not rebuilds the builder function with each change',
+  testWidgets('CustomRefreshIndicator - autoRebuild - false - invokes the builder function only for state changes',
       (WidgetTester tester) async {
     int indicatorChangesCount = 0;
     int rebuildsCount = 0;
+
+    final states = <IndicatorState>[];
 
     final indicatorController = IndicatorController();
     indicatorController.addListener(() => indicatorChangesCount++);
@@ -1163,6 +1169,7 @@ void main() {
         home: CustomRefreshIndicator(
           autoRebuild: false,
           controller: indicatorController,
+          onStateChanged: (change) => states.add(change.newState),
           builder: (
             BuildContext context,
             Widget child,
@@ -1187,8 +1194,19 @@ void main() {
     // finish the indicator
     await tester.pump(const Duration(seconds: 1));
 
-    /// Builder methos is called only once
-    expect(rebuildsCount, equals(1));
-    expect(indicatorChangesCount, greaterThan(10));
+    expect(
+      states,
+      equals([
+        IndicatorState.dragging,
+        IndicatorState.armed,
+        IndicatorState.settling,
+        IndicatorState.loading,
+        IndicatorState.finalizing,
+        IndicatorState.idle
+      ]),
+    );
+    /// Builder methos is called only on state changes
+    expect(rebuildsCount, equals(states.length));
+    expect(indicatorChangesCount, greaterThan(rebuildsCount));
   });
 }

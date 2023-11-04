@@ -31,20 +31,18 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
         ],
       ),
       body: SafeArea(
-        child: CustomRefreshIndicator(
+        child: CustomMaterialIndicator(
           leadingScrollIndicatorVisible: false,
           trailingScrollIndicatorVisible: false,
           triggerMode: IndicatorTriggerMode.anywhere,
           trigger: IndicatorTrigger.bothEdges,
-          builder: MaterialIndicatorDelegate(
-            builder: (context, controller) {
-              return const Icon(
-                Icons.accessibility,
-                color: Colors.black,
-                size: 30,
-              );
-            },
-          ).call,
+          indicatorBuilder: (context, controller) {
+            return const Icon(
+              Icons.accessibility,
+              color: Colors.black,
+              size: 30,
+            );
+          },
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ExampleHorizontalList(
             itemCount: 4,

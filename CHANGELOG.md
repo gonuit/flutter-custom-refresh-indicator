@@ -1,7 +1,8 @@
 ## 3.0.0
 - **CustomRefreshIndicator**:
-  - Deprecated *indicatorFinalizeDuration*, *indicatorSettleDuration*, *indicatorCancelDuration* and *completeStateDuration* parameters in favor of *finalizeDuration*, *settleDuration*, *cancelDuration* and *completeDuration*.
+  - Deprecated *indicatorFinalizeDuration*, *indicatorSettleDuration*, *indicatorCancelDuration* and *completeStateDuration* parameters in favor of *durations*.
   - The indicator widget will now be rebuilt every time *state* changes, even if the *autoRebuilt* parameter is set to false. This will make managing the state of the indicator widget simpler.
+  - Deprecated *IndicatorDelegate* and *MaterialIndicatorDelegate* in favor of *CustomMaterialIndicator* widget.
 - **IndicatorController**:
   - The controller now extends *Animation<double>*. This allows it to be used directly with *Transition* widgets to further improve animation performance.
   - New *ClampedAnimation* class for constraining the *IndicatorController* animation value within a specific range using the *clamp* method.

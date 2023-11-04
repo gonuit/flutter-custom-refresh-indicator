@@ -49,9 +49,12 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    return CustomRefreshIndicator(
+    return CustomMaterialIndicator(
+      withRotation: false,
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-      completeDuration: const Duration(seconds: 2),
+      durations: const RefreshIndicatorDurations(
+        completeDuration: Duration(seconds: 2),
+      ),
       onStateChanged: (change) {
         /// set [_renderCompleteState] to true when controller.state become completed
         if (change.didChange(to: IndicatorState.complete)) {
@@ -62,37 +65,34 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
           _renderCompleteState = false;
         }
       },
-      builder: MaterialIndicatorDelegate(
-        withRotation: false,
-        builder: (
-          BuildContext context,
-          IndicatorController controller,
-        ) {
-          final style = _renderCompleteState ? widget.style.completed : widget.style.loading;
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: style.background,
-              shape: BoxShape.circle,
-            ),
-            child: _renderCompleteState
-                ? const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  )
-                : SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: style.content,
-                      value: controller.isDragging || controller.isArmed ? controller.value.clamp(0.0, 1.0) : null,
-                    ),
+      indicatorBuilder: (
+        BuildContext context,
+        IndicatorController controller,
+      ) {
+        final style = _renderCompleteState ? widget.style.completed : widget.style.loading;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: style.background,
+            shape: BoxShape.circle,
+          ),
+          child: _renderCompleteState
+              ? const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                )
+              : SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: style.content,
+                    value: controller.isDragging || controller.isArmed ? controller.value.clamp(0.0, 1.0) : null,
                   ),
-          );
-        },
-      ).call,
+                ),
+        );
+      },
       child: widget.child,
     );
   }
