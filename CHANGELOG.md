@@ -1,4 +1,4 @@
-## 3.0.0-beta.1
+## 3.0.0-beta.2
 - **CustomRefreshIndicator**:
   - Deprecated *indicatorFinalizeDuration*, *indicatorSettleDuration*, *indicatorCancelDuration* and *completeStateDuration* parameters in favor of *durations*.
   - The indicator widget will now be rebuilt every time *state* changes, even if the *autoRebuilt* parameter is set to false. This will make managing the state of the indicator widget simpler.

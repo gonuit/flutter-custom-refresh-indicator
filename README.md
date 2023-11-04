@@ -286,7 +286,7 @@ Please visit the following live demo to see the _CustomRefreshIndicator_ in acti
 
 <div align="center">
 <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-<img src="readme/controller_data.gif" alt="Controller data example" >
+<img src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/master/readme/controller_data.gif" alt="Controller data example" >
 </a>
 </div>
 
