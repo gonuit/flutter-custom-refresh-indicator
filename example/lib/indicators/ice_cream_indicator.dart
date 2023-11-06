@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
-class ParalaxConfig {
-  final int? level;
-  final AssetImage? image;
+class ParallaxConfig {
+  final int level;
+  final AssetImage image;
 
-  const ParalaxConfig({
-    this.level,
-    this.image,
+  const ParallaxConfig({
+    required this.level,
+    required this.image,
   });
 }
 
@@ -15,42 +17,41 @@ class IceCreamIndicator extends StatefulWidget {
   final Widget child;
 
   const IceCreamIndicator({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  _IceCreamIndicatorState createState() => _IceCreamIndicatorState();
+  State<IceCreamIndicator> createState() => _IceCreamIndicatorState();
 }
 
-class _IceCreamIndicatorState extends State<IceCreamIndicator>
-    with SingleTickerProviderStateMixin {
-  static const _assets = <ParalaxConfig>[
-    ParalaxConfig(
+class _IceCreamIndicatorState extends State<IceCreamIndicator> with SingleTickerProviderStateMixin {
+  static const _assets = <ParallaxConfig>[
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/cup2.png"),
       level: 0,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/spoon.png"),
       level: 1,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/ice1.png"),
       level: 3,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/ice3.png"),
       level: 4,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/ice2.png"),
       level: 2,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/cup.png"),
       level: 0,
     ),
-    ParalaxConfig(
+    ParallaxConfig(
       image: AssetImage("assets/ice_cream_indicator/mint.png"),
       level: 5,
     ),
@@ -64,22 +65,28 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
 
   @override
   void initState() {
-    _spoonController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _spoonController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    WidgetsBinding.instance.addPostFrameCallback((_) => _precacheImages());
     super.initState();
   }
 
-  Widget _buildImage(IndicatorController controller, ParalaxConfig asset) {
+  void _precacheImages() {
+    for (final config in _assets) {
+      unawaited(precacheImage(config.image, context));
+    }
+  }
+
+  Widget _buildImage(IndicatorController controller, ParallaxConfig asset) {
     return Transform.translate(
       offset: Offset(
         0,
-        -(asset.level! * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
+        -(asset.level * (controller.value.clamp(1.0, 1.5) - 1.0) * 20) + 10,
       ),
       child: OverflowBox(
         maxHeight: _imageSize,
         minHeight: _imageSize,
         child: Image(
-          image: asset.image!,
+          image: asset.image,
           fit: BoxFit.contain,
           height: _imageSize,
         ),
@@ -119,16 +126,14 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
                     children: <Widget>[
                       for (int i = 0; i < _assets.length; i++)
 
-                        /// check if it is a spoon build animated builed and attach spoon controller
+                        /// checking for spoon build animation and attaching the spoon controller
                         if (i == 1)
                           AnimatedBuilder(
                             animation: _spoonController,
                             child: _buildImage(controller, _assets[i]),
                             builder: (context, child) {
                               return Transform.rotate(
-                                angle: (-_spoonTween
-                                        .transform(_spoonController.value)) *
-                                    1.25,
+                                angle: (-_spoonTween.transform(_spoonController.value)) * 1.25,
                                 child: child,
                               );
                             },

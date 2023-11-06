@@ -2,6 +2,11 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/widgets.dart';
 
 /// An abstract class for defining indicator delegates.
+@Deprecated(
+  'Indicator delegates are deprecated and will be removed in the upcoming release. '
+  'If you want to exapose some pre-built functionality wrap the CustomRefreshIndicator widget '
+  'with your custom implementation.',
+)
 abstract class IndicatorBuilderDelegate {
   const IndicatorBuilderDelegate();
 
@@ -20,7 +25,6 @@ abstract class IndicatorBuilderDelegate {
     IndicatorController controller,
   );
 
-  @visibleForTesting
   Widget call(
     BuildContext context,
     Widget child,

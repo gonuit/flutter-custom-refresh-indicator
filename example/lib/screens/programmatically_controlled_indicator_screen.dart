@@ -7,15 +7,13 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class ProgrammaticallyControlled extends StatefulWidget {
-  const ProgrammaticallyControlled({Key? key}) : super(key: key);
+  const ProgrammaticallyControlled({super.key});
 
   @override
-  State<ProgrammaticallyControlled> createState() =>
-      _ProgrammaticallyControlledState();
+  State<ProgrammaticallyControlled> createState() => _ProgrammaticallyControlledState();
 }
 
-class _ProgrammaticallyControlledState
-    extends State<ProgrammaticallyControlled> {
+class _ProgrammaticallyControlledState extends State<ProgrammaticallyControlled> {
   final key = GlobalKey<CustomRefreshIndicatorState>();
 
   final controller = IndicatorController(refreshEnabled: false);

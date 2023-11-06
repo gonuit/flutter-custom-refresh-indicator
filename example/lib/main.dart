@@ -16,7 +16,7 @@ import 'utils/mobile_like_scroll_behavior.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +38,14 @@ class MyApp extends StatelessWidget {
         '/envelope': (context) => const EnvelopIndicatorScreen(),
         '/fetch-more': (context) => const FetchMoreScreen(),
         '/horizontal': (context) => const HorizontalScreen(),
-        '/programmatically-controlled': (context) =>
-            const ProgrammaticallyControlled(),
+        '/programmatically-controlled': (context) => const ProgrammaticallyControlled(),
       },
     );
   }
 }
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +85,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child:
-                    const Text("Custom material indicator with list opacity"),
+                child: const Text("Custom material indicator with list opacity"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,

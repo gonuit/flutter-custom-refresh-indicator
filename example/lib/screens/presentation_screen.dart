@@ -3,10 +3,10 @@ import 'package:example/widgets/example_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class PresentationScreen extends StatefulWidget {
-  const PresentationScreen({Key? key}) : super(key: key);
+  const PresentationScreen({super.key});
 
   @override
-  _PresentationScreenState createState() => _PresentationScreenState();
+  State<PresentationScreen> createState() => _PresentationScreenState();
 }
 
 class _PresentationScreenState extends State<PresentationScreen> {
@@ -20,19 +20,20 @@ class _PresentationScreenState extends State<PresentationScreen> {
       body: SafeArea(
         child: CustomRefreshIndicator(
           trigger: IndicatorTrigger.bothEdges,
-          indicatorFinalizeDuration: const Duration(seconds: 1),
-          indicatorSettleDuration: const Duration(seconds: 1),
-          indicatorCancelDuration: const Duration(seconds: 1),
+          durations: const RefreshIndicatorDurations(
+            finalizeDuration: Duration(seconds: 1),
+            settleDuration: Duration(seconds: 1),
+            cancelDuration: Duration(seconds: 1),
+          ),
           leadingScrollIndicatorVisible: false,
           trailingScrollIndicatorVisible: false,
           offsetToArmed: 100.0,
           controller: _controller,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: DecoratedBox(
-            decoration:
-                const BoxDecoration(color: appBackgroundColor, boxShadow: [
-              BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 4)
-            ]),
+            decoration: const BoxDecoration(
+                color: appBackgroundColor,
+                boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 4)]),
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(
                 parent: ClampingScrollPhysics(),
@@ -55,8 +56,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                             width: double.infinity,
                             decoration: const BoxDecoration(
                               color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black12,
@@ -146,25 +146,19 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                     const Spacer(),
                                     ElevatedButton(
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                          _controller.isRefreshEnabled
-                                              ? Colors.red
-                                              : Colors.lightGreen,
+                                        backgroundColor: MaterialStateProperty.all(
+                                          _controller.isRefreshEnabled ? Colors.red : Colors.lightGreen,
                                         ),
                                       ),
                                       child: Text(
-                                        _controller.isRefreshEnabled
-                                            ? "DISABLE"
-                                            : "ENABLE",
+                                        _controller.isRefreshEnabled ? "DISABLE" : "ENABLE",
                                         style: const TextStyle(
                                           color: Colors.white,
                                         ),
                                       ),
-                                      onPressed: () =>
-                                          _controller.isRefreshEnabled
-                                              ? _controller.disableRefresh()
-                                              : _controller.enableRefresh(),
+                                      onPressed: () => _controller.isRefreshEnabled
+                                          ? _controller.disableRefresh()
+                                          : _controller.enableRefresh(),
                                     ),
                                   ],
                                 ),
@@ -187,9 +181,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
             return AnimatedBuilder(
               animation: _controller,
               builder: (context, _) => Stack(
-                alignment: _controller.side.isBottom
-                    ? AlignmentDirectional.bottomStart
-                    : AlignmentDirectional.topStart,
+                alignment: _controller.side.isBottom ? AlignmentDirectional.bottomStart : AlignmentDirectional.topStart,
                 children: <Widget>[
                   Container(
                     height: 100,
@@ -206,9 +198,8 @@ class _PresentationScreenState extends State<PresentationScreen> {
                     ),
                   ),
                   Container(
-                    margin: controller.side.isBottom
-                        ? const EdgeInsets.only(bottom: 100)
-                        : const EdgeInsets.only(top: 100),
+                    margin:
+                        controller.side.isBottom ? const EdgeInsets.only(bottom: 100) : const EdgeInsets.only(top: 100),
                     width: double.infinity,
                     height: 50,
                     color: Colors.greenAccent,
@@ -226,8 +217,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                   Transform.translate(
                     offset: Offset(
                       0.0,
-                      (_controller.side.isBottom ? -100 : 100) *
-                          _controller.value,
+                      (_controller.side.isBottom ? -100 : 100) * _controller.value,
                     ),
                     child: child,
                   ),

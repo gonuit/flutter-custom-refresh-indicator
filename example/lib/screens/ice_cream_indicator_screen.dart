@@ -4,11 +4,10 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class IceCreamIndicatorScreen extends StatefulWidget {
-  const IceCreamIndicatorScreen({Key? key}) : super(key: key);
+  const IceCreamIndicatorScreen({super.key});
 
   @override
-  _IceCreamIndicatorScreenState createState() =>
-      _IceCreamIndicatorScreenState();
+  State<IceCreamIndicatorScreen> createState() => _IceCreamIndicatorScreenState();
 }
 
 class _IceCreamIndicatorScreenState extends State<IceCreamIndicatorScreen> {

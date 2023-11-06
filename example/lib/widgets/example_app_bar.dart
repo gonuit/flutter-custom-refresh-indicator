@@ -8,10 +8,10 @@ class ExampleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
 
   const ExampleAppBar({
-    Key? key,
+    super.key,
     this.title,
     this.actions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

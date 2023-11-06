@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -14,35 +16,35 @@ class _Cloud {
   ];
 
   AnimationController? controller;
-  final Color? color;
-  final AssetImage? image;
-  final double? width;
-  final double? dy;
-  final double? initialValue;
-  final Duration? duration;
+  final Color color;
+  final AssetImage image;
+  final double width;
+  final double dy;
+  final double initialValue;
+  final Duration duration;
+
   _Cloud({
-    this.color,
-    this.image,
-    this.width,
-    this.dy,
-    this.initialValue,
-    this.duration,
+    required this.color,
+    required this.image,
+    required this.width,
+    required this.dy,
+    required this.initialValue,
+    required this.duration,
   });
 }
 
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
   const PlaneIndicator({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  _PlaneIndicatorState createState() => _PlaneIndicatorState();
+  State<PlaneIndicator> createState() => _PlaneIndicatorState();
 }
 
-class _PlaneIndicatorState extends State<PlaneIndicator>
-    with TickerProviderStateMixin {
+class _PlaneIndicatorState extends State<PlaneIndicator> with TickerProviderStateMixin {
   static final _planeTween = CurveTween(curve: Curves.easeInOut);
   late AnimationController _planeController;
 
@@ -54,7 +56,14 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
     );
 
     _setupCloudsAnimationControllers();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _precacheImages());
     super.initState();
+  }
+
+  void _precacheImages() {
+    for (final config in _clouds) {
+      unawaited(precacheImage(config.image, context));
+    }
   }
 
   static final _clouds = [
@@ -162,15 +171,13 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
           ),
           builder: (BuildContext context, Widget? child) {
             return Transform.translate(
-              offset: Offset(0.0,
-                  10 * (0.5 - _planeTween.transform(_planeController.value))),
+              offset: Offset(0.0, 10 * (0.5 - _planeTween.transform(_planeController.value))),
               child: child,
             );
           },
         );
         return CustomRefreshIndicator(
           offsetToArmed: _offsetToArmed,
-          child: widget.child,
           autoRebuild: false,
           onStateChanged: (change) {
             if (change.didChange(
@@ -192,8 +199,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
             }
           },
           onRefresh: () => Future.delayed(const Duration(seconds: 3)),
-          builder: (BuildContext context, Widget child,
-              IndicatorController controller) {
+          builder: (BuildContext context, Widget child, IndicatorController controller) {
             return AnimatedBuilder(
               animation: controller,
               child: child,
@@ -215,10 +221,8 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                 for (final cloud in _clouds)
                                   Transform.translate(
                                     offset: Offset(
-                                      ((screenWidth + cloud.width!) *
-                                              cloud.controller!.value) -
-                                          cloud.width!,
-                                      cloud.dy! * controller.value,
+                                      ((screenWidth + cloud.width) * cloud.controller!.value) - cloud.width,
+                                      cloud.dy * controller.value,
                                     ),
                                     child: OverflowBox(
                                       minWidth: cloud.width,
@@ -228,7 +232,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                       alignment: Alignment.topLeft,
                                       child: Image(
                                         color: cloud.color,
-                                        image: cloud.image!,
+                                        image: cloud.image,
                                         fit: BoxFit.contain,
                                       ),
                                     ),
@@ -237,12 +241,12 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                 /// plane
                                 Center(
                                   child: OverflowBox(
-                                    child: plane,
                                     maxWidth: 172,
                                     minWidth: 172,
                                     maxHeight: 50,
                                     minHeight: 50,
                                     alignment: Alignment.center,
+                                    child: plane,
                                   ),
                                 ),
                               ],
@@ -259,6 +263,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
               },
             );
           },
+          child: widget.child,
         );
       },
     );

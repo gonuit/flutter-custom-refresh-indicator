@@ -4,10 +4,10 @@ import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class PlaneIndicatorScreen extends StatefulWidget {
-  const PlaneIndicatorScreen({Key? key}) : super(key: key);
+  const PlaneIndicatorScreen({super.key});
 
   @override
-  _PlaneIndicatorScreenState createState() => _PlaneIndicatorScreenState();
+  State<PlaneIndicatorScreen> createState() => _PlaneIndicatorScreenState();
 }
 
 class _PlaneIndicatorScreenState extends State<PlaneIndicatorScreen> {

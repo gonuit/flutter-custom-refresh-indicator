@@ -10,75 +10,76 @@ class EnvelopRefreshIndicator extends StatelessWidget {
 
   static const _circleSize = 70.0;
 
-  static const _defaultShadow = [
-    BoxShadow(blurRadius: 10, color: Colors.black26)
-  ];
+  static const _blurRadius = 10.0;
+  static const _defaultShadow = [BoxShadow(blurRadius: _blurRadius, color: Colors.black26)];
 
   const EnvelopRefreshIndicator({
-    Key? key,
+    super.key,
     required this.child,
     required this.onRefresh,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = false,
     this.accent,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
       leadingScrollIndicatorVisible: leadingScrollIndicatorVisible,
       trailingScrollIndicatorVisible: trailingScrollIndicatorVisible,
-      builder: (context, child, controller) =>
-          LayoutBuilder(builder: (context, constraints) {
+      builder: (context, child, controller) => LayoutBuilder(builder: (context, constraints) {
         final widgetWidth = constraints.maxWidth;
         final widgetHeight = constraints.maxHeight;
         final letterTopWidth = (widgetWidth / 2) + 50;
 
-        final leftValue =
-            (widgetWidth - (letterTopWidth * controller.value / 1))
-                .clamp(letterTopWidth - 100, double.infinity);
+        final leftValue = (widgetWidth + _blurRadius - ((letterTopWidth + _blurRadius) * controller.value / 1))
+            .clamp(letterTopWidth - 100, double.infinity);
 
-        final rightValue = (widgetWidth - (widgetWidth * controller.value / 1))
-            .clamp(0.0, double.infinity);
+        final rightShift = widgetWidth + _blurRadius;
+        final rightValue = (rightShift - (rightShift * controller.value / 1)).clamp(0.0, double.infinity);
 
         final opacity = (controller.value - 1).clamp(0, 0.5) / 0.5;
+
+        final isNotIdle = !controller.isIdle;
         return Stack(
           children: <Widget>[
             Transform.scale(
               scale: 1 - 0.1 * controller.value.clamp(0.0, 1.0),
               child: child,
             ),
-            Positioned(
-              right: rightValue,
-              child: Container(
-                height: widgetHeight,
-                width: widgetWidth,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: _defaultShadow,
-                ),
-              ),
-            ),
-            Positioned(
-              left: leftValue,
-              child: CustomPaint(
-                painter: TrianglePainter(
-                  strokeColor: Colors.white,
-                  paintingStyle: PaintingStyle.fill,
-                ),
-                child: SizedBox(
+            if (isNotIdle)
+              Positioned(
+                right: rightValue,
+                child: Container(
                   height: widgetHeight,
-                  width: letterTopWidth,
+                  width: widgetWidth,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: _defaultShadow,
+                  ),
                 ),
               ),
-            ),
+            if (isNotIdle)
+              Positioned(
+                left: leftValue,
+                child: CustomPaint(
+                  size: Size(
+                    letterTopWidth,
+                    widgetHeight,
+                  ),
+                  painter: TrianglePainter(
+                    strokeColor: Colors.white,
+                    paintingStyle: PaintingStyle.fill,
+                  ),
+                ),
+              ),
             if (controller.value >= 1)
               Container(
                 padding: const EdgeInsets.only(right: 100),
                 child: Transform.scale(
                   scale: controller.value,
                   child: Opacity(
-                    opacity: controller.isLoading ? 1 : opacity,
+                    opacity: controller.isLoading || controller.state.isSettling ? 1 : opacity,
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(
@@ -86,21 +87,16 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                         height: _circleSize,
                         decoration: BoxDecoration(
                           boxShadow: _defaultShadow,
-                          color:
-                              accent ?? Theme.of(context).colorScheme.primary,
+                          color: accent ?? Theme.of(context).colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
                         child: Stack(
+                          fit: StackFit.expand,
                           alignment: Alignment.center,
                           children: <Widget>[
-                            SizedBox(
-                              height: double.infinity,
-                              width: double.infinity,
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    const AlwaysStoppedAnimation(Colors.black),
-                                value: controller.isLoading ? null : 0,
-                              ),
+                            CircularProgressIndicator(
+                              valueColor: const AlwaysStoppedAnimation(Colors.black),
+                              value: controller.isLoading ? null : 0,
                             ),
                             const Icon(
                               Icons.mail_outline,
@@ -132,10 +128,7 @@ class TrianglePainter extends CustomPainter {
     return radius * 0.57735 + 0.5;
   }
 
-  TrianglePainter(
-      {this.strokeColor = Colors.black,
-      this.strokeWidth = 3,
-      this.paintingStyle = PaintingStyle.stroke});
+  TrianglePainter({this.strokeColor = Colors.black, this.strokeWidth = 3, this.paintingStyle = PaintingStyle.stroke});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -146,8 +139,7 @@ class TrianglePainter extends CustomPainter {
     final path = getTrianglePath(size.width, size.height);
     final shadowPaint = Paint()
       ..color = Colors.black.withAlpha(50)
-      ..maskFilter =
-          MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(10));
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(10));
     canvas.drawPath(path, shadowPaint);
 
     canvas.drawPath(path, paint);

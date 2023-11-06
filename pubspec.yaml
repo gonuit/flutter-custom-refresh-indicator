@@ -1,9 +1,12 @@
 name: custom_refresh_indicator
-description: Widget that makes it easy to implement a custom pull to refresh effect.
-version: 2.2.1
+description: Widget that makes it easy to implement a custom pull to refresh gesture.
+version: 3.0.0
 repository: https://github.com/gonuit/flutter-custom-refresh-indicator
 issue_tracker: https://github.com/gonuit/flutter-custom-refresh-indicator/issues
 homepage: https://github.com/gonuit/flutter-custom-refresh-indicator
+
+scripts:
+  format: dart format . --line-length=120
 
 environment:
   sdk: ">=2.15.0 <4.0.0"
@@ -12,11 +15,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  meta: ^1.3.0
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
+  flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
+  rps: ^0.7.0
 
 flutter:
 
