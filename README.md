@@ -9,7 +9,7 @@ Create your own custom refresh indicator widget in the blink of an eye!
 ### Features:
 
 - [Create a **COMPLETELY** custom refresh indicator widget.](#examples)
-- [Quickly change the content of the material refresh indicator.](#materialindicatordelegate)
+- [Quickly change the content of the material refresh indicator.](#custommaterialindicator)
 - [Trigger refresh indicator on horizontal lists (online example).](https://custom-refresh-indicator.klyta.it/#/horizontal)
 - [Trigger the refresh indicator from the leading, trailing, or both scroll edges.](#trigger-indicatortrigger)
 
@@ -19,46 +19,14 @@ Create your own custom refresh indicator widget in the blink of an eye!
 
 ## QUICK START
 
-```dart
-CustomRefreshIndicator(
-  /// Scrollable widget
-  child: ListView.builder(
-    itemBuilder: (BuildContext context, int index) => Text(index.toString()),
-  ),
-  /// The function that builds the indicator
-  builder: (
-    BuildContext context,
-    Widget child,
-    IndicatorController controller,
-    ) {
-      /// TODO: Implement your own refresh indicator
-      return Stack(
-        children: <Widget>[
-          /// The scroll widget that was passed as the [child] argument.
-          ///
-          /// TIP:
-          /// You can also wrap [child] with the [Transform] widget to also animate the list transformation (see the example app).
-          child,
-
-          /// Your indicator implementation
-          return MyIndicator(value: controller.value, loading: controller.state.isLoading);
-        ],
-      );
-    }
-  /// A function that is called when the user drags the refresh indicator.
-  onRefresh: myAsyncRefreshFunction,
-)
-```
-
-## CustomMaterialIndicator
+### **CustomMaterialIndicator**
 
 If you just want to replace the content of the material indicator, you can use _CustomMaterialIndicator_ widget, which builds a material container. In addition to the built in _RefreshIndicator_ it supports horizontal lists and triggering from both edges (see the [trigger argument](#trigger-indicatortrigger)).
 
-### Code:
 
 ```dart
 CustomMaterialIndicator(
-  onRefresh: myAsyncRefreshFunction,
+  onRefresh: onRefresh, // Your refresh logic
   builder: (context, controller) {
     return Icon(
       Icons.ac_unit,
@@ -72,7 +40,37 @@ CustomMaterialIndicator(
 
 ### Effect:
 
-![simple_indicator](readme/simple_indicator.gif)
+<div align="center">
+<a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
+<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/master/readme/simple_indicator.gif" alt="Controller data example" >
+</a>
+</div>
+
+
+### **CustomRefreshIndicator**
+
+Elevate your Flutter app with a tailor-made refresh indicator using the CustomRefreshIndicator widget. Just wrap your scrollable list, and design your unique indicator. It's that easy! 😏
+
+```dart
+CustomRefreshIndicator(
+  onRefresh: onRefresh, // Your refresh logic
+  builder: (context, child, controller) {
+    // Place your custom indicator here.
+    // Need inspiration? Look at the example app!
+    return MyIndicator(
+      child: child,
+      controller: controller,
+    );
+  },
+  child: ListView.builder(
+    itemBuilder: (_, index) => Text('Item $index'),
+  ),
+)
+```
+
+### ~~Effect:~~ What's Possible?
+
+Your creativity sets the boundaries! Explore our examples (just scroll a bit 👇) to see what you can build. From subtle animations to eye-catching visuals, make the refresh action a delightful moment. 🚀
 
 # Examples
 
@@ -142,7 +140,7 @@ CustomRefreshIndicator(
 
 ### Customization
 
-- **notificationPredicate ()**: Determines which _ScrollNotifications_ will trigger the indicator.
+- **notificationPredicate (ScrollNotificationPredicate)**: Determines which _ScrollNotifications_ will trigger the indicator.
 - **leadingScrollIndicatorVisible (bool)**: Visibility of the leading scroll indicator.
 - **trailingScrollIndicatorVisible (bool)**: Visibility of the trailing scroll indicator.
 
