@@ -122,12 +122,11 @@ class _PositionedIndicatorContainer extends StatelessWidget {
   /// Position child widget in a similar way
   /// to the built-in [RefreshIndicator] widget.
   const _PositionedIndicatorContainer({
-    Key? key,
     required this.child,
     required this.controller,
     required this.displacement,
     required this.edgeOffset,
-  }) : super(key: key);
+  });
 
   Alignment _getAlignement(IndicatorSide side) {
     switch (side) {
@@ -219,8 +218,8 @@ class _InfiniteRotation extends StatefulWidget {
   const _InfiniteRotation({
     required this.child,
     required this.running,
-    Key? key,
-  }) : super(key: key);
+  });
+
   @override
   _InfiniteRotationState createState() => _InfiniteRotationState();
 }

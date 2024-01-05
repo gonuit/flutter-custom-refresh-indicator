@@ -48,12 +48,12 @@ class DefaultList extends StatelessWidget {
   final ScrollPhysics physics;
 
   const DefaultList({
-    Key? key,
+    super.key,
     required this.itemsCount,
     this.reverse = false,
     this.controller,
     this.physics = const AlwaysScrollableScrollPhysics(),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1205,6 +1205,7 @@ void main() {
         IndicatorState.idle
       ]),
     );
+
     /// Builder methos is called only on state changes
     expect(rebuildsCount, equals(states.length));
     expect(indicatorChangesCount, greaterThan(rebuildsCount));
