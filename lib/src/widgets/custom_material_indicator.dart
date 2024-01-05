@@ -97,7 +97,7 @@ class CustomMaterialIndicator extends StatelessWidget {
   final bool trailingScrollIndicatorVisible;
 
   const CustomMaterialIndicator({
-    Key? key,
+    super.key,
     required this.child,
     required this.onRefresh,
     required this.indicatorBuilder,
@@ -117,7 +117,7 @@ class CustomMaterialIndicator extends StatelessWidget {
     this.onStateChanged,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
-  }) : super(key: key);
+  });
 
   static Widget _defaultBuilder(BuildContext context, Widget child, IndicatorController controller) => child;
 

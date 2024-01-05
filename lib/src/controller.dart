@@ -1,7 +1,11 @@
 part of 'custom_refresh_indicator.dart';
 
 class IndicatorController extends Animation<double>
-    with AnimationEagerListenerMixin, AnimationLocalListenersMixin, AnimationLocalStatusListenersMixin {
+    with
+        AnimationEagerListenerMixin,
+        AnimationLocalListenersMixin,
+        AnimationLocalStatusListenersMixin,
+        ClampingWithOverscrollPhysicsState {
   double _value;
 
   /// Current indicator value / progress
@@ -121,7 +125,7 @@ class IndicatorController extends Animation<double>
   /// will have the direction of `AxisDirection.left`
   AxisDirection get direction => _direction;
 
-  /// Whether list scrolls horrizontally
+  /// Whether list scrolls horizontally
   ///
   /// (direction equals `AxisDirection.left` or `AxisDirection.right`)
   bool get isHorizontalDirection => direction == AxisDirection.left || direction == AxisDirection.right;

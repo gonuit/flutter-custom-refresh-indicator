@@ -5,7 +5,7 @@ import 'package:example/screens/programmatically_controlled_indicator_screen.dar
 import 'package:example/widgets/web_frame.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/opacity_indicator_screen.dart';
+import 'screens/custom_material_indicator_screen.dart';
 import 'screens/fetch_more_screen.dart';
 import 'screens/ice_cream_indicator_screen.dart';
 import 'screens/plane_indicator_screen.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       home: const MainScreen(),
       builder: (context, child) => WebFrame(child: child),
       routes: {
-        '/example': (context) => const OpacityIndicatorScreen(),
+        '/example': (context) => const CustomMaterialIndicatorScreen(),
         '/plane': (context) => const PlaneIndicatorScreen(),
         '/ice-cream': (context) => const IceCreamIndicatorScreen(),
         '/presentation': (context) => const PresentationScreen(),
@@ -74,7 +74,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Multidirectional indicator"),
+                child: const Text("Multidirectional Indicator"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
@@ -87,7 +87,7 @@ class MainScreen extends StatelessWidget {
                 height: 50,
                 alignment: Alignment.center,
                 child:
-                    const Text("Custom material indicator with list opacity"),
+                    const Text("Custom Material Indicator"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,

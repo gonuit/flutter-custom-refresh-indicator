@@ -6,11 +6,13 @@ const appContentColor = Color(0xff877162);
 class ExampleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final List<Widget>? actions;
+  final double elevation;
 
   const ExampleAppBar({
     super.key,
     this.title,
     this.actions,
+    this.elevation = 1.0,
   });
 
   @override
@@ -27,7 +29,7 @@ class ExampleAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: actions,
-      elevation: 3,
+      elevation: elevation,
     );
   }
 

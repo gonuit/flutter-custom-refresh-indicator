@@ -1,3 +1,8 @@
+## 3.1.0-dev.1
+- Experimental: 
+  - Added `ClampingWithOverscrollPhysics` scroll physics, that together with indicator controller allows handling overscroll correctly.
+- The indicator's cancel duration is now based on the dragging progress.
+- Updated the the dart sdk constraints to `>=2.17.0 <4.0.0`
 ## 3.0.0
 - **CustomRefreshIndicator**:
   - Deprecated *indicatorFinalizeDuration*, *indicatorSettleDuration*, *indicatorCancelDuration* and *completeStateDuration* parameters in favor of *durations*.

@@ -7,6 +7,7 @@ class ExampleList extends StatelessWidget {
   final bool countElements;
   final bool reverse;
   final Color backgroundColor;
+  final ScrollPhysics physics;
 
   const ExampleList({
     super.key,
@@ -14,6 +15,9 @@ class ExampleList extends StatelessWidget {
     this.countElements = false,
     this.backgroundColor = appBackgroundColor,
     this.itemCount = 4,
+    this.physics = const AlwaysScrollableScrollPhysics(
+      parent: ClampingScrollPhysics(),
+    ),
   });
 
   @override
@@ -31,10 +35,8 @@ class ExampleList extends StatelessWidget {
         ],
       ),
       child: ListView.separated(
+        physics: physics,
         reverse: reverse,
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: ClampingScrollPhysics(),
-        ),
         itemBuilder: (BuildContext context, int index) => countElements
             ? Element(
                 child: Center(

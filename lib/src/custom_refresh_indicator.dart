@@ -155,7 +155,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   }
 
   CustomRefreshIndicator({
-    Key? key,
+    super.key,
     required this.child,
     required this.onRefresh,
     required this.builder,
@@ -189,8 +189,7 @@ class CustomRefreshIndicator extends StatefulWidget {
           settleDuration: indicatorSettleDuration ?? durations.settleDuration,
         ),
         // set the default extent percentage value if not provided
-        containerExtentPercentageToArmed = containerExtentPercentageToArmed ?? defaultContainerExtentPercentageToArmed,
-        super(key: key);
+        containerExtentPercentageToArmed = containerExtentPercentageToArmed ?? defaultContainerExtentPercentageToArmed;
 
   @override
   CustomRefreshIndicatorState createState() => CustomRefreshIndicatorState();
@@ -388,6 +387,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
+    controller.clearPhysicsState();
+
     if (controller.state.isArmed) {
       _start();
     } else {
@@ -578,9 +579,10 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   Future<void> _hide() async {
     setIndicatorState(IndicatorState.canceling);
     _dragOffset = 0;
+    final progress = _animationController.value;
     await _animationController.animateTo(
       0.0,
-      duration: widget.durations.cancelDuration,
+      duration: widget.durations.cancelDuration * progress,
       curve: Curves.ease,
     );
 
@@ -600,7 +602,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     );
 
     final builder = widget.builder;
-
     if (widget.autoRebuild ||
         // ignore: deprecated_member_use_from_same_package
         (builder is IndicatorBuilderDelegate && (builder as IndicatorBuilderDelegate).autoRebuild)) {
