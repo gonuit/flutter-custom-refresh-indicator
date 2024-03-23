@@ -32,5 +32,5 @@ class IndicatorStateChange {
   int get hashCode => Object.hash(currentState, newState);
 
   @override
-  String toString() => "$runtimeType(${describeEnum(currentState)} → ${describeEnum(newState)})";
+  String toString() => "$runtimeType(${currentState.name} → ${newState.name})";
 }

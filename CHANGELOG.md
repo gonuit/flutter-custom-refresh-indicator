@@ -1,4 +1,4 @@
-## 3.1.0-dev.1
+## 3.1.0
 - Experimental: 
   - Added `ClampingWithOverscrollPhysics` scroll physics, that together with indicator controller allows handling overscroll correctly.
 - The indicator's cancel duration is now based on the dragging progress.

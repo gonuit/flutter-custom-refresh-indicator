@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 /// physics.
 ///
 /// Implemented by the [IndicatorController] class.
+@experimental
 mixin ClampingWithOverscrollPhysicsState {
   double _overscroll = 0;
 
