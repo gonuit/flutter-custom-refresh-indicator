@@ -694,6 +694,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData.light(useMaterial3: false),
         home: CustomRefreshIndicator(
           leadingScrollIndicatorVisible: false,
           builder: buildWithoutIndicator,
@@ -739,6 +740,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData.light(useMaterial3: false),
         home: CustomRefreshIndicator(
           leadingScrollIndicatorVisible: true,
           trailingScrollIndicatorVisible: false,
