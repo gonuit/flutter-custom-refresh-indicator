@@ -1,3 +1,6 @@
+## 3.1.1
+- Fix:
+  - Fixed *durations* parameter of *CustomRefreshIndicator* widget. Reported by [@jccd1996](https://github.com/jccd1996) in [#58](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/58).
 ## 3.1.0
 - Experimental: 
   - Added `ClampingWithOverscrollPhysics` scroll physics, that together with indicator controller allows handling overscroll correctly.
