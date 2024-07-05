@@ -167,12 +167,9 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.offsetToArmed,
     this.onStateChanged,
     double? containerExtentPercentageToArmed,
-    @Deprecated('In favor of durations parameter')
-    Duration? indicatorCancelDuration = const Duration(milliseconds: 300),
-    @Deprecated('In favor of durations parameter')
-    Duration? indicatorSettleDuration = const Duration(milliseconds: 150),
-    @Deprecated('In favor of durations parameter')
-    Duration? indicatorFinalizeDuration = const Duration(milliseconds: 100),
+    @Deprecated('In favor of durations parameter') Duration? indicatorCancelDuration,
+    @Deprecated('In favor of durations parameter') Duration? indicatorSettleDuration,
+    @Deprecated('In favor of durations parameter') Duration? indicatorFinalizeDuration,
     @Deprecated('In favor of durations parameter') Duration? completeStateDuration,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
