@@ -197,11 +197,11 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   late double _dragOffset;
 
   late AnimationController _animationController;
-  late bool _controllerProvided;
-  late IndicatorController _customRefreshIndicatorController;
+  bool get _hasExternalController => widget.controller != null;
+  IndicatorController? _internalIndicatorController;
 
   /// Current [IndicatorController]
-  IndicatorController get controller => _customRefreshIndicatorController;
+  IndicatorController get controller => widget.controller ?? (_internalIndicatorController ??= IndicatorController());
 
   static const double _kPositionLimit = 1.5;
   static const double _kInitialValue = 0.0;
@@ -210,8 +210,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   void initState() {
     _dragOffset = 0;
 
-    _controllerProvided = widget.controller != null;
-    _customRefreshIndicatorController = widget.controller ?? IndicatorController._();
+    _internalIndicatorController = widget.controller ?? IndicatorController._();
 
     _animationController = AnimationController(
       vsync: this,
@@ -221,6 +220,17 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     )..addListener(_updateCustomRefreshIndicatorValue);
 
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomRefreshIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // When a new controller is provided externally.
+    if (oldWidget.controller != widget.controller && widget.controller != null) {
+      // Dispose and remove the current internal controller, if it exists
+      _internalIndicatorController?.dispose();
+      _internalIndicatorController = null;
+    }
   }
 
   /// Triggers a rebuild of the indicator widget
@@ -240,7 +250,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   }
 
   /// Notifies the listeners of the controller
-  void _updateCustomRefreshIndicatorValue() => _customRefreshIndicatorController.setValue(_animationController.value);
+  void _updateCustomRefreshIndicatorValue() => controller.setValue(_animationController.value);
 
   bool _handleScrollIndicatorNotification(
     OverscrollIndicatorNotification notification,
@@ -602,11 +612,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   @override
   void dispose() {
     _animationController.dispose();
-
-    /// Provided controller should be disposed by the user.
-    if (!_controllerProvided) {
-      _customRefreshIndicatorController.dispose();
-    }
+    // External controller should be disposed by the user.
+    // Dispose the internal controller, if it exists.
+    _internalIndicatorController?.dispose();
     super.dispose();
   }
 }
