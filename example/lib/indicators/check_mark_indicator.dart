@@ -50,7 +50,6 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
   @override
   Widget build(BuildContext context) {
     return CustomMaterialIndicator(
-      withRotation: false,
       onRefresh: () => Future.delayed(const Duration(seconds: 2)),
       durations: const RefreshIndicatorDurations(
         completeDuration: Duration(seconds: 2),
