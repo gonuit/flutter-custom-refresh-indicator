@@ -235,7 +235,7 @@ class IndicatorController extends Animation<double>
   ///
   /// - [min] represents the smallest value the animation can have.
   /// - [max] represents the largest value the animation can have.
-  /// 
+  ///
   /// If instead of transforming the entire range of controller values, you want to use only a specific range, see the [clamp] method.
   Animation<double> transform(double min, double max) => TransformedAnimation(
         parent: this,

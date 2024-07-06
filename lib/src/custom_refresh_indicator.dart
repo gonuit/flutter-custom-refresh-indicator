@@ -154,7 +154,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     return notification.depth == 0;
   }
 
-  CustomRefreshIndicator({
+  const CustomRefreshIndicator({
     super.key,
     required this.child,
     required this.onRefresh,

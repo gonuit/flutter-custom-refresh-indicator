@@ -1,5 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:custom_refresh_indicator/src/custom_refresh_indicator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -111,6 +112,9 @@ class CustomMaterialIndicator extends StatefulWidget {
   /// [ColorScheme.primary] by default.
   final Color? color;
 
+  /// when true, the appropriate indicator should be selected depending on the platform.
+  final bool _isAdaptive;
+
   const CustomMaterialIndicator({
     super.key,
     required this.child,
@@ -140,7 +144,40 @@ class CustomMaterialIndicator extends StatefulWidget {
               (color == null && semanticsValue == null && semanticsLabel == null && strokeWidth == null),
           'When a custom indicatorBuilder is provided, the parameters color, semanticsValue, semanticsLabel and strokeWidth are unused and can be safely removed.',
         ),
-        strokeWidth = strokeWidth ?? RefreshProgressIndicator.defaultStrokeWidth;
+        strokeWidth = strokeWidth ?? RefreshProgressIndicator.defaultStrokeWidth,
+        _isAdaptive = false;
+
+  const CustomMaterialIndicator.adaptive({
+    super.key,
+    required this.child,
+    required this.onRefresh,
+    this.indicatorBuilder,
+    this.scrollableBuilder = _defaultBuilder,
+    this.notificationPredicate = CustomRefreshIndicator.defaultScrollNotificationPredicate,
+    this.backgroundColor,
+    this.displacement = 40.0,
+    this.edgeOffset = 0.0,
+    this.elevation = 2.0,
+    this.clipBehavior = Clip.none,
+    this.autoRebuild = true,
+    this.trigger = IndicatorTrigger.leadingEdge,
+    this.triggerMode = IndicatorTriggerMode.onEdge,
+    this.controller,
+    this.durations = const RefreshIndicatorDurations(),
+    this.onStateChanged,
+    this.leadingScrollIndicatorVisible = false,
+    this.trailingScrollIndicatorVisible = true,
+    double? strokeWidth,
+    this.semanticsLabel,
+    this.semanticsValue,
+    this.color,
+  })  : assert(
+          indicatorBuilder == null ||
+              (color == null && semanticsValue == null && semanticsLabel == null && strokeWidth == null),
+          'When a custom indicatorBuilder is provided, the parameters color, semanticsValue, semanticsLabel and strokeWidth are unused and can be safely removed.',
+        ),
+        strokeWidth = strokeWidth ?? RefreshProgressIndicator.defaultStrokeWidth,
+        _isAdaptive = true;
 
   static Widget _defaultBuilder(BuildContext context, Widget child, IndicatorController controller) => child;
 
@@ -182,7 +219,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
     );
   }
 
-  Widget _defaultIndicatorBuilder(BuildContext context, IndicatorController controller) {
+  Widget _defaultMaterialIndicatorBuilder(BuildContext context, IndicatorController controller) {
     final bool showIndeterminateIndicator = controller.isLoading || controller.isComplete || controller.isFinalizing;
 
     return RefreshProgressIndicator(
@@ -192,6 +229,12 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
       valueColor: _colorAnimation,
       backgroundColor: _backgroundColor,
       strokeWidth: widget.strokeWidth,
+    );
+  }
+
+  Widget _defaultCupertinoIndicatorBuilder(BuildContext context, IndicatorController controller) {
+    return CupertinoActivityIndicator(
+      color: widget.color,
     );
   }
 
@@ -242,7 +285,25 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    final indicatorBuilder = widget.indicatorBuilder ?? _defaultIndicatorBuilder;
+    bool useMaterial = true;
+    if (widget._isAdaptive) {
+      final ThemeData theme = Theme.of(context);
+      switch (theme.platform) {
+        case TargetPlatform.android:
+        case TargetPlatform.fuchsia:
+        case TargetPlatform.linux:
+        case TargetPlatform.windows:
+          useMaterial = true;
+          break;
+        case TargetPlatform.iOS:
+        case TargetPlatform.macOS:
+          useMaterial = false;
+          break;
+      }
+    }
+
+    final MaterialIndicatorBuilder indicatorBuilder =
+        widget.indicatorBuilder ?? (useMaterial ? _defaultMaterialIndicatorBuilder : _defaultCupertinoIndicatorBuilder);
 
     return CustomRefreshIndicator(
       autoRebuild: false,
@@ -269,13 +330,15 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
             width: 41,
             height: 41,
             margin: const EdgeInsets.all(4.0),
-            child: Material(
-              type: MaterialType.circle,
-              clipBehavior: widget.clipBehavior,
-              color: _backgroundColor,
-              elevation: widget.elevation,
-              child: indicator,
-            ),
+            child: useMaterial
+                ? Material(
+                    type: MaterialType.circle,
+                    clipBehavior: widget.clipBehavior,
+                    color: _backgroundColor,
+                    elevation: widget.elevation,
+                    child: indicator,
+                  )
+                : indicator,
           );
         }
 
