@@ -167,23 +167,13 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.offsetToArmed,
     this.onStateChanged,
     double? containerExtentPercentageToArmed,
-    @Deprecated('In favor of durations parameter') Duration? indicatorCancelDuration,
-    @Deprecated('In favor of durations parameter') Duration? indicatorSettleDuration,
-    @Deprecated('In favor of durations parameter') Duration? indicatorFinalizeDuration,
-    @Deprecated('In favor of durations parameter') Duration? completeStateDuration,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
-    RefreshIndicatorDurations durations = const RefreshIndicatorDurations(),
+    this.durations = const RefreshIndicatorDurations(),
   })  : assert(
           containerExtentPercentageToArmed == null || offsetToArmed == null,
           'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
           'Remove redundant argument.',
-        ),
-        durations = RefreshIndicatorDurations(
-          cancelDuration: indicatorCancelDuration ?? durations.cancelDuration,
-          completeDuration: completeStateDuration ?? durations.completeDuration,
-          finalizeDuration: indicatorFinalizeDuration ?? durations.finalizeDuration,
-          settleDuration: indicatorSettleDuration ?? durations.settleDuration,
         ),
         // set the default extent percentage value if not provided
         containerExtentPercentageToArmed = containerExtentPercentageToArmed ?? defaultContainerExtentPercentageToArmed;
@@ -599,9 +589,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     );
 
     final builder = widget.builder;
-    if (widget.autoRebuild ||
-        // ignore: deprecated_member_use_from_same_package
-        (builder is IndicatorBuilderDelegate && (builder as IndicatorBuilderDelegate).autoRebuild)) {
+    if (widget.autoRebuild) {
       return AnimatedBuilder(
         animation: controller,
         builder: (context, _) => builder(context, child, controller),
