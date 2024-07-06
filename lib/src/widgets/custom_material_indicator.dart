@@ -1,4 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:custom_refresh_indicator/src/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ typedef MaterialIndicatorBuilder = Widget Function(
   IndicatorController controller,
 );
 
-class CustomMaterialIndicator extends StatelessWidget {
+class CustomMaterialIndicator extends StatefulWidget {
   /// {@macro custom_refresh_indicator.child}
   final Widget child;
 
@@ -53,17 +54,13 @@ class CustomMaterialIndicator extends StatelessWidget {
   final double elevation;
 
   /// Builds the content for the indicator container
-  final MaterialIndicatorBuilder indicatorBuilder;
+  final MaterialIndicatorBuilder? indicatorBuilder;
 
   /// A builder that constructs a scrollable widget, typically used for a list.
   ///
   /// This builder is responsible for building the scrollable widget ([child])
   /// that can be animated during loading or other state changes.
   final IndicatorBuilder scrollableBuilder;
-
-  /// When set to *true*, the indicator will rotate
-  /// in the [IndicatorState.loading] state.
-  final bool withRotation;
 
   /// {@macro custom_refresh_indicator.notification_predicate}
   final ScrollNotificationPredicate notificationPredicate;
@@ -96,17 +93,34 @@ class CustomMaterialIndicator extends StatelessWidget {
   /// Whether to display trailing scroll indicator
   final bool trailingScrollIndicatorVisible;
 
+  /// Defines [strokeWidth] for `RefreshIndicator`.
+  ///
+  /// By default, the value of [strokeWidth] is 2.5 pixels.
+  final double strokeWidth;
+
+  /// {@macro flutter.progress_indicator.ProgressIndicator.semanticsLabel}
+  ///
+  /// This will be defaulted to [MaterialLocalizations.refreshIndicatorSemanticLabel]
+  /// if it is null.
+  final String? semanticsLabel;
+
+  /// {@macro flutter.progress_indicator.ProgressIndicator.semanticsValue}
+  final String? semanticsValue;
+
+  /// The progress indicator's foreground color. The current theme's
+  /// [ColorScheme.primary] by default.
+  final Color? color;
+
   const CustomMaterialIndicator({
     super.key,
     required this.child,
     required this.onRefresh,
-    required this.indicatorBuilder,
+    this.indicatorBuilder,
     this.scrollableBuilder = _defaultBuilder,
     this.notificationPredicate = CustomRefreshIndicator.defaultScrollNotificationPredicate,
     this.backgroundColor,
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
-    this.withRotation = true,
     this.elevation = 2.0,
     this.clipBehavior = Clip.none,
     this.autoRebuild = true,
@@ -117,64 +131,177 @@ class CustomMaterialIndicator extends StatelessWidget {
     this.onStateChanged,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
-  });
+    double? strokeWidth,
+    this.semanticsLabel,
+    this.semanticsValue,
+    this.color,
+  })  : assert(
+          indicatorBuilder == null ||
+              (color == null && semanticsValue == null && semanticsLabel == null && strokeWidth == null),
+          'When a custom indicatorBuilder is provided, the parameters color, semanticsValue, semanticsLabel and strokeWidth are unused and can be safely removed.',
+        ),
+        strokeWidth = strokeWidth ?? RefreshProgressIndicator.defaultStrokeWidth;
 
   static Widget _defaultBuilder(BuildContext context, Widget child, IndicatorController controller) => child;
 
   @override
+  State<CustomMaterialIndicator> createState() => _CustomMaterialIndicatorState();
+}
+
+class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
+  IndicatorController? _internalIndicatorController;
+  IndicatorController get controller => widget.controller ?? (_internalIndicatorController ??= IndicatorController());
+
+  @override
+  void didUpdateWidget(covariant CustomMaterialIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // When a new background color is provided.
+    if (oldWidget.backgroundColor != widget.backgroundColor) {
+      _backgroundColor = _getBackgroundColor();
+    }
+
+    // When a new controller is provided externally.
+    if (oldWidget.controller != widget.controller) {
+      if (widget.controller != null) {
+        // Dispose and remove the current internal controller, if it exists
+        _internalIndicatorController?.dispose();
+        _internalIndicatorController = null;
+      }
+
+      // Update animations/listeners.
+      _setupMaterialIndicator();
+    } else if (oldWidget.color != widget.color) {
+      // Update color animation.
+      _setupMaterialIndicator();
+    }
+
+    assert(
+      widget.controller == null || (widget.controller != null && _internalIndicatorController == null),
+      'An internal indicator should not exist when an external indicator is provided.',
+    );
+  }
+
+  Widget _defaultIndicatorBuilder(BuildContext context, IndicatorController controller) {
+    final bool showIndeterminateIndicator = controller.isLoading || controller.isComplete || controller.isFinalizing;
+
+    return RefreshProgressIndicator(
+      semanticsLabel: widget.semanticsLabel ?? MaterialLocalizations.of(context).refreshIndicatorSemanticLabel,
+      semanticsValue: widget.semanticsValue,
+      value: showIndeterminateIndicator ? null : _valueAnimation.value,
+      valueColor: _colorAnimation,
+      backgroundColor: _backgroundColor,
+      strokeWidth: widget.strokeWidth,
+    );
+  }
+
+  late Animation<double> _valueAnimation;
+  late Animation<Color?> _colorAnimation;
+  late Color _indicatorColor;
+  late Color _backgroundColor;
+
+  @override
+  void didChangeDependencies() {
+    _setupMaterialIndicator();
+    super.didChangeDependencies();
+  }
+
+  Color _getBackgroundColor() {
+    return widget.backgroundColor ??
+        ProgressIndicatorTheme.of(context).refreshBackgroundColor ??
+        Theme.of(context).canvasColor;
+  }
+
+  Color _getIndicatorColor() {
+    return widget.color ?? Theme.of(context).colorScheme.primary;
+  }
+
+  void _setupMaterialIndicator() {
+    _valueAnimation = controller.normalize();
+    // Reset the current color.
+    _backgroundColor = _getBackgroundColor();
+    _indicatorColor = _getIndicatorColor();
+    final Color color = _indicatorColor;
+    if (color.alpha == 0x00) {
+      // Set an always stopped animation instead of a driven tween.
+      _colorAnimation = AlwaysStoppedAnimation<Color>(color);
+    } else {
+      // Respect the alpha of the given color.
+      _colorAnimation = _valueAnimation.drive(
+        ColorTween(
+          begin: color.withAlpha(0),
+          end: color.withAlpha(color.alpha),
+        ).chain(
+          CurveTween(
+            curve: const Interval(0.0, 1.0 / 1.5),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final indicatorBuilder = widget.indicatorBuilder ?? _defaultIndicatorBuilder;
+
     return CustomRefreshIndicator(
       autoRebuild: false,
-      notificationPredicate: notificationPredicate,
-      onRefresh: onRefresh,
-      trigger: trigger,
-      triggerMode: triggerMode,
+      notificationPredicate: widget.notificationPredicate,
+      onRefresh: widget.onRefresh,
+      trigger: widget.trigger,
+      triggerMode: widget.triggerMode,
       controller: controller,
-      durations: durations,
-      onStateChanged: onStateChanged,
-      trailingScrollIndicatorVisible: trailingScrollIndicatorVisible,
-      leadingScrollIndicatorVisible: leadingScrollIndicatorVisible,
+      durations: widget.durations,
+      onStateChanged: widget.onStateChanged,
+      trailingScrollIndicatorVisible: widget.trailingScrollIndicatorVisible,
+      leadingScrollIndicatorVisible: widget.leadingScrollIndicatorVisible,
       builder: (context, child, controller) {
-        final Color backgroundColor = this.backgroundColor ??
-            ProgressIndicatorTheme.of(context).refreshBackgroundColor ??
-            Theme.of(context).canvasColor;
+        Widget indicator = widget.autoRebuild
+            ? AnimatedBuilder(
+                animation: controller,
+                builder: (context, _) => indicatorBuilder(context, controller),
+              )
+            : indicatorBuilder(context, controller);
+
+        /// If indicatorBuilder is not provided
+        if (widget.indicatorBuilder != null) {
+          indicator = Container(
+            width: 41,
+            height: 41,
+            margin: const EdgeInsets.all(4.0),
+            child: Material(
+              type: MaterialType.circle,
+              clipBehavior: widget.clipBehavior,
+              color: _backgroundColor,
+              elevation: widget.elevation,
+              child: indicator,
+            ),
+          );
+        }
 
         return Stack(
           children: <Widget>[
-            scrollableBuilder(context, child, controller),
+            widget.scrollableBuilder(context, child, controller),
             _PositionedIndicatorContainer(
-              edgeOffset: edgeOffset,
-              displacement: displacement,
+              edgeOffset: widget.edgeOffset,
+              displacement: widget.displacement,
               controller: controller,
               child: ScaleTransition(
-                scale: controller.isFinalizing ? controller.clamp(0.0, 1.0) : const AlwaysStoppedAnimation(1.0),
-                child: Container(
-                  width: 41,
-                  height: 41,
-                  margin: const EdgeInsets.all(4.0),
-                  child: Material(
-                    type: MaterialType.circle,
-                    clipBehavior: clipBehavior,
-                    color: backgroundColor,
-                    elevation: elevation,
-                    child: _InfiniteRotation(
-                      running: withRotation && controller.isLoading,
-                      child: autoRebuild
-                          ? AnimatedBuilder(
-                              animation: controller,
-                              builder: (context, _) => indicatorBuilder(context, controller),
-                            )
-                          : indicatorBuilder(context, controller),
-                    ),
-                  ),
-                ),
+                scale: controller.isFinalizing ? _valueAnimation : const AlwaysStoppedAnimation(1.0),
+                child: indicator,
               ),
             ),
           ],
         );
       },
-      child: child,
+      child: widget.child,
     );
+  }
+
+  @override
+  void dispose() {
+    _internalIndicatorController?.dispose();
+    super.dispose();
   }
 }
 
@@ -193,7 +320,7 @@ class _PositionedIndicatorContainer extends StatelessWidget {
     required this.edgeOffset,
   });
 
-  Alignment _getAlignement(IndicatorSide side) {
+  Alignment _getAlignment(IndicatorSide side) {
     switch (side) {
       case IndicatorSide.left:
         return Alignment.centerLeft;
@@ -204,7 +331,7 @@ class _PositionedIndicatorContainer extends StatelessWidget {
       case IndicatorSide.bottom:
         return Alignment.bottomCenter;
       case IndicatorSide.none:
-        throw UnsupportedError('Cannot get alignement for "none" side.');
+        throw UnsupportedError('Cannot get alignment for "none" side.');
     }
   }
 
@@ -271,7 +398,7 @@ class _PositionedIndicatorContainer extends StatelessWidget {
           child: Padding(
             padding: _getEdgeInsets(side),
             child: Align(
-              alignment: _getAlignement(side),
+              alignment: _getAlignment(side),
               child: child,
             ),
           ),
