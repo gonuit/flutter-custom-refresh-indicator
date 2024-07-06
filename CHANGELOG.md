@@ -1,6 +1,7 @@
 ## 4.0.0-dev.1
 - **CustomRefreshIndicator**:
   - Removed deprecated parameters: *indicatorCancelDuration*, *indicatorSettleDuration*, *indicatorFinalizeDuration* and *completeStateDuration* .If you are still using them, switch to the *duration* parameter.
+  - Improved handling of indicator controller changes.
 - **IndicatorController**:
   - Added *minValue* and *maxValue* static constants.
   - Added *transform* method. Allows you to transform controller animation values from the range *0.0* → *1.5* to another range.

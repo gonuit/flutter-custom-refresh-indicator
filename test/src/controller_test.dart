@@ -290,7 +290,8 @@ void main() {
   });
 
   test('stopDrag - changes the shouldStopDrag - valid state', () {
-    var controller = IndicatorController()..setIndicatorState(IndicatorState.dragging);
+    var controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.dragging);
     expect(controller.shouldStopDrag, isFalse);
     controller.stopDrag();
     expect(controller.shouldStopDrag, isTrue);
@@ -302,16 +303,20 @@ void main() {
   });
 
   test('stopDrag - changes the shouldStopDrag - invalid state', () {
-    var controller = IndicatorController()..setIndicatorState(IndicatorState.idle);
+    var controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.idle);
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
 
-    controller = IndicatorController()..setIndicatorState(IndicatorState.loading);
+    controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.loading);
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
 
-    controller = IndicatorController()..setIndicatorState(IndicatorState.complete);
+    controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.complete);
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
 
-    controller = IndicatorController()..setIndicatorState(IndicatorState.finalizing);
+    controller = IndicatorController()
+      ..setIndicatorState(IndicatorState.finalizing);
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
   });
 }

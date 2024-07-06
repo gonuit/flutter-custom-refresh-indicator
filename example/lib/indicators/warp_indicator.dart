@@ -40,7 +40,8 @@ class WarpIndicator extends StatefulWidget {
   State<WarpIndicator> createState() => _WarpIndicatorState();
 }
 
-class _WarpIndicatorState extends State<WarpIndicator> with SingleTickerProviderStateMixin {
+class _WarpIndicatorState extends State<WarpIndicator>
+    with SingleTickerProviderStateMixin {
   static const _indicatorSize = 150.0;
   final _random = Random();
   WarpAnimationState _state = WarpAnimationState.stopped;
@@ -144,7 +145,8 @@ class _WarpIndicatorState extends State<WarpIndicator> with SingleTickerProvider
                 animation: shakeController,
                 builder: (_, __) {
                   return LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints) {
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
                       return CustomPaint(
                         painter: Sky(
                           stars: stars,
@@ -161,8 +163,10 @@ class _WarpIndicatorState extends State<WarpIndicator> with SingleTickerProvider
                 return Transform.scale(
                   scale: _scaleTween.transform(controller.value),
                   child: Builder(builder: (context) {
-                    if (shakeController.value == 1.0 && _state == WarpAnimationState.playing) {
-                      SchedulerBinding.instance.addPostFrameCallback((_) => _resetShakeAnimation());
+                    if (shakeController.value == 1.0 &&
+                        _state == WarpAnimationState.playing) {
+                      SchedulerBinding.instance
+                          .addPostFrameCallback((_) => _resetShakeAnimation());
                     }
                     return Transform.rotate(
                       angle: _angleTween.transform(shakeController.value),
@@ -216,7 +220,8 @@ class Star {
     speed = Offset(cos(angle), sin(angle));
     const minSpeedScale = 20;
     const maxSpeedScale = 35;
-    final speedScale = minSpeedScale + random.nextInt(maxSpeedScale - minSpeedScale).toDouble();
+    final speedScale = minSpeedScale +
+        random.nextInt(maxSpeedScale - minSpeedScale).toDouble();
     speed = speed.scale(
       speedScale,
       speedScale,
@@ -239,7 +244,8 @@ class Star {
 
     final startShiftAngle = angle + (pi / 2);
     final startShift = Offset(cos(startShiftAngle), sin(startShiftAngle));
-    final shiftedStartPosition = startPosition + (startShift * (0.75 + value * 0.01));
+    final shiftedStartPosition =
+        startPosition + (startShift * (0.75 + value * 0.01));
 
     final endShiftAngle = angle + (pi / 2);
     final endShift = Offset(cos(endShiftAngle), sin(endShiftAngle));

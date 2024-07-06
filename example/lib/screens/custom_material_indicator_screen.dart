@@ -7,10 +7,12 @@ class CustomMaterialIndicatorScreen extends StatefulWidget {
   const CustomMaterialIndicatorScreen({super.key});
 
   @override
-  State<CustomMaterialIndicatorScreen> createState() => _CustomMaterialIndicatorScreenState();
+  State<CustomMaterialIndicatorScreen> createState() =>
+      _CustomMaterialIndicatorScreenState();
 }
 
-class _CustomMaterialIndicatorScreenState extends State<CustomMaterialIndicatorScreen> {
+class _CustomMaterialIndicatorScreenState
+    extends State<CustomMaterialIndicatorScreen> {
   final _controller = IndicatorController();
 
   bool _useCustom = true;
@@ -29,7 +31,9 @@ class _CustomMaterialIndicatorScreenState extends State<CustomMaterialIndicatorS
     final child = ExampleList(
       itemCount: 12,
       physics: AlwaysScrollableScrollPhysics(
-        parent: _useCustom ? ClampingWithOverscrollPhysics(state: _controller) : const ClampingScrollPhysics(),
+        parent: _useCustom
+            ? ClampingWithOverscrollPhysics(state: _controller)
+            : const ClampingScrollPhysics(),
       ),
     );
     return Scaffold(

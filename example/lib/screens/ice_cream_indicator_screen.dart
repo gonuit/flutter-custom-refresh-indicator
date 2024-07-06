@@ -7,7 +7,8 @@ class IceCreamIndicatorScreen extends StatefulWidget {
   const IceCreamIndicatorScreen({super.key});
 
   @override
-  State<IceCreamIndicatorScreen> createState() => _IceCreamIndicatorScreenState();
+  State<IceCreamIndicatorScreen> createState() =>
+      _IceCreamIndicatorScreenState();
 }
 
 class _IceCreamIndicatorScreenState extends State<IceCreamIndicatorScreen> {

@@ -18,7 +18,8 @@ import 'package:flutter/animation.dart';
 /// );
 /// ```
 /// Here `animation.value` will always be between 0.0 and 10.0, inclusive.
-class TransformedAnimation extends Animation<double> with AnimationWithParentMixin<double> {
+class TransformedAnimation extends Animation<double>
+    with AnimationWithParentMixin<double> {
   /// Creates a transformed animation with an invariant range.
   ///
   /// The [parent] animation is the source of values for this animation.
@@ -32,8 +33,10 @@ class TransformedAnimation extends Animation<double> with AnimationWithParentMix
     required this.fromMax,
     required this.toMin,
     required this.toMax,
-  })  : assert(fromMin < fromMax, 'The fromMin value must be less than the fromMax value.'),
-        assert(toMin < toMax, 'The toMin value must be less than the toMax value.');
+  })  : assert(fromMin < fromMax,
+            'The fromMin value must be less than the fromMax value.'),
+        assert(toMin < toMax,
+            'The toMin value must be less than the toMax value.');
 
   /// The animation that this clamped animation is based on.
   @override
@@ -54,7 +57,8 @@ class TransformedAnimation extends Animation<double> with AnimationWithParentMix
   /// Gets the current value of the parent animation transformed from the range [fromMin] -> [toMax] to [toMin] -> [toMax].
   @override
   double get value {
-    return (parent.value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
+    return (parent.value - fromMin) / (fromMax - fromMin) * (toMax - toMin) +
+        toMin;
   }
 
   @override

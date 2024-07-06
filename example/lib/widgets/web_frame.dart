@@ -13,10 +13,12 @@ class WebFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWebNotMobile =
-        kIsWeb && (defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform != TargetPlatform.android);
+    final isWebNotMobile = kIsWeb &&
+        (defaultTargetPlatform != TargetPlatform.iOS &&
+            defaultTargetPlatform != TargetPlatform.android);
     if (isWebNotMobile) {
-      final safeAreaWidth = math.max<double>(MediaQuery.of(context).size.width, 300);
+      final safeAreaWidth =
+          math.max<double>(MediaQuery.of(context).size.width, 300);
       final safeAreaHeight = MediaQuery.of(context).size.height - 48;
       return SafeArea(
         child: Center(
