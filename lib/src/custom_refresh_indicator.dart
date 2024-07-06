@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
 
-part 'controller.dart';
+part 'indicator_controller.dart';
 
 typedef IndicatorBuilder = Widget Function(
   BuildContext context,

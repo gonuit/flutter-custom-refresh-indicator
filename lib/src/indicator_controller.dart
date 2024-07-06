@@ -8,6 +8,12 @@ class IndicatorController extends Animation<double>
         ClampingWithOverscrollPhysicsState {
   double _value;
 
+  /// Represents the **minimum** value that an indicator can have.
+  static double get minValue => 0.0;
+
+  /// Represents the **maximum** value that an indicator can have.
+  static double get maxValue => 1.5;
+
   /// Current indicator value / progress
   @override
   double get value => _value;
@@ -211,7 +217,7 @@ class IndicatorController extends Animation<double>
   @override
   AnimationStatus get status => state.isIdle ? AnimationStatus.dismissed : AnimationStatus.forward;
 
-  /// Returns a [ClampedAnimation] that constrains the animation value of its parent
+  /// Returns [ClampedAnimation] that constrains the animation value of its parent
   /// within the given [min] and [max] range.
   ///
   /// - [min] represents the smallest value the animation can have. If the parent
@@ -223,4 +229,22 @@ class IndicatorController extends Animation<double>
         min: min,
         max: max,
       );
+
+  /// Returns [TransformedAnimation], which transforms the animation value of its parent
+  /// to the specified [min] and [max] range.
+  ///
+  /// - [min] represents the smallest value the animation can have.
+  /// - [max] represents the largest value the animation can have.
+  /// 
+  /// If instead of transforming the entire range of controller values, you want to use only a specific range, see the [clamp] method.
+  Animation<double> transform(double min, double max) => TransformedAnimation(
+        parent: this,
+        fromMin: minValue,
+        fromMax: maxValue,
+        toMin: min,
+        toMax: max,
+      );
+
+  /// Returns a new animation with the controller value transformed to the range from `0.0` to `1.0` inclusive.
+  Animation<double> normalize() => transform(0.0, 1.0);
 }
