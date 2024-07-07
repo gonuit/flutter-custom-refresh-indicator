@@ -39,10 +39,8 @@ class _CustomMaterialIndicatorScreenState
     return Scaffold(
       appBar: ExampleAppBar(
         elevation: 0,
+        title: _useCustom ? "CustomMaterialIndicator" : "RefreshIndicator",
         actions: [
-          Text(
-            _useCustom ? "CustomMaterialIndicator" : "RefreshIndicator",
-          ),
           Switch(
             value: _useCustom,
             onChanged: _toggleCustom,
@@ -57,9 +55,6 @@ class _CustomMaterialIndicatorScreenState
                   trigger: IndicatorTrigger.bothEdges,
                   triggerMode: IndicatorTriggerMode.anywhere,
                   onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-                  scrollableBuilder: (context, child, controller) {
-                    return child;
-                  },
                   child: child,
                 )
               : RefreshIndicator(

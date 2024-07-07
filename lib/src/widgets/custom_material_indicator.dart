@@ -12,6 +12,10 @@ typedef MaterialIndicatorBuilder = Widget Function(
   IndicatorController controller,
 );
 
+/// A CustomMaterialIndicator widget that replicates
+/// the behavior of the material indicator widget.
+/// 
+/// It allows for extensive customization of its appearance and behavior.
 class CustomMaterialIndicator extends StatefulWidget {
   /// {@macro custom_refresh_indicator.child}
   final Widget child;
@@ -66,6 +70,7 @@ class CustomMaterialIndicator extends StatefulWidget {
   final ScrollNotificationPredicate notificationPredicate;
 
   /// The content will be clipped (or not) according to this option.
+  /// Applies only if a custom [indicatorBuilder] is provided and material indicator used.
   ///
   /// Defaults to [Clip.none].
   final Clip clipBehavior;
@@ -114,6 +119,19 @@ class CustomMaterialIndicator extends StatefulWidget {
   /// when true, the appropriate indicator should be selected depending on the platform.
   final bool _isAdaptive;
 
+  /// When true (default), the widget returned from the [indicatorBuilder] function
+  /// will be wrapped in the material indicator container widget.
+  ///
+  /// By default true.
+  final bool useMaterialContainer;
+
+  /// The size of the indicator widget.
+  ///
+  /// By default 41 x 41.
+  final Size indicatorSize;
+
+  /// A default constructor that creates a CustomMaterialIndicator widget
+  /// that replicates the behavior of the material indicator widget.
   const CustomMaterialIndicator({
     super.key,
     required this.child,
@@ -139,6 +157,8 @@ class CustomMaterialIndicator extends StatefulWidget {
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
+    this.useMaterialContainer = true,
+    this.indicatorSize = defaultIndicatorSize,
   })  : assert(
           indicatorBuilder == null ||
               (color == null &&
@@ -151,6 +171,11 @@ class CustomMaterialIndicator extends StatefulWidget {
             strokeWidth ?? RefreshProgressIndicator.defaultStrokeWidth,
         _isAdaptive = false;
 
+  /// Creates a CustomMaterialIndicator widget that displays a different
+  /// indicator based on the target platform.
+  ///
+  /// It uses [CupertinoActivityIndicator] for iOS and macOS
+  /// and [RefreshProgressIndicator] for other platforms.
   const CustomMaterialIndicator.adaptive({
     super.key,
     required this.child,
@@ -176,6 +201,7 @@ class CustomMaterialIndicator extends StatefulWidget {
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
+    this.indicatorSize = defaultIndicatorSize,
   })  : assert(
           indicatorBuilder == null ||
               (color == null &&
@@ -184,6 +210,7 @@ class CustomMaterialIndicator extends StatefulWidget {
                   strokeWidth == null),
           'When a custom indicatorBuilder is provided, the parameters color, semanticsValue, semanticsLabel and strokeWidth are unused and can be safely removed.',
         ),
+        useMaterialContainer = true,
         strokeWidth =
             strokeWidth ?? RefreshProgressIndicator.defaultStrokeWidth,
         _isAdaptive = true;
@@ -191,6 +218,8 @@ class CustomMaterialIndicator extends StatefulWidget {
   static Widget _defaultBuilder(
           BuildContext context, Widget child, IndicatorController controller) =>
       child;
+
+  static const defaultIndicatorSize = Size(41, 41);
 
   @override
   State<CustomMaterialIndicator> createState() =>
@@ -352,7 +381,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
             width: 41,
             height: 41,
             margin: const EdgeInsets.all(4.0),
-            child: useMaterial
+            child: useMaterial && widget.useMaterialContainer
                 ? Material(
                     type: MaterialType.circle,
                     clipBehavior: widget.clipBehavior,
