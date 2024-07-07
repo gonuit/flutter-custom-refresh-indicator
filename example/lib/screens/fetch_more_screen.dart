@@ -1,4 +1,4 @@
-import 'package:example/indicators/swipe_action.dart';
+import 'package:example/indicators/fetch_more_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +27,16 @@ class _FetchMoreScreenState extends State<FetchMoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const ExampleAppBar(title: "Scroll to fetch more"),
+      appBar: const ExampleAppBar(title: "Pull to fetch more"),
       body: FetchMoreIndicator(
         onAction: _fetchMore,
         child: ExampleList(
+          leading: const ListHelpBox(
+            child: Text(
+              "Scroll to the end of the list "
+              "and pull up to retrieve more rows.",
+            ),
+          ),
           itemCount: _itemsCount,
           countElements: true,
         ),

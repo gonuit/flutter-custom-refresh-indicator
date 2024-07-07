@@ -57,7 +57,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                   : Alignment.topCenter,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: FakeBox(
+                            child: AppCard(
                               child: Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
@@ -238,3 +238,4 @@ class _PresentationScreenState extends State<PresentationScreen> {
     super.dispose();
   }
 }
+

@@ -1,4 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -14,28 +15,41 @@ class CheckMarkColors {
 
 class CheckMarkStyle {
   final CheckMarkColors loading;
-  final CheckMarkColors completed;
+  final CheckMarkColors success;
+  final CheckMarkColors error;
 
   const CheckMarkStyle({
     required this.loading,
-    required this.completed,
+    required this.success,
+    required this.error,
   });
 
   static const defaultStyle = CheckMarkStyle(
-    loading: CheckMarkColors(content: Colors.white, background: Colors.black),
-    completed:
-        CheckMarkColors(content: Colors.white, background: Colors.greenAccent),
+    loading: CheckMarkColors(
+      content: Colors.white,
+      background: Colors.blueAccent,
+    ),
+    success: CheckMarkColors(
+      content: Colors.black,
+      background: Colors.greenAccent,
+    ),
+    error: CheckMarkColors(
+      content: Colors.black,
+      background: Colors.redAccent,
+    ),
   );
 }
 
 class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
   final CheckMarkStyle style;
+  final AsyncCallback onRefresh;
 
   const CheckMarkIndicator({
     super.key,
     required this.child,
     this.style = CheckMarkStyle.defaultStyle,
+    required this.onRefresh,
   });
 
   @override
@@ -49,10 +63,26 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
 
   ScrollDirection prevScrollDirection = ScrollDirection.idle;
 
+  bool _hasError = false;
+
+  Future<void> _handleRefresh() async {
+    try {
+      setState(() {
+        _hasError = false;
+      });
+      await widget.onRefresh();
+    } catch (_) {
+      setState(() {
+        _hasError = true;
+      });
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomMaterialIndicator(
-      onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+      onRefresh: _handleRefresh,
       durations: const RefreshIndicatorDurations(
         completeDuration: Duration(seconds: 2),
       ),
@@ -70,9 +100,17 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
         BuildContext context,
         IndicatorController controller,
       ) {
-        final style = _renderCompleteState
-            ? widget.style.completed
-            : widget.style.loading;
+        final CheckMarkColors style;
+        if (_renderCompleteState) {
+          if (_hasError) {
+            style = widget.style.error;
+          } else {
+            style = widget.style.success;
+          }
+        } else {
+          style = widget.style.loading;
+        }
+
         return AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           alignment: Alignment.center,
@@ -81,9 +119,9 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
             shape: BoxShape.circle,
           ),
           child: _renderCompleteState
-              ? const Icon(
-                  Icons.check,
-                  color: Colors.white,
+              ? Icon(
+                  _hasError ? Icons.close : Icons.check,
+                  color: style.content,
                 )
               : SizedBox(
                   height: 24,

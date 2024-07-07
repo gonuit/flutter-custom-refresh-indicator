@@ -12,13 +12,54 @@ class CheckMarkIndicatorScreen extends StatefulWidget {
 }
 
 class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
+  bool _useError = false;
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: ExampleAppBar(),
+    return Scaffold(
+      appBar: const ExampleAppBar(
+        title: "Complete state",
+      ),
       body: SafeArea(
         child: CheckMarkIndicator(
-          child: ExampleList(),
+          onRefresh: () async {
+            await Future.delayed(const Duration(seconds: 2));
+            if (_useError) {
+              throw Exception("Fake exception");
+            }
+          },
+          child: ExampleList(
+            leading: Column(
+              children: [
+                const ListHelpBox(
+                  child: Text(
+                    'You can specify the "complete state" duration to enable the additional state of the indicator widget.',
+                  ),
+                ),
+                const ListHelpBox(
+                  margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Text(
+                    'To configure it, please check the durations parameter of the CustomRefreshIndicator widget.',
+                  ),
+                ),
+                ListHelpBox(
+                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title:  Text(
+                      "Simulate unsuccessful fetches",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    value: _useError,
+                    onChanged: (useError) {
+                      setState(() {
+                        _useError = useError;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

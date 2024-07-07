@@ -80,7 +80,14 @@ class _ProgrammaticallyControlledState
         controller: controller,
         indicatorKey: key,
         onRefresh: onRefresh,
-        child: ExampleList(itemCount: _itemsCount),
+        child: ExampleList(
+          leading: const ListHelpBox(
+            child: Text(
+              'You can use the buttons located in the app bar to control the state of the indicator.',
+            ),
+          ),
+          itemCount: _itemsCount,
+        ),
       ),
     );
   }

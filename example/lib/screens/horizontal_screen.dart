@@ -1,6 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
+import 'package:example/widgets/infinite_rotation.dart';
 import 'package:flutter/material.dart';
 
 class HorizontalScreen extends StatefulWidget {
@@ -38,9 +39,12 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
           triggerMode: IndicatorTriggerMode.anywhere,
           trigger: IndicatorTrigger.bothEdges,
           indicatorBuilder: (context, controller) {
-            return const Icon(
-              Icons.accessibility,
-              size: 30,
+            return InfiniteRotation(
+              running: controller.state.isLoading,
+              child: const Icon(
+                Icons.accessibility,
+                size: 30,
+              ),
             );
           },
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),

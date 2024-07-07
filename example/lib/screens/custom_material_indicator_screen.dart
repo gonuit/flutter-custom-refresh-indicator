@@ -29,6 +29,22 @@ class _CustomMaterialIndicatorScreenState
   @override
   Widget build(BuildContext context) {
     final child = ExampleList(
+      leading: const Column(
+        children: [
+          ListHelpBox(
+            child: Text(
+              "Use the toggle on the app bar to change between CustomMaterialIndicator "
+              "and the built-in RefreshIndicator widget.",
+            ),
+          ),
+          ListHelpBox(
+            margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Text(
+              "Can you spot the difference? 😉",
+            ),
+          ),
+        ],
+      ),
       itemCount: 12,
       physics: AlwaysScrollableScrollPhysics(
         parent: _useCustom
