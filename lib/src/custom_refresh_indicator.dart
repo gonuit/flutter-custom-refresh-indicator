@@ -200,7 +200,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   late double _dragOffset;
 
   late AnimationController _animationController;
-  bool get _hasExternalController => widget.controller != null;
   IndicatorController? _internalIndicatorController;
 
   /// Current [IndicatorController]
@@ -376,6 +375,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleOverscrollNotification(OverscrollNotification notification) {
+    controller.setIndicatorDragDetails(notification.dragDetails);
+
     if (!controller.hasEdge) {
       controller.setIndicatorEdge(
         notification.overscroll.isNegative
@@ -396,7 +397,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
-    controller.clearPhysicsState();
+    controller
+      ..setIndicatorDragDetails(null)
+      ..clearPhysicsState();
 
     if (controller.state.isArmed) {
       _start();
