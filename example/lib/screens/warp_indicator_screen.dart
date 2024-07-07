@@ -15,7 +15,6 @@ class _WarpIndicatorScreenState extends State<WarpIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: WarpIndicator(

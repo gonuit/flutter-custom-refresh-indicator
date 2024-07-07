@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'example_app_bar.dart';
-
 class ExampleList extends StatelessWidget {
   final int itemCount;
   final bool countElements;
   final bool reverse;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final ScrollPhysics physics;
 
   const ExampleList({
     super.key,
     this.reverse = false,
     this.countElements = false,
-    this.backgroundColor = appBackgroundColor,
+    this.backgroundColor,
     this.itemCount = 4,
     this.physics = const AlwaysScrollableScrollPhysics(
       parent: ClampingScrollPhysics(),
@@ -22,9 +20,11 @@ class ExampleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: theme.scaffoldBackgroundColor,
         boxShadow: const [
           BoxShadow(
             blurRadius: 2,
@@ -42,17 +42,15 @@ class ExampleList extends StatelessWidget {
                 child: Center(
                   child: Text(
                     "${index + 1}",
-                    style: const TextStyle(
-                      color: appContentColor,
-                    ),
+                    style: const TextStyle(),
                   ),
                 ),
               )
             : const Element(),
         itemCount: itemCount,
-        separatorBuilder: (BuildContext context, int index) => const Divider(
+        separatorBuilder: (BuildContext context, int index) => Divider(
           height: 0,
-          color: Color(0xFFe2d6ce),
+          color: theme.colorScheme.surfaceContainer,
           thickness: 1,
         ),
       ),
@@ -95,30 +93,32 @@ class Element extends StatelessWidget {
 
 class FakeBox extends StatelessWidget {
   final Widget? child;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
   const FakeBox({
     super.key,
-    required this.width,
-    required this.height,
+    this.width,
+    this.height,
     this.child,
   });
 
-  static const _boxDecoration = BoxDecoration(
-    color: Color(0xFFE2D8D7),
-    borderRadius: BorderRadius.all(
-      Radius.circular(10),
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       width: width,
       height: height,
-      decoration: _boxDecoration,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainer,
+        border: Border.all(
+          color: theme.colorScheme.surfaceContainerHighest,
+        ),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
       child: child,
     );
   }
@@ -127,22 +127,23 @@ class FakeBox extends StatelessWidget {
 class ExampleHorizontalList extends StatelessWidget {
   final int itemCount;
   final bool reverse;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final bool isHorizontal;
 
   const ExampleHorizontalList({
     super.key,
     this.reverse = false,
-    this.backgroundColor = appBackgroundColor,
+    this.backgroundColor,
     this.itemCount = 4,
     this.isHorizontal = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: theme.scaffoldBackgroundColor,
         boxShadow: const [
           BoxShadow(
             blurRadius: 2,

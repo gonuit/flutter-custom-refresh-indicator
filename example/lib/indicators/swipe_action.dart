@@ -1,5 +1,4 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:example/widgets/example_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class FetchMoreIndicator extends StatelessWidget {
@@ -20,6 +19,9 @@ class FetchMoreIndicator extends StatelessWidget {
       trigger: IndicatorTrigger.trailingEdge,
       trailingScrollIndicatorVisible: false,
       leadingScrollIndicatorVisible: true,
+      durations: const RefreshIndicatorDurations(
+        completeDuration: Duration(seconds: 1),
+      ),
       child: child,
       builder: (
         BuildContext context,
@@ -33,47 +35,42 @@ class FetchMoreIndicator extends StatelessWidget {
                   -(height - (height * 0.25));
               return Stack(
                 children: [
-                  Transform.translate(
-                    offset: Offset(0.0, dy),
-                    child: child,
-                  ),
-                  Positioned(
-                    bottom: -height,
-                    left: 0,
-                    right: 0,
-                    height: height,
+                  child,
+                  PositionedIndicatorContainer(
+                    controller: controller,
+                    displacement: 0,
                     child: Container(
-                      transform: Matrix4.translationValues(0.0, dy, 0.0),
-                      padding: const EdgeInsets.only(top: 30.0),
-                      constraints: const BoxConstraints.expand(),
-                      child: Column(
-                        children: [
-                          if (controller.isLoading)
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 8.0),
-                              width: 16,
-                              height: 16,
-                              child: const CircularProgressIndicator(
-                                color: appContentColor,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          else
-                            const Icon(
-                              Icons.keyboard_arrow_up,
-                              color: appContentColor,
+                        padding: const EdgeInsets.all(8.0),
+                        transform: Matrix4.translationValues(0.0, dy, 0.0),
+                        child: switch (controller.state) {
+                          IndicatorState.idle => null,
+                          IndicatorState.dragging ||
+                          IndicatorState.canceling ||
+                          IndicatorState.armed ||
+                          IndicatorState.settling =>
+                            const Column(
+                              children: [
+                                Icon(Icons.keyboard_arrow_up),
+                                Text("Pull to fetch more"),
+                              ],
                             ),
-                          Text(
-                            controller.isLoading
-                                ? "Fetching..."
-                                : "Pull to fetch more",
-                            style: const TextStyle(
-                              color: appContentColor,
+                          IndicatorState.loading => Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 8.0),
+                                  width: 16,
+                                  height: 16,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                                const Text("Fetching..."),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
+                          IndicatorState.complete ||
+                          IndicatorState.finalizing =>
+                            const Text("Fetched 🚀"),
+                        }),
                   ),
                 ],
               );

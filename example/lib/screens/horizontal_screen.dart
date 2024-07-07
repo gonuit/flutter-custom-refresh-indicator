@@ -15,7 +15,6 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: ExampleAppBar(
         title: "Multidirectional indicator",
         actions: [
@@ -41,7 +40,6 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
           indicatorBuilder: (context, controller) {
             return const Icon(
               Icons.accessibility,
-              color: Colors.black,
               size: 30,
             );
           },

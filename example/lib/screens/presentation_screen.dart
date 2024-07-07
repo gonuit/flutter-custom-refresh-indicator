@@ -1,5 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
+import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
 
 class PresentationScreen extends StatefulWidget {
@@ -14,8 +15,9 @@ class _PresentationScreenState extends State<PresentationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: const ExampleAppBar(),
       body: SafeArea(
         child: CustomRefreshIndicator(
@@ -31,10 +33,12 @@ class _PresentationScreenState extends State<PresentationScreen> {
           controller: _controller,
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: DecoratedBox(
-            decoration:
-                const BoxDecoration(color: appBackgroundColor, boxShadow: [
-              BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 4)
-            ]),
+            decoration: BoxDecoration(
+              color: theme.scaffoldBackgroundColor,
+              boxShadow: const [
+                BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 4)
+              ],
+            ),
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(
                 parent: ClampingScrollPhysics(),
@@ -51,126 +55,112 @@ class _PresentationScreenState extends State<PresentationScreen> {
                               : _controller.side.isBottom
                                   ? Alignment.bottomCenter
                                   : Alignment.topCenter,
-                          child: Container(
-                            margin: const EdgeInsets.all(15),
-                            padding: const EdgeInsets.all(15),
-                            width: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 4,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                const Center(
-                                  child: Text(
-                                    "IndicatorController",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const Divider(
-                                  indent: 5,
-                                  thickness: 2,
-                                  color: appBackgroundColor,
-                                ),
-                                Text(
-                                  "value: ${_controller.value.toStringAsFixed(2)}",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Divider(
-                                  indent: 2.5,
-                                  thickness: 1,
-                                  color: appBackgroundColor,
-                                ),
-                                Text(
-                                  "state: ${_controller.state.name}",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Divider(
-                                  indent: 2.5,
-                                  thickness: 1,
-                                  color: appBackgroundColor,
-                                ),
-                                Text(
-                                  "scrollingDirection: ${_controller.scrollingDirection.name}",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Divider(
-                                  indent: 2.5,
-                                  thickness: 1,
-                                  color: appBackgroundColor,
-                                ),
-                                Text(
-                                  "direction: ${_controller.direction.name}",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Divider(
-                                  indent: 2.5,
-                                  thickness: 1,
-                                  color: appBackgroundColor,
-                                ),
-                                Text(
-                                  "edge: ${_controller.edge?.name}",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Divider(
-                                  indent: 2.5,
-                                  thickness: 1,
-                                  color: appBackgroundColor,
-                                ),
-                                Text(
-                                  "side: ${_controller.side.name}",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Divider(
-                                  indent: 2.5,
-                                  thickness: 1,
-                                  color: appBackgroundColor,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "isRefreshEnabled: ${_controller.isRefreshEnabled}",
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    const Spacer(),
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            WidgetStateProperty.all(
-                                          _controller.isRefreshEnabled
-                                              ? Colors.red
-                                              : Colors.lightGreen,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: FakeBox(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    const Padding(
+                                      padding: EdgeInsets.only(bottom: 16),
+                                      child: Center(
+                                        child: Text(
+                                          "IndicatorController",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                      child: Text(
-                                        _controller.isRefreshEnabled
-                                            ? "DISABLE"
-                                            : "ENABLE",
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                    ),
+                                    Table(
+                                      defaultVerticalAlignment:
+                                          TableCellVerticalAlignment.middle,
+                                      border: TableBorder(
+                                        horizontalInside: BorderSide(
+                                          width: 1,
+                                          color: theme.dividerColor,
                                         ),
                                       ),
-                                      onPressed: () =>
-                                          _controller.isRefreshEnabled
-                                              ? _controller.disableRefresh()
-                                              : _controller.enableRefresh(),
+                                      children: [
+                                        TableRow(
+                                          children: [
+                                            const Text("value:"),
+                                            Text(_controller.value
+                                                .toStringAsFixed(2)),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("state:"),
+                                            Text(_controller.state.name),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("scrollingDirection:"),
+                                            Text(_controller
+                                                .scrollingDirection.name),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("direction:"),
+                                            Text(_controller.direction.name),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("edge:"),
+                                            Text('${_controller.edge?.name}'),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("side:"),
+                                            Text(_controller.side.name),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("dragDetails.delta:"),
+                                            Text(
+                                                '${_controller.dragDetails?.delta}'),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text(
+                                                "dragDetails.localPosition:"),
+                                            Text(
+                                                '${_controller.dragDetails?.localPosition}'),
+                                          ],
+                                        ),
+                                        TableRow(
+                                          children: [
+                                            const Text("isRefreshEnabled:"),
+                                            Text(_controller.isRefreshEnabled
+                                                .toString()),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Switch(
+                                        value: _controller.isRefreshEnabled,
+                                        activeColor: Colors.lightGreen,
+                                        onChanged: (isEnabled) => isEnabled
+                                            ? _controller.enableRefresh()
+                                            : _controller.disableRefresh(),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         );

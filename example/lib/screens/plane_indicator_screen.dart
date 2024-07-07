@@ -14,7 +14,6 @@ class _PlaneIndicatorScreenState extends State<PlaneIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: ExampleAppBar(),
       body: PlaneIndicator(
         child: ExampleList(),

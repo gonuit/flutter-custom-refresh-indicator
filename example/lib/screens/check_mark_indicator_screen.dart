@@ -15,7 +15,6 @@ class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: ExampleAppBar(),
       body: SafeArea(
         child: CheckMarkIndicator(

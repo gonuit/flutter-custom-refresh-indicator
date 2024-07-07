@@ -15,7 +15,6 @@ class _IceCreamIndicatorScreenState extends State<IceCreamIndicatorScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: ExampleAppBar(),
       body: SafeArea(
         child: IceCreamIndicator(

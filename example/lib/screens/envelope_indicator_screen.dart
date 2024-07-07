@@ -13,7 +13,6 @@ class EnvelopIndicatorScreen extends StatelessWidget {
         title: "Envelope indicator",
       ),
       body: EnvelopRefreshIndicator(
-        accent: appContentColor,
         onRefresh: () => Future<void>.delayed(const Duration(seconds: 2)),
         child: const ExampleList(),
       ),

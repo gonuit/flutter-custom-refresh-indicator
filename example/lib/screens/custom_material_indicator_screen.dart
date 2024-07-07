@@ -37,7 +37,6 @@ class _CustomMaterialIndicatorScreenState
       ),
     );
     return Scaffold(
-      backgroundColor: appBackgroundColor,
       appBar: ExampleAppBar(
         elevation: 0,
         actions: [
@@ -52,12 +51,6 @@ class _CustomMaterialIndicatorScreenState
       ),
       body: SafeArea(
         child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color(0xFFE2D8D7),
-            ),
-          ),
           child: _useCustom
               ? CustomMaterialIndicator(
                   clipBehavior: Clip.antiAlias,

@@ -23,23 +23,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       scrollBehavior: const MobileLikeScrollBehavior(),
       title: 'CustomRefreshIndicator Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.dark(),
       home: const MainScreen(),
       builder: (context, child) => WebFrame(child: child),
       routes: {
+        '/presentation': (context) => const PresentationScreen(),
         '/example': (context) => const CustomMaterialIndicatorScreen(),
         '/plane': (context) => const PlaneIndicatorScreen(),
         '/ice-cream': (context) => const IceCreamIndicatorScreen(),
-        '/presentation': (context) => const PresentationScreen(),
         '/check-mark': (context) => const CheckMarkIndicatorScreen(),
         '/warp': (context) => const WarpIndicatorScreen(),
         '/envelope': (context) => const EnvelopIndicatorScreen(),
         '/fetch-more': (context) => const FetchMoreScreen(),
         '/horizontal': (context) => const HorizontalScreen(),
-        '/programmatically-controlled': (context) =>
-            const ProgrammaticallyControlled(),
+        '/programmatically-controlled': (context) => const ProgrammaticallyControlled(),
       },
     );
   }
