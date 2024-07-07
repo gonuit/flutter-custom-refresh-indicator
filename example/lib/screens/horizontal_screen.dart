@@ -49,6 +49,12 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
           },
           onRefresh: () => Future.delayed(const Duration(seconds: 2)),
           child: ExampleHorizontalList(
+            leading: const ListHelpBox(
+              child: Text(
+                'The indicator can be triggered from both sides. '
+                'A button located on the app bar can be used to change the axis.',
+              ),
+            ),
             itemCount: 4,
             isHorizontal: _isHorizontal,
           ),

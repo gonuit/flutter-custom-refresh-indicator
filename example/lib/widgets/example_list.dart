@@ -165,21 +165,39 @@ class ExampleHorizontalList extends StatelessWidget {
           )
         ],
       ),
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        reverse: reverse,
-        scrollDirection: isHorizontal ? Axis.horizontal : Axis.vertical,
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: ClampingScrollPhysics(),
-        ),
-        itemBuilder: (BuildContext context, int index) => const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: AppCard(
-            width: 300,
-            height: 300,
+      child: Column(
+        children: [
+          if (isHorizontal && leading != null) leading!,
+          Expanded(
+            child: CustomScrollView(
+              reverse: reverse,
+              scrollDirection: isHorizontal ? Axis.horizontal : Axis.vertical,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: ClampingScrollPhysics(),
+              ),
+              slivers: [
+                if (!isHorizontal && leading != null && !reverse)
+                  SliverToBoxAdapter(child: leading!),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  sliver: SliverList.separated(
+                    itemBuilder: (BuildContext context, int index) =>
+                        const AppCard(
+                      margin: EdgeInsets.zero,
+                      width: 300,
+                      height: 300,
+                    ),
+                    itemCount: itemCount,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const SizedBox.square(dimension: 16),
+                  ),
+                ),
+                if (!isHorizontal && leading != null && reverse)
+                  SliverToBoxAdapter(child: leading!),
+              ],
+            ),
           ),
-        ),
-        itemCount: itemCount,
+        ],
       ),
     );
   }

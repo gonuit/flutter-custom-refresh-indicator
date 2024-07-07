@@ -16,7 +16,7 @@ class ExampleAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        title ?? "flutter_custom_refresh_indicator",
+        title ?? "custom_refresh_indicator",
       ),
       actions: actions,
       elevation: elevation,
