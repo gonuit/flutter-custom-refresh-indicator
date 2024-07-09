@@ -45,7 +45,7 @@ class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
                   margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title:  Text(
+                    title: Text(
                       "Simulate unsuccessful fetches",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),

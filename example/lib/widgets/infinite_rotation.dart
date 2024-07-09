@@ -14,7 +14,8 @@ class InfiniteRotation extends StatefulWidget {
   State<InfiniteRotation> createState() => _InfiniteRotationState();
 }
 
-class _InfiniteRotationState extends State<InfiniteRotation> with SingleTickerProviderStateMixin {
+class _InfiniteRotationState extends State<InfiniteRotation>
+    with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
 
   @override
@@ -23,7 +24,8 @@ class _InfiniteRotationState extends State<InfiniteRotation> with SingleTickerPr
       if (widget.running) {
         _startAnimation();
       } else {
-        _rotationController.animateTo(0.0, duration: const Duration(milliseconds: 50));
+        _rotationController.animateTo(0.0,
+            duration: const Duration(milliseconds: 50));
       }
     }
     super.didUpdateWidget(oldWidget);
@@ -54,5 +56,6 @@ class _InfiniteRotationState extends State<InfiniteRotation> with SingleTickerPr
   }
 
   @override
-  Widget build(BuildContext context) => RotationTransition(turns: _rotationController, child: widget.child);
+  Widget build(BuildContext context) =>
+      RotationTransition(turns: _rotationController, child: widget.child);
 }

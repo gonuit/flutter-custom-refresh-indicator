@@ -14,7 +14,7 @@ typedef MaterialIndicatorBuilder = Widget Function(
 
 /// A CustomMaterialIndicator widget that replicates
 /// the behavior of the material indicator widget.
-/// 
+///
 /// It allows for extensive customization of its appearance and behavior.
 class CustomMaterialIndicator extends StatefulWidget {
   /// {@macro custom_refresh_indicator.child}

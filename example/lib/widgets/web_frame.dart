@@ -17,9 +17,11 @@ class WebFrame extends StatelessWidget {
         defaultTargetPlatform == TargetPlatform.macOS ||
         defaultTargetPlatform == TargetPlatform.linux ||
         defaultTargetPlatform == TargetPlatform.windows &&
-            (defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform != TargetPlatform.android);
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.android);
     if (isWebNotMobile) {
-      final safeAreaWidth = math.max<double>(MediaQuery.of(context).size.width, 300);
+      final safeAreaWidth =
+          math.max<double>(MediaQuery.of(context).size.width, 300);
       final safeAreaHeight = MediaQuery.of(context).size.height - 48;
       return SafeArea(
         child: Center(
