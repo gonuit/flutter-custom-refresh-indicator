@@ -1,9 +1,11 @@
+import 'package:example/screens/ball_indicator_screen.dart';
 import 'package:example/screens/envelope_indicator_screen.dart';
 import 'package:example/screens/horizontal_screen.dart';
 import 'package:example/screens/presentation_screen.dart';
 import 'package:example/screens/programmatically_controlled_indicator_screen.dart';
 import 'package:example/widgets/web_frame.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'screens/custom_material_indicator_screen.dart';
 import 'screens/fetch_more_screen.dart';
@@ -14,7 +16,13 @@ import 'screens/warp_indicator_screen.dart';
 import 'utils/mobile_like_scroll_behavior.dart';
 import 'widgets/example_list.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,13 +40,13 @@ class MyApp extends StatelessWidget {
         '/example': (context) => const CustomMaterialIndicatorScreen(),
         '/plane': (context) => const PlaneIndicatorScreen(),
         '/ice-cream': (context) => const IceCreamIndicatorScreen(),
+        '/ball': (context) => const BallIndicatorScreen(),
         '/check-mark': (context) => const CheckMarkIndicatorScreen(),
         '/warp': (context) => const WarpIndicatorScreen(),
         '/envelope': (context) => const EnvelopIndicatorScreen(),
         '/fetch-more': (context) => const FetchMoreScreen(),
         '/horizontal': (context) => const HorizontalScreen(),
-        '/programmatically-controlled': (context) =>
-            const ProgrammaticallyControlled(),
+        '/programmatically-controlled': (context) => const ProgrammaticallyControlled(),
       },
     );
   }
@@ -103,6 +111,18 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/check-mark',
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Event based"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/ball',
               ),
             ),
             const SizedBox(height: 16),
