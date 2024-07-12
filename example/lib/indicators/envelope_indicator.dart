@@ -7,6 +7,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
   final bool trailingScrollIndicatorVisible;
   final RefreshCallback onRefresh;
   final Color? accent;
+  final IndicatorController? controller;
 
   static const _circleSize = 70.0;
 
@@ -22,12 +23,14 @@ class EnvelopRefreshIndicator extends StatelessWidget {
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = false,
     this.accent,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return CustomRefreshIndicator(
+      controller: controller,
       leadingScrollIndicatorVisible: leadingScrollIndicatorVisible,
       trailingScrollIndicatorVisible: trailingScrollIndicatorVisible,
       builder: (context, child, controller) =>

@@ -35,9 +35,12 @@ class _Cloud {
 
 class PlaneIndicator extends StatefulWidget {
   final Widget child;
+  final IndicatorController? controller;
+
   const PlaneIndicator({
     super.key,
     required this.child,
+    this.controller,
   });
 
   @override
@@ -188,6 +191,7 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
         );
         return ClipRect(
           child: CustomRefreshIndicator(
+            controller: widget.controller,
             offsetToArmed: _offsetToArmed,
             autoRebuild: false,
             durations: const RefreshIndicatorDurations(

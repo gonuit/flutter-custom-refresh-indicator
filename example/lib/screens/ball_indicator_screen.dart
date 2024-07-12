@@ -38,6 +38,9 @@ class _BallIndicatorScreenState extends State<BallIndicatorScreen> {
             await Future.delayed(const Duration(seconds: 5));
           },
           child: ExampleList(
+            physics: AlwaysScrollableScrollPhysics(
+              parent: ClampingWithOverscrollPhysics(state: _controller),
+            ),
             leading: Column(
               children: [
                 const ListHelpBox(

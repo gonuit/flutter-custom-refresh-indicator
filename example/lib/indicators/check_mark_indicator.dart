@@ -44,10 +44,12 @@ class CheckMarkIndicator extends StatefulWidget {
   final Widget child;
   final CheckMarkStyle style;
   final AsyncCallback onRefresh;
+  final IndicatorController? controller;
 
   const CheckMarkIndicator({
     super.key,
     required this.child,
+    this.controller,
     this.style = CheckMarkStyle.defaultStyle,
     required this.onRefresh,
   });
@@ -82,6 +84,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
   @override
   Widget build(BuildContext context) {
     return CustomMaterialIndicator(
+      controller: widget.controller,
       onRefresh: _handleRefresh,
       durations: const RefreshIndicatorDurations(
         completeDuration: Duration(seconds: 2),

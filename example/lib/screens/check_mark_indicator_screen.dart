@@ -1,3 +1,4 @@
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/indicators/check_mark_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
@@ -12,6 +13,7 @@ class CheckMarkIndicatorScreen extends StatefulWidget {
 }
 
 class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
+  final _controller = IndicatorController();
   bool _useError = false;
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
       ),
       body: SafeArea(
         child: CheckMarkIndicator(
+          controller: _controller,
           onRefresh: () async {
             await Future.delayed(const Duration(seconds: 2));
             if (_useError) {
@@ -28,6 +31,9 @@ class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {
             }
           },
           child: ExampleList(
+            physics: AlwaysScrollableScrollPhysics(
+              parent: ClampingWithOverscrollPhysics(state: _controller),
+            ),
             leading: Column(
               children: [
                 const ListHelpBox(
