@@ -58,42 +58,49 @@ class ClampingWithOverscrollPhysics extends ClampingScrollPhysics {
     assert(() {
       if (value == position.pixels) {
         throw FlutterError.fromParts(<DiagnosticsNode>[
-          ErrorSummary('$runtimeType.applyBoundaryConditions() was called redundantly.'),
+          ErrorSummary(
+              '$runtimeType.applyBoundaryConditions() was called redundantly.'),
           ErrorDescription(
             'The proposed new position, $value, is exactly equal to the current position of the '
             'given ${position.runtimeType}, ${position.pixels}.\n'
             'The applyBoundaryConditions method should only be called when the value is '
             'going to actually change the pixels, otherwise it is redundant.',
           ),
-          DiagnosticsProperty<ScrollPhysics>('The physics object in question was', this,
+          DiagnosticsProperty<ScrollPhysics>(
+              'The physics object in question was', this,
               style: DiagnosticsTreeStyle.errorProperty),
-          DiagnosticsProperty<ScrollMetrics>('The position object in question was', position,
+          DiagnosticsProperty<ScrollMetrics>(
+              'The position object in question was', position,
               style: DiagnosticsTreeStyle.errorProperty),
         ]);
       }
       return true;
     }());
 
-    if (value < position.pixels && position.pixels <= position.minScrollExtent) {
+    if (value < position.pixels &&
+        position.pixels <= position.minScrollExtent) {
       // Underscroll.
 
       final delta = value - position.pixels;
       _state._addOverscroll(delta.abs());
       return delta;
     }
-    if (position.maxScrollExtent <= position.pixels && position.pixels < value) {
+    if (position.maxScrollExtent <= position.pixels &&
+        position.pixels < value) {
       // Overscroll.
       final delta = value - position.pixels;
       _state._addOverscroll(delta);
       return delta;
     }
-    if (value < position.minScrollExtent && position.minScrollExtent < position.pixels) {
+    if (value < position.minScrollExtent &&
+        position.minScrollExtent < position.pixels) {
       // Hit top edge.
       final delta = value - position.minScrollExtent;
       _state._addOverscroll(delta);
       return delta;
     }
-    if (position.pixels < position.maxScrollExtent && position.maxScrollExtent < value) {
+    if (position.pixels < position.maxScrollExtent &&
+        position.maxScrollExtent < value) {
       // Hit bottom edge.
       final delta = value - position.maxScrollExtent;
       _state._addOverscroll(delta);

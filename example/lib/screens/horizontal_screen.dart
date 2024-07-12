@@ -26,7 +26,9 @@ class _HorizontalScreenState extends State<HorizontalScreen> {
                 _isHorizontal = !_isHorizontal;
               });
             },
-            icon: _isHorizontal ? const Icon(Icons.swap_horizontal_circle) : const Icon(Icons.swap_vert_circle),
+            icon: _isHorizontal
+                ? const Icon(Icons.swap_horizontal_circle)
+                : const Icon(Icons.swap_vert_circle),
           )
         ],
       ),

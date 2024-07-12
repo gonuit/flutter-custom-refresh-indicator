@@ -7,7 +7,8 @@ class CheckMarkIndicatorScreen extends StatefulWidget {
   const CheckMarkIndicatorScreen({super.key});
 
   @override
-  State<CheckMarkIndicatorScreen> createState() => _CheckMarkIndicatorScreenState();
+  State<CheckMarkIndicatorScreen> createState() =>
+      _CheckMarkIndicatorScreenState();
 }
 
 class _CheckMarkIndicatorScreenState extends State<CheckMarkIndicatorScreen> {

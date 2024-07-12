@@ -150,7 +150,8 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// A [ScrollNotificationPredicate] that checks whether
   /// `notification.depth == 0`, which means that the notification did not bubble
   /// through any intervening scrolling widgets.
-  static bool defaultScrollNotificationPredicate(ScrollNotification notification) {
+  static bool defaultScrollNotificationPredicate(
+      ScrollNotification notification) {
     return notification.depth == 0;
   }
 
@@ -167,10 +168,14 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.offsetToArmed,
     this.onStateChanged,
     double? containerExtentPercentageToArmed,
-    @Deprecated('In favor of durations parameter') Duration? indicatorCancelDuration,
-    @Deprecated('In favor of durations parameter') Duration? indicatorSettleDuration,
-    @Deprecated('In favor of durations parameter') Duration? indicatorFinalizeDuration,
-    @Deprecated('In favor of durations parameter') Duration? completeStateDuration,
+    @Deprecated('In favor of durations parameter')
+    Duration? indicatorCancelDuration,
+    @Deprecated('In favor of durations parameter')
+    Duration? indicatorSettleDuration,
+    @Deprecated('In favor of durations parameter')
+    Duration? indicatorFinalizeDuration,
+    @Deprecated('In favor of durations parameter')
+    Duration? completeStateDuration,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
     RefreshIndicatorDurations durations = const RefreshIndicatorDurations(),
@@ -182,17 +187,20 @@ class CustomRefreshIndicator extends StatefulWidget {
         durations = RefreshIndicatorDurations(
           cancelDuration: indicatorCancelDuration ?? durations.cancelDuration,
           completeDuration: completeStateDuration ?? durations.completeDuration,
-          finalizeDuration: indicatorFinalizeDuration ?? durations.finalizeDuration,
+          finalizeDuration:
+              indicatorFinalizeDuration ?? durations.finalizeDuration,
           settleDuration: indicatorSettleDuration ?? durations.settleDuration,
         ),
         // set the default extent percentage value if not provided
-        containerExtentPercentageToArmed = containerExtentPercentageToArmed ?? defaultContainerExtentPercentageToArmed;
+        containerExtentPercentageToArmed = containerExtentPercentageToArmed ??
+            defaultContainerExtentPercentageToArmed;
 
   @override
   CustomRefreshIndicatorState createState() => CustomRefreshIndicatorState();
 }
 
-class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with TickerProviderStateMixin {
+class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
+    with TickerProviderStateMixin {
   /// Whether custom refresh indicator can change
   /// [IndicatorState] from `idle` to `dragging`
   ///
@@ -221,7 +229,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     _dragOffset = 0;
 
     _controllerProvided = widget.controller != null;
-    _customRefreshIndicatorController = widget.controller ?? IndicatorController._();
+    _customRefreshIndicatorController =
+        widget.controller ?? IndicatorController._();
 
     _animationController = AnimationController(
       vsync: this,
@@ -250,7 +259,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   }
 
   /// Notifies the listeners of the controller
-  void _updateCustomRefreshIndicatorValue() => _customRefreshIndicatorController.setValue(_animationController.value);
+  void _updateCustomRefreshIndicatorValue() =>
+      _customRefreshIndicatorController.setValue(_animationController.value);
 
   bool _handleScrollIndicatorNotification(
     OverscrollIndicatorNotification notification,
@@ -278,7 +288,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
       case IndicatorTrigger.trailingEdge:
         return notification.metrics.extentAfter == 0;
       case IndicatorTrigger.bothEdges:
-        return notification.metrics.extentBefore == 0 || notification.metrics.extentAfter == 0;
+        return notification.metrics.extentBefore == 0 ||
+            notification.metrics.extentAfter == 0;
     }
   }
 
@@ -311,12 +322,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     // Calculate the edge if not defined and possible.
     // This may apply to two-way lists on the iOS platform with bouncing physics.
     if (!controller.hasEdge && notification.scrollDelta != null) {
-      if (notification.metrics.extentBefore == 0 && notification.scrollDelta!.isNegative) {
+      if (notification.metrics.extentBefore == 0 &&
+          notification.scrollDelta!.isNegative) {
         controller
           ..setIndicatorDragDetails(notification.dragDetails)
           ..setIndicatorEdge(IndicatorEdge.leading);
         setIndicatorState(IndicatorState.dragging);
-      } else if (notification.metrics.extentAfter == 0 && !notification.scrollDelta!.isNegative) {
+      } else if (notification.metrics.extentAfter == 0 &&
+          !notification.scrollDelta!.isNegative) {
         controller
           ..setIndicatorDragDetails(notification.dragDetails)
           ..setIndicatorEdge(IndicatorEdge.trailing);
@@ -368,7 +381,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   bool _handleOverscrollNotification(OverscrollNotification notification) {
     if (!controller.hasEdge) {
       controller.setIndicatorEdge(
-        notification.overscroll.isNegative ? IndicatorEdge.leading : IndicatorEdge.trailing,
+        notification.overscroll.isNegative
+            ? IndicatorEdge.leading
+            : IndicatorEdge.trailing,
       );
       // Inform indicator widget of edge change
       _update();
@@ -466,7 +481,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   }
 
   void _calculateDragOffset(double containerExtent) {
-    if (controller.state.isCanceling || controller.state.isFinalizing || controller.state.isLoading) return;
+    if (controller.state.isCanceling ||
+        controller.state.isFinalizing ||
+        controller.state.isLoading) return;
 
     double newValue;
 
@@ -482,9 +499,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
       newValue = _dragOffset / (containerExtent * extentPercentageToArmed);
     }
 
-    if (newValue > 0.0 && newValue < CustomRefreshIndicator.armedFromValue && !controller.state.isDragging) {
+    if (newValue > 0.0 &&
+        newValue < CustomRefreshIndicator.armedFromValue &&
+        !controller.state.isDragging) {
       setIndicatorState(IndicatorState.dragging);
-    } else if (newValue >= CustomRefreshIndicator.armedFromValue && !controller.state.isArmed) {
+    } else if (newValue >= CustomRefreshIndicator.armedFromValue &&
+        !controller.state.isArmed) {
       setIndicatorState(IndicatorState.armed);
     }
 
@@ -566,7 +586,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
 
     if (!mounted) return;
     setIndicatorState(IndicatorState.finalizing);
-    await _animationController.animateTo(0.0, duration: widget.durations.finalizeDuration);
+    await _animationController.animateTo(0.0,
+        duration: widget.durations.finalizeDuration);
 
     if (!mounted) return;
     controller.setIndicatorEdge(null);
@@ -601,7 +622,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     final builder = widget.builder;
     if (widget.autoRebuild ||
         // ignore: deprecated_member_use_from_same_package
-        (builder is IndicatorBuilderDelegate && (builder as IndicatorBuilderDelegate).autoRebuild)) {
+        (builder is IndicatorBuilderDelegate &&
+            (builder as IndicatorBuilderDelegate).autoRebuild)) {
       return AnimatedBuilder(
         animation: controller,
         builder: (context, _) => builder(context, child, controller),

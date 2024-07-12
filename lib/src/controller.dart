@@ -128,12 +128,14 @@ class IndicatorController extends Animation<double>
   /// Whether list scrolls horizontally
   ///
   /// (direction equals `AxisDirection.left` or `AxisDirection.right`)
-  bool get isHorizontalDirection => direction == AxisDirection.left || direction == AxisDirection.right;
+  bool get isHorizontalDirection =>
+      direction == AxisDirection.left || direction == AxisDirection.right;
 
   /// Whether list scrolls vertically
   ///
   /// (direction equals `AxisDirection.up` or `AxisDirection.down`)
-  bool get isVerticalDirection => direction == AxisDirection.up || direction == AxisDirection.down;
+  bool get isVerticalDirection =>
+      direction == AxisDirection.up || direction == AxisDirection.down;
 
   IndicatorState _currentState;
 
@@ -209,7 +211,8 @@ class IndicatorController extends Animation<double>
   /// the indicator [state] is [IndicatorState.idle],
   /// and [AnimationStatus.forward] otherwise.
   @override
-  AnimationStatus get status => state.isIdle ? AnimationStatus.dismissed : AnimationStatus.forward;
+  AnimationStatus get status =>
+      state.isIdle ? AnimationStatus.dismissed : AnimationStatus.forward;
 
   /// Returns a [ClampedAnimation] that constrains the animation value of its parent
   /// within the given [min] and [max] range.

@@ -23,7 +23,8 @@ class CheckMarkStyle {
 
   static const defaultStyle = CheckMarkStyle(
     loading: CheckMarkColors(content: Colors.white, background: Colors.black),
-    completed: CheckMarkColors(content: Colors.white, background: Colors.greenAccent),
+    completed:
+        CheckMarkColors(content: Colors.white, background: Colors.greenAccent),
   );
 }
 
@@ -41,7 +42,8 @@ class CheckMarkIndicator extends StatefulWidget {
   State<CheckMarkIndicator> createState() => _CheckMarkIndicatorState();
 }
 
-class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTickerProviderStateMixin {
+class _CheckMarkIndicatorState extends State<CheckMarkIndicator>
+    with SingleTickerProviderStateMixin {
   /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
 
@@ -69,7 +71,9 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
         BuildContext context,
         IndicatorController controller,
       ) {
-        final style = _renderCompleteState ? widget.style.completed : widget.style.loading;
+        final style = _renderCompleteState
+            ? widget.style.completed
+            : widget.style.loading;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           alignment: Alignment.center,
@@ -88,7 +92,9 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     color: style.content,
-                    value: controller.isDragging || controller.isArmed ? controller.value.clamp(0.0, 1.0) : null,
+                    value: controller.isDragging || controller.isArmed
+                        ? controller.value.clamp(0.0, 1.0)
+                        : null,
                   ),
                 ),
         );

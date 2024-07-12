@@ -87,7 +87,9 @@ class MaterialIndicatorDelegate extends IndicatorBuilderDelegate {
           displacement: displacement,
           controller: controller,
           child: Transform.scale(
-            scale: controller.isFinalizing ? controller.value.clamp(0.0, 1.0) : 1.0,
+            scale: controller.isFinalizing
+                ? controller.value.clamp(0.0, 1.0)
+                : 1.0,
             child: Container(
               width: 41,
               height: 41,
@@ -197,7 +199,10 @@ class _PositionedIndicatorContainer extends StatelessWidget {
         child: SlideTransition(
           position: controller.isFinalizing
               ? const AlwaysStoppedAnimation(Offset(0.0, 1.0))
-              : Tween(begin: const Offset(0.0, 0.0), end: const Offset(0.0, 1.0)).animate(controller),
+              : Tween(
+                      begin: const Offset(0.0, 0.0),
+                      end: const Offset(0.0, 1.0))
+                  .animate(controller),
           child: Padding(
             padding: _getEdgeInsets(controller.side),
             child: Align(
@@ -224,7 +229,8 @@ class _InfiniteRotation extends StatefulWidget {
   _InfiniteRotationState createState() => _InfiniteRotationState();
 }
 
-class _InfiniteRotationState extends State<_InfiniteRotation> with SingleTickerProviderStateMixin {
+class _InfiniteRotationState extends State<_InfiniteRotation>
+    with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
 
   @override
@@ -267,5 +273,6 @@ class _InfiniteRotationState extends State<_InfiniteRotation> with SingleTickerP
   }
 
   @override
-  Widget build(BuildContext context) => RotationTransition(turns: _rotationController, child: widget.child);
+  Widget build(BuildContext context) =>
+      RotationTransition(turns: _rotationController, child: widget.child);
 }

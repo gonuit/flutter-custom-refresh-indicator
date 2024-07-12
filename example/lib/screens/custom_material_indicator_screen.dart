@@ -7,10 +7,12 @@ class CustomMaterialIndicatorScreen extends StatefulWidget {
   const CustomMaterialIndicatorScreen({super.key});
 
   @override
-  State<CustomMaterialIndicatorScreen> createState() => _CustomMaterialIndicatorScreenState();
+  State<CustomMaterialIndicatorScreen> createState() =>
+      _CustomMaterialIndicatorScreenState();
 }
 
-class _CustomMaterialIndicatorScreenState extends State<CustomMaterialIndicatorScreen> {
+class _CustomMaterialIndicatorScreenState
+    extends State<CustomMaterialIndicatorScreen> {
   final _controller = IndicatorController();
 
   @override

@@ -44,7 +44,8 @@ class PlaneIndicator extends StatefulWidget {
   State<PlaneIndicator> createState() => _PlaneIndicatorState();
 }
 
-class _PlaneIndicatorState extends State<PlaneIndicator> with TickerProviderStateMixin {
+class _PlaneIndicatorState extends State<PlaneIndicator>
+    with TickerProviderStateMixin {
   static final _planeTween = CurveTween(curve: Curves.easeInOut);
   late AnimationController _planeController;
 
@@ -171,7 +172,8 @@ class _PlaneIndicatorState extends State<PlaneIndicator> with TickerProviderStat
           ),
           builder: (BuildContext context, Widget? child) {
             return Transform.translate(
-              offset: Offset(0.0, 10 * (0.5 - _planeTween.transform(_planeController.value))),
+              offset: Offset(0.0,
+                  10 * (0.5 - _planeTween.transform(_planeController.value))),
               child: child,
             );
           },
@@ -199,7 +201,8 @@ class _PlaneIndicatorState extends State<PlaneIndicator> with TickerProviderStat
             }
           },
           onRefresh: () => Future.delayed(const Duration(seconds: 3)),
-          builder: (BuildContext context, Widget child, IndicatorController controller) {
+          builder: (BuildContext context, Widget child,
+              IndicatorController controller) {
             return AnimatedBuilder(
               animation: controller,
               child: child,
@@ -221,7 +224,9 @@ class _PlaneIndicatorState extends State<PlaneIndicator> with TickerProviderStat
                                 for (final cloud in _clouds)
                                   Transform.translate(
                                     offset: Offset(
-                                      ((screenWidth + cloud.width) * cloud.controller!.value) - cloud.width,
+                                      ((screenWidth + cloud.width) *
+                                              cloud.controller!.value) -
+                                          cloud.width,
                                       cloud.dy * controller.value,
                                     ),
                                     child: OverflowBox(

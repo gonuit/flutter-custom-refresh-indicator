@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
         '/envelope': (context) => const EnvelopIndicatorScreen(),
         '/fetch-more': (context) => const FetchMoreScreen(),
         '/horizontal': (context) => const HorizontalScreen(),
-        '/programmatically-controlled': (context) => const ProgrammaticallyControlled(),
+        '/programmatically-controlled': (context) =>
+            const ProgrammaticallyControlled(),
       },
     );
   }
