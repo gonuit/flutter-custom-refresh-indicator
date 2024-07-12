@@ -229,9 +229,11 @@ class ListSection extends StatelessWidget {
 class ListHelpBox extends StatelessWidget {
   final Widget child;
   final EdgeInsets margin;
+  final IconData? icon;
 
   const ListHelpBox({
     super.key,
+    this.icon,
     this.margin = const EdgeInsets.all(16.0),
     required this.child,
   });
@@ -247,7 +249,7 @@ class ListHelpBox extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                Icons.info_outline,
+                icon ?? Icons.info_outline,
                 color: theme.colorScheme.onSurface,
               ),
               const VerticalDivider(

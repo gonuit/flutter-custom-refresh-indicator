@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         '/example': (context) => const CustomMaterialIndicatorScreen(),
         '/plane': (context) => const PlaneIndicatorScreen(),
         '/ice-cream': (context) => const IceCreamIndicatorScreen(),
-        '/ball': (context) => const BallIndicatorScreen(),
+        '/drag-details': (context) => const BallIndicatorScreen(),
         '/check-mark': (context) => const CheckMarkIndicatorScreen(),
         '/warp': (context) => const WarpIndicatorScreen(),
         '/envelope': (context) => const EnvelopIndicatorScreen(),
@@ -118,11 +118,11 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Event based"),
+                child: const Text("Drag details (Ball)"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/ball',
+                '/drag-details',
               ),
             ),
             const SizedBox(height: 16),
@@ -130,7 +130,7 @@ class MainScreen extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Programmatically-controlled"),
+                child: const Text("Programmatically-controlled (Warp)"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,

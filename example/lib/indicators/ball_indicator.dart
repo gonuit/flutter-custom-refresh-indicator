@@ -6,6 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
+extension _GetRandomFromList<T> on List<T> {
+  T get random {
+    return this[math.Random().nextInt(length)];
+  }
+}
+
 class ShakeState {
   final bool isInitial;
   final Offset shift;
@@ -22,6 +28,9 @@ class BallIndicator extends StatefulWidget {
   final double acceleration;
   final double ballRadius;
   final double shakeOffset;
+  final List<Color> ballColors;
+  final double strokeWidth;
+  final IndicatorController? controller;
 
   const BallIndicator({
     super.key,
@@ -29,21 +38,30 @@ class BallIndicator extends StatefulWidget {
     required this.onRefresh,
     this.acceleration = 1.2,
     this.ballRadius = 25.0,
+    this.strokeWidth = 3.0,
     this.shakeOffset = 4.0,
-  });
+    this.ballColors = const [Colors.blue],
+    this.controller,
+  }) : assert(ballColors.length > 0, 'ballColors cannot be empty.');
 
   @override
   State<BallIndicator> createState() => _BallIndicatorState();
 }
 
-class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateMixin {
+class _BallIndicatorState extends State<BallIndicator>
+    with TickerProviderStateMixin {
+  IndicatorController? _internalIndicatorController;
+  IndicatorController get controller =>
+      widget.controller ??
+      (_internalIndicatorController ??= IndicatorController());
+
   late final Ticker _ticker;
-  final _controller = IndicatorController();
   final _ballPosition = ValueNotifier<Offset>(Offset.zero);
 
   Offset _direction = Offset.zero;
   double _lastAngle = 0;
   Size _rectSize = Size.zero;
+  late Color _ballColor;
 
   late final _shakeController = AnimationController(
     vsync: this,
@@ -62,10 +80,30 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
 
   @override
   void initState() {
+    _ballColor =
+        widget.ballColors.length > 1 ? widget.ballColors.random : Colors.blue;
+
     _ticker = createTicker(_onTick);
     _shakeController.addStatusListener(_onShakeStatusChanged);
     _centerController.addListener(_onCenterChanged);
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant BallIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.controller != widget.controller &&
+        widget.controller != null) {
+      _internalIndicatorController?.dispose();
+      _internalIndicatorController = null;
+    }
+
+    assert(
+      widget.controller == null ||
+          (widget.controller != null && _internalIndicatorController == null),
+      'An internal indicator should not exist when an external indicator is provided.',
+    );
   }
 
   void _onShakeStatusChanged(AnimationStatus status) {
@@ -79,25 +117,23 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
     _ballPosition.value = _centerTween.transform(_centerController.value);
   }
 
-  @override
-  void dispose() {
-    _ticker.dispose();
-    _controller.dispose();
-    _ballPosition.dispose();
-    _shakeController.dispose();
-    _arrowOpacityController.dispose();
-    _centerController.dispose();
-    super.dispose();
-  }
-
   void _onHitBorder(Offset direction) {
-    _shakeState = ShakeState(
-      shift: direction * widget.shakeOffset,
-      isInitial: true,
-    );
-    _shakeController.forward(from: 0.0);
-    HapticFeedback.lightImpact().ignore();
-    setState(() {});
+    setState(() {
+      _shakeState = ShakeState(
+        shift: direction * widget.shakeOffset,
+        isInitial: true,
+      );
+
+      // Update ball color
+      if (widget.ballColors.length > 1) {
+        final colors =
+            widget.ballColors.where((color) => color != _ballColor).toList();
+        _ballColor = colors.random;
+      }
+
+      _shakeController.forward(from: 0.0);
+      HapticFeedback.lightImpact().ignore();
+    });
   }
 
   Duration _prevTickerDuration = Duration.zero;
@@ -105,9 +141,11 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
     final delta = time - _prevTickerDuration;
     _prevTickerDuration = time;
 
-    Offset ballPosition = _ballPosition.value + _direction * delta.inMilliseconds.toDouble() * widget.acceleration;
+    Offset ballPosition = _ballPosition.value +
+        _direction * delta.inMilliseconds.toDouble() * widget.acceleration;
 
-    final Size ballSafeSpace = Size(_rectSize.width - widget.ballRadius * 2, _rectSize.height - widget.ballRadius * 2);
+    final Size ballSafeSpace = Size(_rectSize.width - widget.ballRadius * 2,
+        _rectSize.height - widget.ballRadius * 2);
 
     if (ballPosition.dx < 0) {
       _onHitBorder(_direction);
@@ -146,7 +184,8 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
     required Offset origin,
     required Offset point,
   }) {
-    final double angle = math.atan2(point.dy - origin.dy, point.dx - origin.dx) - (math.pi / 2);
+    final double angle =
+        math.atan2(point.dy - origin.dy, point.dx - origin.dx) - (math.pi / 2);
 
     final normalizedAngle = (angle + math.pi) % (2 * math.pi) - math.pi;
     return normalizedAngle;
@@ -173,7 +212,7 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
       );
 
       return CustomRefreshIndicator(
-        controller: _controller,
+        controller: controller,
         trailingScrollIndicatorVisible: false,
         leadingScrollIndicatorVisible: false,
         onRefresh: widget.onRefresh,
@@ -222,12 +261,12 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
             duration: const Duration(milliseconds: 60),
             curve: Curves.easeIn,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: _ballColor,
               shape: BoxShape.circle,
               border: controller.isArmed
                   ? Border.all(
                       color: Colors.white,
-                      width: 4,
+                      width: widget.strokeWidth,
                     )
                   : null,
             ),
@@ -282,7 +321,7 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
                         child: Arrow(
                           radius: arrowRadius,
                           angle: angle,
-                          strokeWidth: 4,
+                          strokeWidth: widget.strokeWidth,
                           distanceFromCenter: ballSize * 0.75,
                           color: Colors.white,
                         ),
@@ -290,7 +329,9 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
                     );
                   },
                 ),
-              if (controller.isLoading || controller.isSettling || controller.isComplete)
+              if (controller.isLoading ||
+                  controller.isSettling ||
+                  controller.isComplete)
                 Align(
                   alignment: Alignment.topLeft,
                   child: AnimatedBuilder(
@@ -303,7 +344,10 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
                     },
                   ),
                 ),
-              if (controller.isDragging || controller.isArmed)
+              if (controller.isDragging ||
+                  controller.isArmed ||
+                  controller.isCanceling ||
+                  controller.isFinalizing)
                 PositionedTransition(
                   rect: RelativeRectTween(
                     begin: RelativeRect.fromRect(
@@ -333,6 +377,17 @@ class _BallIndicatorState extends State<BallIndicator> with TickerProviderStateM
         child: widget.child,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    _ballPosition.dispose();
+    _shakeController.dispose();
+    _arrowOpacityController.dispose();
+    _centerController.dispose();
+    _internalIndicatorController?.dispose();
+    super.dispose();
   }
 }
 
@@ -414,10 +469,12 @@ class ArrowPainter extends CustomPainter {
     /// Calculate the vector from A to B
     Offset direction = end - start;
     // Calculate the magnitude of the direction vector
-    double magnitude = math.sqrt(direction.dx * direction.dx + direction.dy * direction.dy);
+    double magnitude =
+        math.sqrt(direction.dx * direction.dx + direction.dy * direction.dy);
 
     /// Normalize the vector
-    Offset unitVector = Offset(direction.dx / magnitude, direction.dy / magnitude);
+    Offset unitVector =
+        Offset(direction.dx / magnitude, direction.dy / magnitude);
 
     /// Scale the unit vector by 50 to get the new point offset
     Offset startFrom = start + unitVector * distanceFromCenter;
@@ -426,13 +483,16 @@ class ArrowPainter extends CustomPainter {
 
     /// Arrowhead settings
     double arrowLength = 20; // Length of the arrow lines
-    double arrowAngle = math.pi / 6; // Angle of the arrow lines from the main line
+    double arrowAngle =
+        math.pi / 6; // Angle of the arrow lines from the main line
 
     /// Calculating arrowhead lines
     final arrowEnd1 = Offset(
-        end.dx - arrowLength * math.sin(angle - arrowAngle), end.dy + arrowLength * math.cos(angle - arrowAngle));
+        end.dx - arrowLength * math.sin(angle - arrowAngle),
+        end.dy + arrowLength * math.cos(angle - arrowAngle));
     final arrowEnd2 = Offset(
-        end.dx - arrowLength * math.sin(angle + arrowAngle), end.dy + arrowLength * math.cos(angle + arrowAngle));
+        end.dx - arrowLength * math.sin(angle + arrowAngle),
+        end.dy + arrowLength * math.cos(angle + arrowAngle));
 
     final path = Path()
       ..moveTo(arrowEnd1.dx, arrowEnd1.dy)

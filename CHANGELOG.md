@@ -18,6 +18,9 @@
 - Exposed a *PositionedIndicatorContainer* widget that allows easy positioning of the indicator.
 - **Example app**:
   - Updated custom material indicator example. 
+  - Updated application design.
+  - Added tooltips.
+  - Added *ball indicator* example, which is an overview of the drag details based indicator.
 ## 3.1.1
 - Fix:
   - Fixed *durations* parameter of *CustomRefreshIndicator* widget. Reported by [@jccd1996](https://github.com/jccd1996) in [#58](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/58).
