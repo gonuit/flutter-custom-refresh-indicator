@@ -63,6 +63,10 @@ class CustomMaterialIndicator extends StatelessWidget {
 
   /// When set to *true*, the indicator will rotate
   /// in the [IndicatorState.loading] state.
+  @Deprecated(
+    'This is not part of the material indicator and will be removed in the next version. '
+    'To keep the rotation logic, please implement the rotation on your own and do not rely on this property.',
+  )
   final bool withRotation;
 
   /// {@macro custom_refresh_indicator.notification_predicate}
@@ -102,10 +106,15 @@ class CustomMaterialIndicator extends StatelessWidget {
     required this.onRefresh,
     required this.indicatorBuilder,
     this.scrollableBuilder = _defaultBuilder,
-    this.notificationPredicate = CustomRefreshIndicator.defaultScrollNotificationPredicate,
+    this.notificationPredicate =
+        CustomRefreshIndicator.defaultScrollNotificationPredicate,
     this.backgroundColor,
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
+    @Deprecated(
+      'This is not part of the material indicator and will be removed in the next version. '
+      'To keep the rotation logic, please implement the rotation on your own and do not rely on this property.',
+    )
     this.withRotation = true,
     this.elevation = 2.0,
     this.clipBehavior = Clip.none,
@@ -119,7 +128,9 @@ class CustomMaterialIndicator extends StatelessWidget {
     this.trailingScrollIndicatorVisible = true,
   });
 
-  static Widget _defaultBuilder(BuildContext context, Widget child, IndicatorController controller) => child;
+  static Widget _defaultBuilder(
+          BuildContext context, Widget child, IndicatorController controller) =>
+      child;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +158,9 @@ class CustomMaterialIndicator extends StatelessWidget {
               displacement: displacement,
               controller: controller,
               child: ScaleTransition(
-                scale: controller.isFinalizing ? controller.clamp(0.0, 1.0) : const AlwaysStoppedAnimation(1.0),
+                scale: controller.isFinalizing
+                    ? controller.clamp(0.0, 1.0)
+                    : const AlwaysStoppedAnimation(1.0),
                 child: Container(
                   width: 41,
                   height: 41,
@@ -162,7 +175,8 @@ class CustomMaterialIndicator extends StatelessWidget {
                       child: autoRebuild
                           ? AnimatedBuilder(
                               animation: controller,
-                              builder: (context, _) => indicatorBuilder(context, controller),
+                              builder: (context, _) =>
+                                  indicatorBuilder(context, controller),
                             )
                           : indicatorBuilder(context, controller),
                     ),
@@ -235,11 +249,14 @@ class _PositionedIndicatorContainer extends StatelessWidget {
         ? AlignmentDirectional(-1.0, side.isTop ? 1.0 : -1.0)
         : AlignmentDirectional(side.isLeft ? 1.0 : -1.0, -1.0);
 
-    final endOffset = isVerticalAxis ? Offset(0.0, side.isTop ? 1.0 : -1.0) : Offset(side.isLeft ? 1.0 : -1.0, 0.0);
+    final endOffset = isVerticalAxis
+        ? Offset(0.0, side.isTop ? 1.0 : -1.0)
+        : Offset(side.isLeft ? 1.0 : -1.0, 0.0);
 
     final animation = controller.isFinalizing
         ? AlwaysStoppedAnimation(endOffset)
-        : Tween(begin: const Offset(0.0, 0.0), end: endOffset).animate(controller);
+        : Tween(begin: const Offset(0.0, 0.0), end: endOffset)
+            .animate(controller);
 
     return Positioned(
       top: isHorizontalAxis
@@ -294,7 +311,8 @@ class _InfiniteRotation extends StatefulWidget {
   _InfiniteRotationState createState() => _InfiniteRotationState();
 }
 
-class _InfiniteRotationState extends State<_InfiniteRotation> with SingleTickerProviderStateMixin {
+class _InfiniteRotationState extends State<_InfiniteRotation>
+    with SingleTickerProviderStateMixin {
   late AnimationController _rotationController;
 
   @override
@@ -337,5 +355,6 @@ class _InfiniteRotationState extends State<_InfiniteRotation> with SingleTickerP
   }
 
   @override
-  Widget build(BuildContext context) => RotationTransition(turns: _rotationController, child: widget.child);
+  Widget build(BuildContext context) =>
+      RotationTransition(turns: _rotationController, child: widget.child);
 }

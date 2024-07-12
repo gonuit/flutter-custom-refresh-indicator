@@ -1,3 +1,5 @@
+## 3.1.2
+- Deprecated the *withRotation* argument of the *CustomMaterialIndicator* widget. The rotation function will be removed in the upcoming version.
 ## 3.1.1
 - Fix:
   - Fixed *durations* parameter of *CustomRefreshIndicator* widget. Reported by [@jccd1996](https://github.com/jccd1996) in [#58](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/58).
