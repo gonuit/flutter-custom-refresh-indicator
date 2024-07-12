@@ -1,4 +1,4 @@
-## 4.0.0-dev.1
+## 4.0.0-dev.2
 - **CustomRefreshIndicator**:
   - Removed deprecated parameters: *indicatorCancelDuration*, *indicatorSettleDuration*, *indicatorFinalizeDuration* and *completeStateDuration* .If you are still using them, switch to the *duration* parameter.
   - Improved handling of indicator controller changes.
@@ -21,6 +21,7 @@
   - Updated application design.
   - Added tooltips.
   - Added *ball indicator* example, which is an overview of the drag details based indicator.
+  - Updated web example.
 ## 3.1.1
 - Fix:
   - Fixed *durations* parameter of *CustomRefreshIndicator* widget. Reported by [@jccd1996](https://github.com/jccd1996) in [#58](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/58).
