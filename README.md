@@ -27,14 +27,17 @@ If you just want to replace the content of the material indicator, you can use _
 ```dart
 CustomMaterialIndicator(
   onRefresh: onRefresh, // Your refresh logic
-  builder: (context, controller) {
-    return Icon(
-      Icons.ac_unit,
-      color: Colors.blue,
-      size: 30,
+  backgroundColor: Colors.white,
+  indicatorBuilder: (context, controller) {
+    return Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: CircularProgressIndicator(
+        color: Colors.redAccent,
+        value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
+      ),
     );
   },
-  child: scrollable,
+  child: child,
 )
 ```
 
