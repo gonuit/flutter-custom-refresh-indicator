@@ -1,4 +1,4 @@
-## 4.0.0-dev.3
+## 4.0.1
 - **CustomRefreshIndicator**:
   - Removed deprecated parameters: *indicatorCancelDuration*, *indicatorSettleDuration*, *indicatorFinalizeDuration* and *completeStateDuration* .If you are still using them, switch to the *duration* parameter.
   - Improved handling of indicator controller changes.
