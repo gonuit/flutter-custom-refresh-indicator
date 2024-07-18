@@ -22,6 +22,9 @@
   - Added tooltips.
   - Added *ball indicator* example, which is an overview of the drag details based indicator.
   - Updated web example.
+## 3.1.2
+- Deprecated the *withRotation* argument of the *CustomMaterialIndicator* widget. The rotation function will be removed in the upcoming version.
+- Fixed missing drag detail (*IndicatorController.dragDetails*) information from scroll events.
 ## 3.1.1
 - Fix:
   - Fixed *durations* parameter of *CustomRefreshIndicator* widget. Reported by [@jccd1996](https://github.com/jccd1996) in [#58](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/58).
