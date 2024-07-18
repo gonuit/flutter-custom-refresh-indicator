@@ -15,10 +15,12 @@ class ParallaxConfig {
 
 class IceCreamIndicator extends StatefulWidget {
   final Widget child;
+  final IndicatorController? controller;
 
   const IceCreamIndicator({
     super.key,
     required this.child,
+    this.controller,
   });
 
   @override
@@ -99,6 +101,7 @@ class _IceCreamIndicatorState extends State<IceCreamIndicator>
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
+      controller: widget.controller,
       offsetToArmed: _indicatorSize,
       onRefresh: () => Future.delayed(const Duration(seconds: 4)),
       autoRebuild: false,

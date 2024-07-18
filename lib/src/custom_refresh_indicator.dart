@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
 
-part 'controller.dart';
+part 'indicator_controller.dart';
 
 typedef IndicatorBuilder = Widget Function(
   BuildContext context,
@@ -155,7 +155,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     return notification.depth == 0;
   }
 
-  CustomRefreshIndicator({
+  const CustomRefreshIndicator({
     super.key,
     required this.child,
     required this.onRefresh,
@@ -168,28 +168,13 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.offsetToArmed,
     this.onStateChanged,
     double? containerExtentPercentageToArmed,
-    @Deprecated('In favor of durations parameter')
-    Duration? indicatorCancelDuration,
-    @Deprecated('In favor of durations parameter')
-    Duration? indicatorSettleDuration,
-    @Deprecated('In favor of durations parameter')
-    Duration? indicatorFinalizeDuration,
-    @Deprecated('In favor of durations parameter')
-    Duration? completeStateDuration,
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = true,
-    RefreshIndicatorDurations durations = const RefreshIndicatorDurations(),
+    this.durations = const RefreshIndicatorDurations(),
   })  : assert(
           containerExtentPercentageToArmed == null || offsetToArmed == null,
           'Providing `extentPercentageToArmed` argument take no effect when `offsetToArmed` is provided. '
           'Remove redundant argument.',
-        ),
-        durations = RefreshIndicatorDurations(
-          cancelDuration: indicatorCancelDuration ?? durations.cancelDuration,
-          completeDuration: completeStateDuration ?? durations.completeDuration,
-          finalizeDuration:
-              indicatorFinalizeDuration ?? durations.finalizeDuration,
-          settleDuration: indicatorSettleDuration ?? durations.settleDuration,
         ),
         // set the default extent percentage value if not provided
         containerExtentPercentageToArmed = containerExtentPercentageToArmed ??
@@ -215,11 +200,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   late double _dragOffset;
 
   late AnimationController _animationController;
-  late bool _controllerProvided;
-  late IndicatorController _customRefreshIndicatorController;
+  IndicatorController? _internalIndicatorController;
 
   /// Current [IndicatorController]
-  IndicatorController get controller => _customRefreshIndicatorController;
+  IndicatorController get controller =>
+      widget.controller ??
+      (_internalIndicatorController ??= IndicatorController());
 
   static const double _kPositionLimit = 1.5;
   static const double _kInitialValue = 0.0;
@@ -228,9 +214,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void initState() {
     _dragOffset = 0;
 
-    _controllerProvided = widget.controller != null;
-    _customRefreshIndicatorController =
-        widget.controller ?? IndicatorController._();
+    _internalIndicatorController = widget.controller ?? IndicatorController._();
 
     _animationController = AnimationController(
       vsync: this,
@@ -240,6 +224,18 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     )..addListener(_updateCustomRefreshIndicatorValue);
 
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomRefreshIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // When a new controller is provided externally.
+    if (oldWidget.controller != widget.controller &&
+        widget.controller != null) {
+      // Dispose and remove the current internal controller, if it exists
+      _internalIndicatorController?.dispose();
+      _internalIndicatorController = null;
+    }
   }
 
   /// Triggers a rebuild of the indicator widget
@@ -260,7 +256,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Notifies the listeners of the controller
   void _updateCustomRefreshIndicatorValue() =>
-      _customRefreshIndicatorController.setValue(_animationController.value);
+      controller.setValue(_animationController.value);
 
   bool _handleScrollIndicatorNotification(
     OverscrollIndicatorNotification notification,
@@ -624,10 +620,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     );
 
     final builder = widget.builder;
-    if (widget.autoRebuild ||
-        // ignore: deprecated_member_use_from_same_package
-        (builder is IndicatorBuilderDelegate &&
-            (builder as IndicatorBuilderDelegate).autoRebuild)) {
+    if (widget.autoRebuild) {
       return AnimatedBuilder(
         animation: controller,
         builder: (context, _) => builder(context, child, controller),
@@ -640,11 +633,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   @override
   void dispose() {
     _animationController.dispose();
-
-    /// Provided controller should be disposed by the user.
-    if (!_controllerProvided) {
-      _customRefreshIndicatorController.dispose();
-    }
+    // External controller should be disposed by the user.
+    // Dispose the internal controller, if it exists.
+    _internalIndicatorController?.dispose();
     super.dispose();
   }
 }

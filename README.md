@@ -27,14 +27,17 @@ If you just want to replace the content of the material indicator, you can use _
 ```dart
 CustomMaterialIndicator(
   onRefresh: onRefresh, // Your refresh logic
-  builder: (context, controller) {
-    return Icon(
-      Icons.ac_unit,
-      color: Colors.blue,
-      size: 30,
+  backgroundColor: Colors.white,
+  indicatorBuilder: (context, controller) {
+    return Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: CircularProgressIndicator(
+        color: Colors.redAccent,
+        value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
+      ),
     );
   },
-  child: scrollable,
+  child: child,
 )
 ```
 
@@ -74,19 +77,22 @@ Your creativity sets the boundaries! Explore our examples (just scroll a bit ðŸ‘
 
 # Examples
 
-Almost all of these examples are available in the example application.
+All these examples are available in the example application.
 
-| Plane indicator [[SOURCE](example/lib/indicators/plane_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | Ice cream [[SOURCE](example/lib/indicators/ice_cream_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | Warp [[SOURCE](example/lib/indicators/warp_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
-| :--------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: |
-|                                           ![plane_indicator](readme/plane_indicator.gif)                                           |                                        ![ice_cream_indicator](readme/ice_cream_indicator.gif)                                        |                                     ![warp_indicator](readme/warp_indicator.gif)                                      |
+|                                                   Plane indicator                                                   |                                                          Ice cream                                                          |                                                       Warp                                                        |
+| :-----------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
+|                                   ![plane_indicator](readme/plane_indicator.gif)                                    |                                   ![ice_cream_indicator](readme/ice_cream_indicator.gif)                                    |                                   ![warp_indicator](readme/warp_indicator.gif)                                    |
+| [[SOURCE](example/lib/indicators/plane_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | [[SOURCE](example/lib/indicators/ice_cream_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | [[SOURCE](example/lib/indicators/warp_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
 
-| With complete state [[SOURCE](example/lib/indicators/check_mark_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | Pull to fetch more [[SOURCE](example/lib/indicators/swipe_action.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | Envelope [[SOURCE](example/lib/indicators/envelope_indicator.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
-| :----------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
-|                                    ![indicator_with_complete_state](readme/indicator_with_complete_state.gif)                                    |                                                  ![fetch_more](readme/fetch_more.gif)                                                   |                                       ![Envelope indicator](readme/envelope_indicator.gif)                                        |
+|                                                      With complete state                                                      |                                                  Pull to fetch more                                                   |                                                         Envelope                                                          |
+| :---------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: |
+|                                         ![complete_state](readme/complete_state.gif)                                          |                                         ![fetch_more](readme/fetch_more.gif)                                          |                                   ![Envelope indicator](readme/envelope_indicator.gif)                                    |
+| [[SOURCE](example/lib/indicators/check_mark_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | [[SOURCE](example/lib/indicators/swipe_action.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | [[SOURCE](example/lib/indicators/envelope_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
 
-| Programmatically controlled [[SOURCE](example/lib/screens/programmatically_controlled_indicator_screen.dart)][[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] |                                                                 Your indicator                                                                  |                                                                 Your indicator                                                                  |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                                             ![programmatically_controlled](readme/programmatically_controlled.gif)                                                             | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). | Have you created a fancy refresh indicator? This place is for you. [Open PR](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls). |
+|                                                                             Controlled                                                                              |                                                   Based on drag details                                                   |                                     Your indicator                                      |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: |
+|                                               ![programmatically_controlled](readme/programmatically_controlled.gif)                                                |                                         ![drag_details](readme/drag_details.gif)                                          |           Have you created a fancy refresh indicator? This place is for you.            |
+| [[SOURCE](example/lib/screens/programmatically_controlled_indicator_screen.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] | [[SOURCE](example/lib/indicators/ball_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/drag-details)] | [[OPEN PULL REQUEST](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls)] |
 
 ---
 

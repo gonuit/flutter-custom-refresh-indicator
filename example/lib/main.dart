@@ -1,9 +1,11 @@
+import 'package:example/screens/ball_indicator_screen.dart';
 import 'package:example/screens/envelope_indicator_screen.dart';
 import 'package:example/screens/horizontal_screen.dart';
 import 'package:example/screens/presentation_screen.dart';
 import 'package:example/screens/programmatically_controlled_indicator_screen.dart';
 import 'package:example/widgets/web_frame.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'screens/custom_material_indicator_screen.dart';
 import 'screens/fetch_more_screen.dart';
@@ -12,8 +14,15 @@ import 'screens/plane_indicator_screen.dart';
 import 'screens/check_mark_indicator_screen.dart';
 import 'screens/warp_indicator_screen.dart';
 import 'utils/mobile_like_scroll_behavior.dart';
+import 'widgets/example_list.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -23,16 +32,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       scrollBehavior: const MobileLikeScrollBehavior(),
       title: 'CustomRefreshIndicator Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.dark(),
       home: const MainScreen(),
       builder: (context, child) => WebFrame(child: child),
       routes: {
+        '/presentation': (context) => const PresentationScreen(),
         '/example': (context) => const CustomMaterialIndicatorScreen(),
         '/plane': (context) => const PlaneIndicatorScreen(),
         '/ice-cream': (context) => const IceCreamIndicatorScreen(),
-        '/presentation': (context) => const PresentationScreen(),
+        '/drag-details': (context) => const BallIndicatorScreen(),
         '/check-mark': (context) => const CheckMarkIndicatorScreen(),
         '/warp': (context) => const WarpIndicatorScreen(),
         '/envelope': (context) => const EnvelopIndicatorScreen(),
@@ -56,32 +64,20 @@ class MainScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(16),
           children: <Widget>[
             ElevatedButton(
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Controller presentation"),
+                child: const Text("Overview"),
               ),
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/presentation',
               ),
             ),
-            const SizedBox(height: 15),
-            ElevatedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: const Text("Multidirectional Indicator"),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/horizontal',
-              ),
-            ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 16),
             ElevatedButton(
               child: Container(
                 height: 50,
@@ -93,7 +89,68 @@ class MainScreen extends StatelessWidget {
                 '/example',
               ),
             ),
-            const SizedBox(height: 15),
+            const ListSection(label: "Use cases"),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Multidirectional"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/horizontal',
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Complete state"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/check-mark',
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Drag details (Ball)"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/drag-details',
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Programmatically-controlled (Warp)"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/programmatically-controlled',
+              ),
+            ),
+            const ListSection(label: "Indicator examples"),
+            ElevatedButton(
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                child: const Text("Pull up to fetch more"),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/fetch-more',
+              ),
+            ),
+            const SizedBox(height: 16),
             ElevatedButton(
               child: Container(
                 height: 50,
@@ -105,7 +162,7 @@ class MainScreen extends StatelessWidget {
                 '/plane',
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 16),
             ElevatedButton(
               child: Container(
                 height: 50,
@@ -117,19 +174,7 @@ class MainScreen extends StatelessWidget {
                 '/ice-cream',
               ),
             ),
-            const SizedBox(height: 15),
-            ElevatedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: const Text("Witch complete state"),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/check-mark',
-              ),
-            ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 16),
             ElevatedButton(
               child: Container(
                 height: 50,
@@ -141,7 +186,7 @@ class MainScreen extends StatelessWidget {
                 '/warp',
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 16),
             ElevatedButton(
               child: Container(
                 height: 50,
@@ -151,30 +196,6 @@ class MainScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/envelope',
-              ),
-            ),
-            const SizedBox(height: 15),
-            ElevatedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: const Text("Programmatically-controlled warp"),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/programmatically-controlled',
-              ),
-            ),
-            const SizedBox(height: 15),
-            ElevatedButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: const Text("Swipe to fetch more"),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/fetch-more',
               ),
             ),
           ],

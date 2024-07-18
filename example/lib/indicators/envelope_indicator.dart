@@ -7,6 +7,7 @@ class EnvelopRefreshIndicator extends StatelessWidget {
   final bool trailingScrollIndicatorVisible;
   final RefreshCallback onRefresh;
   final Color? accent;
+  final IndicatorController? controller;
 
   static const _circleSize = 70.0;
 
@@ -22,11 +23,14 @@ class EnvelopRefreshIndicator extends StatelessWidget {
     this.leadingScrollIndicatorVisible = false,
     this.trailingScrollIndicatorVisible = false,
     this.accent,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return CustomRefreshIndicator(
+      controller: controller,
       leadingScrollIndicatorVisible: leadingScrollIndicatorVisible,
       trailingScrollIndicatorVisible: trailingScrollIndicatorVisible,
       builder: (context, child, controller) =>
@@ -51,7 +55,16 @@ class EnvelopRefreshIndicator extends StatelessWidget {
           children: <Widget>[
             Transform.scale(
               scale: 1 - 0.1 * controller.value.clamp(0.0, 1.0),
-              child: child,
+              child: Container(
+                foregroundDecoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1,
+                    strokeAlign: BorderSide.strokeAlignOutside,
+                    color: theme.dividerColor,
+                  ),
+                ),
+                child: child,
+              ),
             ),
             if (isNotIdle)
               Positioned(
@@ -59,9 +72,13 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                 child: Container(
                   height: widgetHeight,
                   width: widgetWidth,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainer,
                     boxShadow: _defaultShadow,
+                    border: Border.all(
+                      color: theme.dividerColor,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -74,8 +91,9 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                     widgetHeight,
                   ),
                   painter: TrianglePainter(
-                    strokeColor: Colors.white,
-                    paintingStyle: PaintingStyle.fill,
+                    strokeColor: theme.dividerColor,
+                    color: theme.colorScheme.surfaceContainer,
+                    strokeWidth: 2,
                   ),
                 ),
               ),
@@ -103,14 +121,19 @@ class EnvelopRefreshIndicator extends StatelessWidget {
                           fit: StackFit.expand,
                           alignment: Alignment.center,
                           children: <Widget>[
-                            CircularProgressIndicator(
-                              valueColor:
-                                  const AlwaysStoppedAnimation(Colors.black),
-                              value: controller.isLoading ? null : 0,
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                value: controller.isLoading ? null : 0,
+                              ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.mail_outline,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimary,
                               size: 35,
                             ),
                           ],
@@ -130,33 +153,44 @@ class EnvelopRefreshIndicator extends StatelessWidget {
 }
 
 class TrianglePainter extends CustomPainter {
-  final Color strokeColor;
-  final PaintingStyle paintingStyle;
+  final Color? strokeColor;
+  final Color color;
   final double strokeWidth;
 
   static double convertRadiusToSigma(double radius) {
     return radius * 0.57735 + 0.5;
   }
 
-  TrianglePainter(
-      {this.strokeColor = Colors.black,
-      this.strokeWidth = 3,
-      this.paintingStyle = PaintingStyle.stroke});
+  TrianglePainter({
+    this.strokeColor = Colors.black,
+    this.color = Colors.white,
+    this.strokeWidth = 2,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = strokeColor
-      ..strokeWidth = strokeWidth
-      ..style = paintingStyle;
     final path = getTrianglePath(size.width, size.height);
+
+    Paint backgroundPaint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.fill;
     final shadowPaint = Paint()
       ..color = Colors.black.withAlpha(50)
       ..maskFilter =
           MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(10));
-    canvas.drawPath(path, shadowPaint);
+    canvas
+      ..drawPath(path, shadowPaint)
+      ..drawPath(path, backgroundPaint);
 
-    canvas.drawPath(path, paint);
+    final strokeColor = this.strokeColor;
+    if (strokeColor != null) {
+      Paint strokePaint = Paint()
+        ..color = strokeColor
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke;
+      canvas.drawPath(path, strokePaint);
+    }
   }
 
   Path getTrianglePath(double x, double y) {
@@ -170,7 +204,7 @@ class TrianglePainter extends CustomPainter {
   @override
   bool shouldRepaint(TrianglePainter oldDelegate) {
     return oldDelegate.strokeColor != strokeColor ||
-        oldDelegate.paintingStyle != paintingStyle ||
+        oldDelegate.color != color ||
         oldDelegate.strokeWidth != strokeWidth;
   }
 }

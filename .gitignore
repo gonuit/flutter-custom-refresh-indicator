@@ -74,4 +74,6 @@ build/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 # Flutter version manager
-.fvm
+
+# FVM Version Cache
+.fvm/

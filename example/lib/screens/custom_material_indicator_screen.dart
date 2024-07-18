@@ -15,44 +15,69 @@ class _CustomMaterialIndicatorScreenState
     extends State<CustomMaterialIndicatorScreen> {
   final _controller = IndicatorController();
 
+  bool _useCustom = true;
+
+  void _toggleCustom(bool useCustom) {
+    // if no change exit
+    if (_useCustom == useCustom) return;
+
+    setState(() {
+      _useCustom = useCustom;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final child = ExampleList(
+      leading: const Column(
+        children: [
+          ListHelpBox(
+            child: Text(
+              "Use the toggle on the app bar to change between CustomMaterialIndicator "
+              "and the built-in RefreshIndicator widget.",
+            ),
+          ),
+          ListHelpBox(
+            margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Text(
+              "Can you spot the difference? 😉",
+            ),
+          ),
+        ],
+      ),
+      itemCount: 12,
+      physics: AlwaysScrollableScrollPhysics(
+        parent: _useCustom
+            ? ClampingWithOverscrollPhysics(state: _controller)
+            : const ClampingScrollPhysics(),
+      ),
+    );
     return Scaffold(
-      backgroundColor: appBackgroundColor,
-      appBar: const ExampleAppBar(
+      appBar: ExampleAppBar(
         elevation: 0,
+        title: _useCustom ? "CustomMaterialIndicator" : "RefreshIndicator",
+        actions: [
+          Switch(
+            value: _useCustom,
+            onChanged: _toggleCustom,
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color(0xFFE2D8D7),
-            ),
-          ),
-          child: CustomMaterialIndicator(
-            controller: _controller,
-            clipBehavior: Clip.antiAlias,
-            trigger: IndicatorTrigger.bothEdges,
-            triggerMode: IndicatorTriggerMode.anywhere,
-            onRefresh: () => Future.delayed(const Duration(seconds: 2)),
-            indicatorBuilder: (context, controller) {
-              return const Icon(
-                Icons.ac_unit,
-                color: appContentColor,
-                size: 30,
-              );
-            },
-            scrollableBuilder: (context, child, controller) {
-              return child;
-            },
-            child: ExampleList(
-              itemCount: 12,
-              physics: AlwaysScrollableScrollPhysics(
-                parent: ClampingWithOverscrollPhysics(state: _controller),
-              ),
-            ),
-          ),
+          child: _useCustom
+              ? CustomMaterialIndicator(
+                  clipBehavior: Clip.antiAlias,
+                  trigger: IndicatorTrigger.bothEdges,
+                  triggerMode: IndicatorTriggerMode.anywhere,
+                  onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+                  child: child,
+                )
+              : RefreshIndicator(
+                  onRefresh: () => Future.delayed(const Duration(seconds: 2)),
+                  triggerMode: RefreshIndicatorTriggerMode.anywhere,
+                  child: child,
+                ),
         ),
       ),
     );

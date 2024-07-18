@@ -1,3 +1,27 @@
+## 4.0.0-dev.3
+- **CustomRefreshIndicator**:
+  - Removed deprecated parameters: *indicatorCancelDuration*, *indicatorSettleDuration*, *indicatorFinalizeDuration* and *completeStateDuration* .If you are still using them, switch to the *duration* parameter.
+  - Improved handling of indicator controller changes.
+  - Fixed missing *dragDetails* data when overscrolling.
+- **IndicatorController**:
+  - Added *minValue* and *maxValue* static constants.
+  - Added *transform* method. Allows you to transform controller animation values from the range *0.0* → *1.5* to another range.
+  - Added *normalize* method. Normalizes *value* by converting it to the range *0.0* → *1.0*. This allows the animation to be used directly with most Flutter widgets and tweens. You can still use *clamp* if you want to remove values above *1.0* instead of transforming the whole range.
+- **CustomMaterialIndicator**:
+  - Redesigned/reimplemented. Now, when *indicatorBuilder* argument is not provided, it completely recreates the look and behavior of the built-in *RefreshIndicator* widget.
+  - Added *CustomMaterialIndicator.adaptive* constructor.
+  - *indicatorBuilder* parameter is now optional.
+  - The deprecated parameter *withRotation* has been removed. It was confusing and was not related to the material indicator design. To add rotation to the indicator, you need to implement rotation yourself 😔.
+  - Added *color*, *semanticsValue*, *semanticsLabel* and *strokeWidth* parameters. They are applied only when the default *indicatorBuilder* is used (given a null value).
+- Removed deprecated *IndicatorBuilderDelegate* and *MaterialIndicatorDelegate* classes.
+- Added *TransformedAnimation* class that allows transforming the parent animation value.
+- Exposed a *PositionedIndicatorContainer* widget that allows easy positioning of the indicator.
+- **Example app**:
+  - Updated custom material indicator example. 
+  - Updated application design.
+  - Added tooltips.
+  - Added *ball indicator* example, which is an overview of the drag details based indicator.
+  - Updated web example.
 ## 3.1.2
 - Deprecated the *withRotation* argument of the *CustomMaterialIndicator* widget. The rotation function will be removed in the upcoming version.
 - Fixed missing drag detail (*IndicatorController.dragDetails*) information from scroll events.
