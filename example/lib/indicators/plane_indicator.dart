@@ -253,8 +253,8 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
                                         colors: [
-                                          Colors.blue[100]!.withOpacity(.2),
-                                          Colors.blue[100]!.withOpacity(0.0)
+                                          Colors.blue[100]!.withAlpha(51),
+                                          Colors.blue[100]!.withAlpha(0)
                                         ],
                                       ),
                                     ),

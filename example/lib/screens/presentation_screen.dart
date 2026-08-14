@@ -1,3 +1,6 @@
+// This screen presents the experimental `dragDetails` API.
+// ignore_for_file: experimental_member_use
+
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
@@ -152,7 +155,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                       alignment: Alignment.centerRight,
                                       child: Switch(
                                         value: _controller.isRefreshEnabled,
-                                        activeColor: Colors.lightGreen,
+                                        activeThumbColor: Colors.lightGreen,
                                         onChanged: (isEnabled) => isEnabled
                                             ? _controller.enableRefresh()
                                             : _controller.disableRefresh(),

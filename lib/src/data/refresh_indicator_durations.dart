@@ -20,7 +20,8 @@ class RefreshIndicatorDurations {
   /// The default is 150 milliseconds.
   final Duration settleDuration;
 
-  /// Duration of hiding the pointer after the [onRefresh] function completes.
+  /// Duration of hiding the pointer after the [CustomRefreshIndicator.onRefresh]
+  /// function completes.
   ///
   /// During this time, the value of the controller decreases from `1.0` to `0.0`
   /// with a state set to [IndicatorState.finalizing].
@@ -29,7 +30,8 @@ class RefreshIndicatorDurations {
   final Duration finalizeDuration;
 
   /// Duration for which the indicator remains at value of *1.0* and
-  /// [IndicatorState.complete] state after the [onRefresh] function completes.
+  /// [IndicatorState.complete] state after the [CustomRefreshIndicator.onRefresh]
+  /// function completes.
   final Duration? completeDuration;
 
   /// Constructs a `RefreshIndicatorDurations` with the specified durations.

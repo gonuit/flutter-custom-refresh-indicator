@@ -115,7 +115,7 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// to the refresh indicator widget.
   /// It extends the [Animation] class.
   ///
-  /// The indicator controller will be passed to the [builder] method.
+  /// The indicator controller will be passed to the [CustomRefreshIndicator.builder] method.
   /// {@endtemplate}
   final IndicatorController? controller;
 
@@ -137,12 +137,13 @@ class CustomRefreshIndicator extends StatefulWidget {
   final IndicatorTriggerMode triggerMode;
 
   /// {@template custom_refresh_indicator.auto_rebuild}
-  /// When set to true, the [builder] function will be called whenever the controller changes.
+  /// When set to true, the [CustomRefreshIndicator.builder] function will be called
+  /// whenever the controller changes.
   /// It is set to `true` by default.
   ///
   /// This can be useful for optimizing performance in complex widgets.
   /// When setting this to false, you can manage which part of the ui you want to rebuild,
-  /// such as using the [AnimationBuilder] widget in conjunction with [IndicatorController] or
+  /// such as using the [AnimatedBuilder] widget in conjunction with [IndicatorController] or
   /// transition widgets, for instance [FadeTransition].
   /// {@endtemplate}
   final bool autoRebuild;
@@ -413,7 +414,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// automatically, call the [hide] method to hide the pointer.
   ///
   /// This method is only responsible for the visual part, if you want
-  /// to do the whole process with a [onRefresh] call, use the [refresh]
+  /// to do the whole process with a [CustomRefreshIndicator.onRefresh] call, use the [refresh]
   /// method instead.
   Future<void> show({
     Duration draggingDuration = const Duration(milliseconds: 300),
@@ -483,7 +484,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void _calculateDragOffset(double containerExtent) {
     if (controller.state.isCanceling ||
         controller.state.isFinalizing ||
-        controller.state.isLoading) return;
+        controller.state.isLoading) {
+      return;
+    }
 
     double newValue;
 

@@ -1,3 +1,5 @@
+## 4.0.2
+- Removed usages of deprecated Flutter APIs. The minimum supported Dart and Flutter versions remain unchanged.
 ## 4.0.1
 - **CustomRefreshIndicator**:
   - Removed deprecated parameters: *indicatorCancelDuration*, *indicatorSettleDuration*, *indicatorFinalizeDuration* and *completeStateDuration* .If you are still using them, switch to the *duration* parameter.

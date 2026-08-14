@@ -314,15 +314,19 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
     _backgroundColor = _getBackgroundColor();
     _indicatorColor = _getIndicatorColor();
     final Color color = _indicatorColor;
-    if (color.alpha == 0x00) {
+    final Color transparentColor = color.withAlpha(0);
+    // Equal only when the color is already fully transparent. A [ColorSwatch]
+    // never is (it compares its runtime type), so it always takes the tween
+    // below, which emits the very same color when its alpha is zero.
+    if (color == transparentColor) {
       // Set an always stopped animation instead of a driven tween.
       _colorAnimation = AlwaysStoppedAnimation<Color>(color);
     } else {
       // Respect the alpha of the given color.
       _colorAnimation = _valueAnimation.drive(
         ColorTween(
-          begin: color.withAlpha(0),
-          end: color.withAlpha(color.alpha),
+          begin: transparentColor,
+          end: color,
         ).chain(
           CurveTween(
             curve: const Interval(0.0, 1.0 / 1.5),

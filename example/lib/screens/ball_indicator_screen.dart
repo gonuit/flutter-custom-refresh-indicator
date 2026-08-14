@@ -1,3 +1,6 @@
+// This screen presents the experimental `dragDetails` API.
+// ignore_for_file: experimental_member_use
+
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/indicators/ball_indicator.dart';
 import 'package:example/widgets/example_app_bar.dart';

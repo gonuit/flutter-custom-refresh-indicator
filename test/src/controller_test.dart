@@ -6,7 +6,7 @@ class TestListener {
   int _called = 0;
   int get called => _called;
 
-  onNotify() {
+  void onNotify() {
     _called++;
   }
 
