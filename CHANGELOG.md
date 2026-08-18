@@ -1,3 +1,5 @@
+## 4.1.0
+- **CustomMaterialIndicator**: Fixed the *indicatorSize* argument, which had no effect.
 ## 4.0.2
 - Removed usages of deprecated Flutter APIs. The minimum supported Dart and Flutter versions remain unchanged.
 ## 4.0.1
