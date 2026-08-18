@@ -1,0 +1,9 @@
+build/
+.dart_tool/
+.fvm/
+.idea/
+.DS_Store
+*.iml
+*.log
+
+readme/
