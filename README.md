@@ -45,7 +45,7 @@ CustomMaterialIndicator(
 
 <div align="center">
 <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/master/readme/simple_indicator.gif" alt="Controller data example" >
+<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/simple_indicator.gif" alt="Controller data example" >
 </a>
 </div>
 
@@ -290,7 +290,7 @@ Please visit the following live demo to see the _CustomRefreshIndicator_ in acti
 
 <div align="center">
 <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-<img src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/master/readme/controller_data.gif" alt="Controller data example" >
+<img src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/controller_data.gif" alt="Controller data example" >
 </a>
 </div>
 
