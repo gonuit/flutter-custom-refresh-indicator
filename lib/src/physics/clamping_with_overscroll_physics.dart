@@ -96,7 +96,7 @@ class ClampingWithOverscrollPhysics extends ClampingScrollPhysics {
         position.minScrollExtent < position.pixels) {
       // Hit top edge.
       final delta = value - position.minScrollExtent;
-      _state._addOverscroll(delta);
+      _state._addOverscroll(delta.abs());
       return delta;
     }
     if (position.pixels < position.maxScrollExtent &&
