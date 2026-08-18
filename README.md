@@ -6,7 +6,7 @@
 
 Create your own custom refresh indicator widget in the blink of an eye!
 
-### Features:
+## Features
 
 - [Create a **COMPLETELY** custom refresh indicator widget.](#examples)
 - [Quickly change the content of the material refresh indicator.](#custommaterialindicator)
@@ -19,7 +19,7 @@ Create your own custom refresh indicator widget in the blink of an eye!
 
 ## QUICK START
 
-### **CustomMaterialIndicator**
+### CustomMaterialIndicator
 
 If you just want to replace the content of the material indicator, you can use _CustomMaterialIndicator_ widget, which builds a material container. In addition to the built in _RefreshIndicator_ it supports horizontal lists and triggering from both edges (see the [trigger argument](#trigger-indicatortrigger)).
 
@@ -41,16 +41,16 @@ CustomMaterialIndicator(
 )
 ```
 
-### Effect:
+### Effect
 
 <div align="center">
 <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/simple_indicator.gif" alt="Controller data example" >
+<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/simple_indicator.gif" alt="Simple indicator example" >
 </a>
 </div>
 
 
-### **CustomRefreshIndicator**
+### CustomRefreshIndicator
 
 Elevate your Flutter app with a tailor-made refresh indicator using the CustomRefreshIndicator widget. Just wrap your scrollable list, and design your unique indicator. It's that easy! 😏
 
@@ -71,34 +71,33 @@ CustomRefreshIndicator(
 )
 ```
 
-### ~~Effect:~~ What's Possible?
+### What's possible?
 
 Your creativity sets the boundaries! Explore our examples (just scroll a bit 👇) to see what you can build. From subtle animations to eye-catching visuals, make the refresh action a delightful moment. 🚀
 
-# Examples
+## Examples
 
 All these examples are available in the example application.
 
-|                                                   Plane indicator                                                   |                                                          Ice cream                                                          |                                                       Warp                                                        |
-| :-----------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
-|                                   ![plane_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/plane_indicator.gif)                                    |                                   ![ice_cream_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/ice_cream_indicator.gif)                                    |                                   ![warp_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/warp_indicator.gif)                                    |
-| [[SOURCE](example/lib/indicators/plane_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | [[SOURCE](example/lib/indicators/ice_cream_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | [[SOURCE](example/lib/indicators/warp_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
+| Plane indicator | Ice cream | Warp |
+| :-: | :-: | :-: |
+| ![plane_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/plane_indicator.gif) | ![ice_cream_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/ice_cream_indicator.gif) | ![warp_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/warp_indicator.gif) |
+| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/plane_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/ice_cream_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/warp_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
 
-|                                                      With complete state                                                      |                                                  Pull to fetch more                                                   |                                                         Envelope                                                          |
-| :---------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: |
-|                                         ![complete_state](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/complete_state.gif)                                          |                                         ![fetch_more](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/fetch_more.gif)                                          |                                   ![Envelope indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/envelope_indicator.gif)                                    |
-| [[SOURCE](example/lib/indicators/check_mark_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | [[SOURCE](example/lib/indicators/swipe_action.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | [[SOURCE](example/lib/indicators/envelope_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
+| With complete state | Pull to fetch more | Envelope |
+| :-: | :-: | :-: |
+| ![complete_state](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/complete_state.gif) | ![fetch_more](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/fetch_more.gif) | ![Envelope indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/envelope_indicator.gif) |
+| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/check_mark_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/fetch_more_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/envelope_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
 
-|                                                                             Controlled                                                                              |                                                   Based on drag details                                                   |                                     Your indicator                                      |
-| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: |
-|                                               ![programmatically_controlled](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/programmatically_controlled.gif)                                                |                                         ![drag_details](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/drag_details.gif)                                          |           Have you created a fancy refresh indicator? This place is for you.            |
-| [[SOURCE](example/lib/screens/programmatically_controlled_indicator_screen.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] | [[SOURCE](example/lib/indicators/ball_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/drag-details)] | [[OPEN PULL REQUEST](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls)] |
+| Controlled | Based on drag details | Your indicator |
+| :-: | :-: | :-: |
+| ![programmatically_controlled](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/programmatically_controlled.gif) | ![drag_details](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/drag_details.gif) | Have you created a fancy refresh indicator? This place is for you. |
+| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/screens/programmatically_controlled_indicator_screen.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/ball_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/drag-details)] | [[OPEN PULL REQUEST](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls)] |
 
 ---
 
-# Documentation
+## Documentation
 
-- [Usage](#usage)
 - [CustomRefreshIndicator Parameters](#customrefreshindicator-parameters)
 - [Indicator States](#indicator-states)
 - [Handling State Changes](#handling-state-changes)
@@ -106,22 +105,6 @@ All these examples are available in the example application.
 - [IndicatorController Properties](#indicatorcontroller-properties)
 - [IndicatorController Showcase](#indicatorcontroller-showcase)
 - [Support](#support)
-
-## Usage
-
-Here is a quick example of how to use the CustomRefreshIndicator:
-
-```dart
-CustomRefreshIndicator(
-  onRefresh: onRefresh,
-  child: ListView(
-    // Your ListView content here
-  ),
-  builder: (BuildContext context, Widget child, IndicatorController controller) {
-    // Return your custom indicator widget here
-  },
-)
-```
 
 ## CustomRefreshIndicator Parameters
 
@@ -153,7 +136,7 @@ CustomRefreshIndicator(
 ### Trigger Behavior
 
 - **offsetToArmed (double?)**: Pixel distance to trigger the refresh.
-- **containerExtentPercentageToArmed (double?)**: Container extent percentage to arm the indicator.
+- **containerExtentPercentageToArmed (double)**: Container extent percentage to arm the indicator.
 - **trigger (IndicatorTrigger)**: Defines the edge from which the refresh can be triggered.
 - **triggerMode (IndicatorTriggerMode)**: Configures the condition that will trigger the refresh.
 
@@ -165,15 +148,15 @@ CustomRefreshIndicator(
 
 CustomRefreshIndicator manages various states to provide feedback on the refresh process. Understanding these states will help you customize the behavior and appearance of your refresh indicator.
 
-| State        | Value Range            | Description                                                                                   |
-| ------------ | ---------------------- | --------------------------------------------------------------------------------------------- |
-| `idle`       | `0.0`                  | The default state when no interaction is happening. The indicator is not visible.             |
-| `dragging`   | `0.0` to `1.0`         | The user is pulling down, but hasn't yet reached the threshold to trigger a refresh.          |
-| `armed`      | At or above `1.0`      | Pull-down has passed the threshold. Releasing now will trigger the _onRefresh_ callback.      |
-| `canceling`  | Animates back to `0.0` | Pull-down stopped before the threshold; no refresh is triggered, and the indicator retracts.  |
-| `loading`    | Steady at `1.0`        | The _onRefresh_ callback is active, indicating an ongoing refresh operation.                  |
-| `complete`   | Steady at `1.0`        | Refresh is complete, and the indicator stays fully visible if _completeDuration_ is set.      |
-| `finalizing` | `1.0` to `0.0`         | The refresh operation has finished, and the indicator is animating back to its initial state. |
+| State | Value Range | Description |
+| - | - | - |
+| `idle` | `0.0` | The default state when no interaction is happening. The indicator is not visible. |
+| `dragging` | `0.0` to `1.0` | The user is pulling down, but hasn't yet reached the threshold to trigger a refresh. |
+| `armed` | At or above `1.0` | Pull-down has passed the threshold. Releasing now will trigger the _onRefresh_ callback. |
+| `canceling` | Animates back to `0.0` | Pull-down stopped before the threshold; no refresh is triggered, and the indicator retracts. |
+| `loading` | Steady at `1.0` | The _onRefresh_ callback is active, indicating an ongoing refresh operation. |
+| `complete` | Steady at `1.0` | Refresh is complete, and the indicator stays fully visible if _completeDuration_ is set. |
+| `finalizing` | `1.0` to `0.0` | The refresh operation has finished, and the indicator is animating back to its initial state. |
 
 Each state transition provides an opportunity to animate or adjust the UI accordingly, giving users a seamless and interactive experience.
 
@@ -210,20 +193,20 @@ The _CustomRefreshIndicator_ widget provides flexible trigger modes that define 
 
 This property determines which edge of the list the pull-to-refresh can be initiated from. It is especially useful for lists that can be inverted using the _reverse_ argument.
 
-| Value          | Description                                                                                                                                                                         |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `leadingEdge`  | The pull-to-refresh gesture can only be initiated from the leading edge of the list. This is typically the top for standard lists, but it becomes the bottom when list is reversed. |
-| `trailingEdge` | The pull-to-refresh can only be initiated from the trailing edge of the list. This is usually the bottom, but it switches to the top for lists that are reversed.                   |
-| `bothEdges`    | The gesture can be triggered from both the leading and trailing edges of the list, allowing for pull-to-refresh functionality no matter which end the user starts dragging from.    |
+| Value | Description |
+| - | - |
+| `leadingEdge` | The pull-to-refresh gesture can only be initiated from the leading edge of the list. This is typically the top for standard lists, but it becomes the bottom when list is reversed. |
+| `trailingEdge` | The pull-to-refresh can only be initiated from the trailing edge of the list. This is usually the bottom, but it switches to the top for lists that are reversed. |
+| `bothEdges` | The gesture can be triggered from both the leading and trailing edges of the list, allowing for pull-to-refresh functionality no matter which end the user starts dragging from. |
 
 ### triggerMode (IndicatorTriggerMode)
 
 This property controls how the _CustomRefreshIndicator_ can be activated in relation to the scrollable's position when the drag starts. It behaves similarly to the _triggerMode_ of the built-in _RefreshIndicator_ widget.
 
-| Value      | Description                                                                                                   |
-| ---------- | ------------------------------------------------------------------------------------------------------------- |
-| `anywhere` | The refresh can be triggered from any position within the scrollable content, not just from the edge.         |
-| `onEdge`   | The refresh will only be triggered if the scrollable content is at the edge when the dragging gesture begins. |
+| Value | Description |
+| - | - |
+| `anywhere` | The refresh can be triggered from any position within the scrollable content, not just from the edge. |
+| `onEdge` | The refresh will only be triggered if the scrollable content is at the edge when the dragging gesture begins. |
 
 By default, _triggerMode_ is set to _onEdge_, which means that the refresh action is typically initiated when the user drags from the very top or bottom of the content, depending on the list orientation and the _trigger_ property settings.
 
@@ -243,10 +226,10 @@ More information about the state can be found in the [Indicator States](#indicat
 
 This property indicates from which end of the list the pull-to-refresh gesture was initiated.
 
-| Value   | Description                                                           |
-| ------- | --------------------------------------------------------------------- |
+| Value | Description |
+| - | - |
 | `start` | The gesture started from the beginning of the list (usually the top). |
-| `end`   | The gesture started from the end of the list (usually the bottom).    |
+| `end` | The gesture started from the end of the list (usually the bottom). |
 
 The _edge_ property is particularly useful when the _trigger_ is set to _bothEdges_, allowing the gesture to be recognized from either the start or end of the list.
 
@@ -254,13 +237,13 @@ The _edge_ property is particularly useful when the _trigger_ is set to _bothEdg
 
 The _side_ property determines on which side of the scrollable area the indicator "should" appear.
 
-| Value    | Description                                                   |
-| -------- | ------------------------------------------------------------- |
-| `top`    | Places the indicator at the top of the scrollable content.    |
+| Value | Description |
+| - | - |
+| `top` | Places the indicator at the top of the scrollable content. |
 | `bottom` | Places the indicator at the bottom of the scrollable content. |
-| `left`   | Places the indicator to the left of the scrollable content.   |
-| `right`  | Places the indicator to the right of the scrollable content.  |
-| `none`   | The indicator will not be displayed on any side.              |
+| `left` | Places the indicator to the left of the scrollable content. |
+| `right` | Places the indicator to the right of the scrollable content. |
+| `none` | The indicator will not be displayed on any side. |
 
 ### direction (AxisDirection)
 
@@ -274,11 +257,11 @@ This reflects the scrolling direction that the user is currently taking within t
 
 This property provides the details about the drag update event, including the position and delta of the drag.
 
-| Property         | Description                                                                                 |
-| ---------------- | ------------------------------------------------------------------------------------------- |
-| `globalPosition` | The global position of the pointer when the drag update occurred.                           |
-| `delta`          | The delta distance the pointer has moved since the last update event.                       |
-| `primaryDelta`   | The delta distance along the primary axis (e.g., vertical for a vertically scrolling list). |
+| Property | Description |
+| - | - |
+| `globalPosition` | The global position of the pointer when the drag update occurred. |
+| `delta` | The delta distance the pointer has moved since the last update event. |
+| `primaryDelta` | The delta distance along the primary axis (e.g., vertical for a vertically scrolling list). |
 
 The _dragDetails_ property is invaluable when you want to implement custom behavior based on the precise movement of the user's drag, allowing for fine-tuned control over the refresh indicator's response.
 
