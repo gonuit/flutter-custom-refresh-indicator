@@ -382,8 +382,8 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
         /// If indicatorBuilder is not provided
         if (widget.indicatorBuilder != null) {
           indicator = Container(
-            width: 41,
-            height: 41,
+            width: widget.indicatorSize.width,
+            height: widget.indicatorSize.height,
             margin: const EdgeInsets.all(4.0),
             child: useMaterial && widget.useMaterialContainer
                 ? Material(
