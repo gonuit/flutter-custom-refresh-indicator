@@ -1194,4 +1194,140 @@ void main() {
     expect(rebuildsCount, equals(states.length));
     expect(indicatorChangesCount, greaterThan(rebuildsCount));
   });
+
+  testWidgets('CustomRefreshIndicator - show - throws when not idle',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    final state = tester.state<CustomRefreshIndicatorState>(
+        find.byType(CustomRefreshIndicator));
+
+    state.show();
+    // finish the show animation
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.loading);
+    expect(
+      () => state.show(),
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          allOf(
+            contains('Controller must be in the idle state'),
+            contains(IndicatorState.loading.name),
+          ),
+        ),
+      ),
+    );
+
+    state.hide();
+    await tester.pump();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('CustomRefreshIndicator - stopDrag - hides the indicator',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(tester.getCenter(find.text('1')));
+    await gesture.moveBy(const Offset(0.0, 50.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.dragging);
+
+    indicatorController.stopDrag();
+    expect(indicatorController.shouldStopDrag, isTrue);
+
+    await gesture.moveBy(const Offset(0.0, 20.0));
+    await tester.pump();
+
+    expect(indicatorController.shouldStopDrag, isFalse);
+
+    await gesture.moveBy(const Offset(0.0, 20.0));
+    await tester.pump();
+    await gesture.up();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.idle);
+    expect(indicatorController.shouldStopDrag, isFalse);
+    expect(fakeRefresh.called, isFalse);
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - dragging back below the threshold disarms',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(
+            itemsCount: 6,
+            physics: BouncingScrollPhysics(),
+          ),
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(tester.getCenter(find.text('1')));
+    await gesture.moveBy(const Offset(0.0, 140.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.armed);
+    expect(
+      indicatorController.value,
+      greaterThanOrEqualTo(CustomRefreshIndicator.armedFromValue),
+    );
+
+    await gesture.moveBy(const Offset(0.0, -120.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.dragging);
+    expect(
+      indicatorController.value,
+      lessThan(CustomRefreshIndicator.armedFromValue),
+    );
+
+    await gesture.up();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isFalse);
+    expect(indicatorController.state, IndicatorState.idle);
+  });
 }
