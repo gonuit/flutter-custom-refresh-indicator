@@ -1,4 +1,4 @@
-## 4.1.0
+## 4.1.0-dev.1
 - **CustomRefreshIndicator**: Fixed a crash when the indicator was hidden before the *onRefresh* callback completed. Reported by [@KubrickRubrik](https://github.com/KubrickRubrik) in [#60](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/60).
 - **CustomMaterialIndicator**:
   - Fixed the *indicatorSize* argument, which had no effect.
