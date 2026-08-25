@@ -1,7 +1,9 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../utils/test_utils.dart';
 
 const _min = 0.0;
 const _max = 1000.0;
@@ -142,5 +144,177 @@ void main() {
       error.toString(),
       contains('applyBoundaryConditions() was called redundantly'),
     );
+  });
+
+  Future<void> pumpList(
+    WidgetTester tester, {
+    required IndicatorController indicatorController,
+    required ScrollController scrollController,
+    required AsyncCallback onRefresh,
+  }) {
+    return tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: onRefresh,
+          child: DefaultList(
+            itemsCount: 20,
+            controller: scrollController,
+            physics: AlwaysScrollableScrollPhysics(
+              parent: ClampingWithOverscrollPhysics(state: indicatorController),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> dragBy(WidgetTester tester, double offset) async {
+    final gesture =
+        await tester.startGesture(tester.getCenter(find.byType(ListView)));
+    await gesture.moveBy(Offset(0.0, offset));
+    await tester.pump();
+    await gesture.up();
+    await tester.pump();
+    // finish the scroll and indicator animations
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  }
+
+  testWidgets('the list still scrolls after overscrolling while idle',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    final scrollController = ScrollController();
+    final fakeRefresh = FakeRefresh();
+    addTearDown(indicatorController.dispose);
+    addTearDown(scrollController.dispose);
+
+    await pumpList(
+      tester,
+      indicatorController: indicatorController,
+      scrollController: scrollController,
+      onRefresh: fakeRefresh.instantRefresh,
+    );
+
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    await tester.pump();
+
+    await dragBy(tester, -80.0);
+
+    expect(indicatorController.state, IndicatorState.idle);
+
+    final offsetBefore = scrollController.offset;
+    await dragBy(tester, 100.0);
+
+    expect(scrollController.offset, lessThan(offsetBefore - 50.0));
+  });
+
+  testWidgets('the list scrolls back within the overscrolling gesture',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    final scrollController = ScrollController();
+    final fakeRefresh = FakeRefresh();
+    addTearDown(indicatorController.dispose);
+    addTearDown(scrollController.dispose);
+
+    await pumpList(
+      tester,
+      indicatorController: indicatorController,
+      scrollController: scrollController,
+      onRefresh: fakeRefresh.instantRefresh,
+    );
+
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    await tester.pump();
+
+    final gesture =
+        await tester.startGesture(tester.getCenter(find.byType(ListView)));
+    await gesture.moveBy(const Offset(0.0, -80.0));
+    await tester.pump();
+
+    final offsetBefore = scrollController.offset;
+    await gesture.moveBy(const Offset(0.0, 40.0));
+    await tester.pump();
+
+    expect(scrollController.offset, lessThan(offsetBefore));
+
+    await gesture.up();
+    await tester.pump();
+    // finish the scroll and indicator animations
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('the list scrolls within a gesture while loading',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    final scrollController = ScrollController();
+    final fakeRefresh = FakeRefresh();
+    addTearDown(indicatorController.dispose);
+    addTearDown(scrollController.dispose);
+
+    await pumpList(
+      tester,
+      indicatorController: indicatorController,
+      scrollController: scrollController,
+      onRefresh: fakeRefresh.refresh,
+    );
+
+    await dragBy(tester, 200.0);
+
+    expect(indicatorController.state, IndicatorState.loading);
+
+    final gesture =
+        await tester.startGesture(tester.getCenter(find.byType(ListView)));
+    await gesture.moveBy(const Offset(0.0, 60.0));
+    await tester.pump();
+
+    final offsetBefore = scrollController.offset;
+    await gesture.moveBy(const Offset(0.0, -40.0));
+    await tester.pump();
+
+    expect(scrollController.offset, greaterThan(offsetBefore));
+
+    await gesture.up();
+    fakeRefresh.complete();
+    await tester.pump();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('the list still scrolls after overscrolling while loading',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    final scrollController = ScrollController();
+    final fakeRefresh = FakeRefresh();
+    addTearDown(indicatorController.dispose);
+    addTearDown(scrollController.dispose);
+
+    await pumpList(
+      tester,
+      indicatorController: indicatorController,
+      scrollController: scrollController,
+      onRefresh: fakeRefresh.refresh,
+    );
+
+    await dragBy(tester, 200.0);
+
+    expect(indicatorController.state, IndicatorState.loading);
+
+    await dragBy(tester, 80.0);
+
+    final offsetBefore = scrollController.offset;
+    await dragBy(tester, -100.0);
+
+    expect(indicatorController.state, IndicatorState.loading);
+    expect(scrollController.offset, greaterThan(offsetBefore + 50.0));
+
+    fakeRefresh.complete();
+    await tester.pump();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
   });
 }

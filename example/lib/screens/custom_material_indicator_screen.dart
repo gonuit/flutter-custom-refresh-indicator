@@ -67,6 +67,7 @@ class _CustomMaterialIndicatorScreenState
         child: Container(
           child: _useCustom
               ? CustomMaterialIndicator(
+                  controller: _controller,
                   clipBehavior: Clip.antiAlias,
                   trigger: IndicatorTrigger.bothEdges,
                   triggerMode: IndicatorTriggerMode.anywhere,

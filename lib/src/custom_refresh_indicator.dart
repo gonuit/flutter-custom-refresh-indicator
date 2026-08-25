@@ -398,9 +398,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
-    controller
-      ..setIndicatorDragDetails(null)
-      ..clearPhysicsState();
+    controller.setIndicatorDragDetails(null);
 
     if (controller.state.isArmed) {
       _start();
@@ -535,6 +533,10 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         _isStopingDrag = false;
       });
       return false;
+    }
+
+    if (!canHandleNotifications(controller)) {
+      controller.clearPhysicsState();
     }
 
     if (controller.state.isIdle) {
