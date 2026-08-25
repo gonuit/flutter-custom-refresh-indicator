@@ -1241,6 +1241,46 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   });
 
+  testWidgets('CustomRefreshIndicator - hide - before onRefresh completes',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.loading);
+
+    tester
+        .state<CustomRefreshIndicatorState>(find.byType(CustomRefreshIndicator))
+        .hide();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.idle);
+
+    fakeRefresh.complete();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(tester.takeException(), isNull);
+    expect(indicatorController.state, IndicatorState.idle);
+  });
+
   testWidgets('CustomRefreshIndicator - stopDrag - hides the indicator',
       (WidgetTester tester) async {
     final indicatorController = IndicatorController();

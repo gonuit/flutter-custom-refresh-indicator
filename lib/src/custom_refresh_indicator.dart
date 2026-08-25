@@ -572,7 +572,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       setIndicatorState(IndicatorState.loading);
       await widget.onRefresh();
     } finally {
-      await _hideAfterRefresh();
+      if (controller.state.isLoading) {
+        await _hideAfterRefresh();
+      }
     }
   }
 
