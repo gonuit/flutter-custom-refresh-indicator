@@ -26,9 +26,6 @@ void main() {
 
   tearDown(() => controller.dispose());
 
-  /// Drains the accumulated overscroll in [step] sized moves, returning the
-  /// total that the physics gave back. The accumulator is library private,
-  /// so this is the only way to observe how much was registered.
   double drain({double step = 10.0, int attempts = 10}) {
     var total = 0.0;
     for (var i = 0; i < attempts; i++) {

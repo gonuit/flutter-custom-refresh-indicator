@@ -10,9 +10,7 @@ class FakeRefresh {
   bool _called = false;
   bool get called => _called;
 
-  /// The completer is created here, so that it belongs to the zone of the
-  /// test that triggered the refresh. A completer created outside of it never
-  /// resolves for the widget under test.
+  // Created here so it belongs to the test zone, otherwise it never resolves.
   Future<void> refresh() {
     _called = true;
     return (_completer = Completer<void>()).future;
