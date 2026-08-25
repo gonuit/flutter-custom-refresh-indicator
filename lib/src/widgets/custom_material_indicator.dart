@@ -315,9 +315,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
     _indicatorColor = _getIndicatorColor();
     final Color color = _indicatorColor;
     final Color transparentColor = color.withAlpha(0);
-    // Equal only when the color is already fully transparent. A [ColorSwatch]
-    // never is (it compares its runtime type), so it always takes the tween
-    // below, which emits the very same color when its alpha is zero.
+    // Equal only when the color is already fully transparent
     if (color == transparentColor) {
       // Set an always stopped animation instead of a driven tween.
       _colorAnimation = AlwaysStoppedAnimation<Color>(color);
@@ -379,7 +377,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
               )
             : indicatorBuilder(context, controller);
 
-        /// If indicatorBuilder is not provided
+        // The default indicator comes with its own material container
         if (widget.indicatorBuilder != null) {
           indicator = Container(
             width: widget.indicatorSize.width,

@@ -10,7 +10,7 @@ class FakeRefresh {
   bool _called = false;
   bool get called => _called;
 
-  // Created here so it belongs to the test zone, otherwise it never resolves.
+  // Created here so it belongs to the test zone, otherwise it never resolves
   Future<void> refresh() {
     _called = true;
     return (_completer = Completer<void>()).future;

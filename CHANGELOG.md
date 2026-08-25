@@ -1,5 +1,7 @@
 ## 4.1.0
-- **CustomMaterialIndicator**: Fixed the *indicatorSize* argument, which had no effect.
+- **CustomMaterialIndicator**:
+  - Fixed the *indicatorSize* argument, which had no effect.
+  - Fixed a misleading comment. Reported by [@raymondmakz](https://github.com/raymondmakz) in [#68](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/68).
 - **ClampingWithOverscrollPhysics**: Fixed overscroll not being registered when the list was scrolled past its leading edge.
 ## 4.0.2
 - Removed usages of deprecated Flutter APIs. The minimum supported Dart and Flutter versions remain unchanged.
