@@ -207,7 +207,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Indicating that indicator is currently stopping drag.
   /// When true, user is not able to perform any action.
-  bool _isStopingDrag = false;
+  bool _isStoppingDrag = false;
 
   late double _dragOffset;
 
@@ -255,6 +255,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @visibleForTesting
   @protected
+  @internal
   void setIndicatorState(IndicatorState newState) {
     final onStateChanged = widget.onStateChanged;
     if (onStateChanged != null && controller.state != newState) {
@@ -336,6 +337,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
+    if (controller.state.isIdle) {
+      _checkCanStart(notification);
+      return false;
+    }
+    if (!canHandleNotifications(controller)) return false;
+
     // Calculate the edge if not defined and possible.
     // This may apply to two-way lists on the iOS platform with bouncing physics.
     if (!controller.hasEdge && notification.scrollDelta != null) {
@@ -396,6 +403,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleOverscrollNotification(OverscrollNotification notification) {
+    if (!canHandleNotifications(controller)) return false;
+
     controller.setIndicatorDragDetails(notification.dragDetails);
 
     if (!controller.hasEdge) {
@@ -418,6 +427,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
+    if (!canHandleNotifications(controller)) return false;
+
     controller.setIndicatorDragDetails(null);
 
     if (controller.state.isArmed) {
@@ -508,6 +519,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleUserScrollNotification(UserScrollNotification notification) {
+    if (!canHandleNotifications(controller)) return false;
+
     controller.setScrollingDirection(notification.direction);
     return false;
   }
@@ -547,38 +560,37 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   /// Notifications can only be handled in the "dragging" and "armed" state.
+  @internal
   bool canHandleNotifications(IndicatorController controller) =>
       controller.state.isDragging || controller.state.isArmed;
+
+  bool _consumeStopDragNotification() {
+    if (_isStoppingDrag) {
+      controller.resetStopDrag();
+      return true;
+    }
+    if (controller.shouldStopDrag) {
+      controller.resetStopDrag();
+      _isStoppingDrag = true;
+      _hide().whenComplete(() => _isStoppingDrag = false);
+      return true;
+    }
+    return false;
+  }
 
   bool _handleScrollNotification(ScrollNotification notification) {
     /// if notification predicate is not matched then notification
     /// will not be handled by this widget
     if (!widget.notificationPredicate(notification)) return false;
 
-    if (_isStopingDrag) {
-      controller._shouldStopDrag = false;
-      return false;
-    } else if (controller._shouldStopDrag) {
-      controller._shouldStopDrag = false;
-      _isStopingDrag = true;
-
-      _hide().whenComplete(() {
-        _isStopingDrag = false;
-      });
-      return false;
-    }
+    if (_consumeStopDragNotification()) return false;
 
     if (!canHandleNotifications(controller)) {
       controller.clearPhysicsState();
     }
 
-    if (controller.state.isIdle) {
-      _checkCanStart(notification);
-      return false;
-    }
-
-    if (!canHandleNotifications(controller)) {
-      return false;
+    if (notification is ScrollStartNotification) {
+      return _handleScrollStartNotification(notification);
     } else if (notification is ScrollUpdateNotification) {
       return _handleScrollUpdateNotification(notification);
     } else if (notification is OverscrollNotification) {
@@ -589,6 +601,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       return _handleUserScrollNotification(notification);
     }
 
+    return false;
+  }
+
+  bool _handleScrollStartNotification(ScrollStartNotification notification) {
+    if (controller.state.isIdle) {
+      _checkCanStart(notification);
+    }
     return false;
   }
 

@@ -37,16 +37,14 @@ class IndicatorController extends Animation<double>
         _isRefreshEnabled = refreshEnabled ?? true,
         _shouldStopDrag = false;
 
-  @protected
-  @visibleForTesting
+  @internal
   void setValue(double value) {
     _value = value;
     notifyListeners();
   }
 
   ScrollDirection _scrollingDirection;
-  @protected
-  @visibleForTesting
+  @internal
   void setScrollingDirection(ScrollDirection userScrollDirection) {
     _scrollingDirection = userScrollDirection;
   }
@@ -66,8 +64,7 @@ class IndicatorController extends Animation<double>
   AxisDirection _direction;
 
   /// Sets the direction in which list scrolls
-  @protected
-  @visibleForTesting
+  @internal
   void setAxisDirection(AxisDirection direction) {
     _direction = direction;
   }
@@ -91,14 +88,12 @@ class IndicatorController extends Animation<double>
   DragUpdateDetails? get dragDetails => _dragDetails;
   DragUpdateDetails? _dragDetails;
 
-  @protected
-  @visibleForTesting
+  @internal
   void setIndicatorDragDetails(DragUpdateDetails? dragDetails) {
     _dragDetails = dragDetails;
   }
 
-  @protected
-  @visibleForTesting
+  @internal
   void setIndicatorEdge(IndicatorEdge? edge) {
     _edge = edge;
   }
@@ -146,8 +141,7 @@ class IndicatorController extends Animation<double>
   IndicatorState _currentState;
 
   /// sets indicator state and notifies listeners
-  @protected
-  @visibleForTesting
+  @internal
   void setIndicatorState(IndicatorState newState) {
     _currentState = newState;
 
@@ -199,6 +193,11 @@ class IndicatorController extends Animation<double>
         "drag or armed indicator state.",
       );
     }
+  }
+
+  @internal
+  void resetStopDrag() {
+    _shouldStopDrag = false;
   }
 
   /// Disables list pull to refresh
