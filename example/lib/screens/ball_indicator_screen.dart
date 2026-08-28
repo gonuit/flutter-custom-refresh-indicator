@@ -3,6 +3,7 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:example/indicators/ball_indicator.dart';
+import 'package:example/utils/format_offset.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,8 @@ class _BallIndicatorScreenState extends State<BallIndicatorScreen> {
                         ListHelpBox(
                           icon: Icons.data_object_sharp,
                           child: Text(
-                            "${_controller.dragDetails?.localPosition}",
+                            formatOffset(
+                                _controller.dragDetails?.localPosition),
                           ),
                         )
                       ],
