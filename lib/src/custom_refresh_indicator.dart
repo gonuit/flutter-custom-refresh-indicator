@@ -1,10 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:meta/meta.dart';
-
-part 'indicator_controller.dart';
 
 typedef IndicatorBuilder = Widget Function(
   BuildContext context,
@@ -197,7 +193,7 @@ class CustomRefreshIndicator extends StatefulWidget {
 }
 
 class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   /// Whether custom refresh indicator can change
   /// [IndicatorState] from `idle` to `dragging`
   ///
@@ -224,9 +220,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   void initState() {
-    _dragOffset = 0;
+    super.initState();
 
-    _internalIndicatorController = widget.controller ?? IndicatorController._();
+    _dragOffset = 0;
 
     _animationController = AnimationController(
       vsync: this,
@@ -234,8 +230,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       lowerBound: _kInitialValue,
       value: _kInitialValue,
     )..addListener(_updateCustomRefreshIndicatorValue);
-
-    super.initState();
   }
 
   @override

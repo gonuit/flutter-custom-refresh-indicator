@@ -1328,6 +1328,38 @@ void main() {
     expect(glowAccepted, isTrue);
   });
 
+  testWidgets('CustomRefreshIndicator - stops driving a detached controller',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    Widget build({IndicatorController? controller}) => MaterialApp(
+          home: CustomRefreshIndicator(
+            controller: controller,
+            builder: buildWithoutIndicator,
+            onRefresh: fakeRefresh.refresh,
+            child: const DefaultList(itemsCount: 6),
+          ),
+        );
+
+    await tester.pumpWidget(build(controller: indicatorController));
+    await tester.pumpWidget(build());
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(indicatorController.state, IndicatorState.idle);
+    expect(indicatorController.value, 0.0);
+
+    fakeRefresh.complete();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
   testWidgets('CustomRefreshIndicator - hide - before onRefresh completes',
       (WidgetTester tester) async {
     final indicatorController = IndicatorController();

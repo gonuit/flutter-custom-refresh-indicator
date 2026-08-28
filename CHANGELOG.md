@@ -4,6 +4,7 @@
   - Fixed the scroll indicator being shown on the opposite edge while the indicator was dragged.
   - The *show* and *refresh* methods now set the indicator edge, so the indicator is visible when triggered programmatically.
   - The *IndicatorController* methods used internally by the widget are now marked as internal.
+  - Fixed the widget still driving an externally provided controller after it was replaced with null.
 - **CustomMaterialIndicator**:
   - Added the *show*, *hide* and *refresh* methods, available through a `GlobalKey<CustomMaterialIndicatorState>`. Reported by [@MrLi2000](https://github.com/MrLi2000) in [#70](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/70).
   - Fixed the *indicatorSize* argument, which had no effect.
