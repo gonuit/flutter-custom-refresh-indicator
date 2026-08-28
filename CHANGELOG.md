@@ -1,3 +1,17 @@
+## 4.1.0-dev.2
+- **CustomRefreshIndicator**:
+  - Fixed a crash when the indicator was hidden before the *onRefresh* callback completed. Reported by [@KubrickRubrik](https://github.com/KubrickRubrik) in [#60](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/60).
+  - Fixed the scroll indicator being shown on the opposite edge while the indicator was dragged.
+  - The *show* and *refresh* methods now set the indicator edge, so the indicator is visible when triggered programmatically.
+  - The *IndicatorController* methods used internally by the widget are now marked as internal.
+  - Fixed the widget still driving an externally provided controller after it was replaced with null.
+- **CustomMaterialIndicator**:
+  - Added the *show*, *hide* and *refresh* methods, available through a `GlobalKey<CustomMaterialIndicatorState>`. Reported by [@MrLi2000](https://github.com/MrLi2000) in [#70](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/70).
+  - Fixed the *indicatorSize* argument, which had no effect.
+  - Fixed a misleading comment. Reported by [@raymondmakz](https://github.com/raymondmakz) in [#68](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/68).
+- **ClampingWithOverscrollPhysics**:
+  - Fixed overscroll not being registered when the list was scrolled past its leading edge.
+  - Fixed the list becoming unscrollable after overscrolling while the indicator was idle or loading. Reported by [@Katzeee](https://github.com/Katzeee) in [#65](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/65).
 ## 4.0.2
 - Removed usages of deprecated Flutter APIs. The minimum supported Dart and Flutter versions remain unchanged.
 ## 4.0.1

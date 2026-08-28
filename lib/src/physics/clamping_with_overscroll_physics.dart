@@ -40,6 +40,9 @@ class ClampingWithOverscrollPhysics extends ClampingScrollPhysics {
 
   /// Creates scroll physics that prevent the scroll offset from exceeding the
   /// bounds of the content while handling the overscroll.
+  ///
+  /// The [state] must be the same [IndicatorController] that is passed to
+  /// the indicator widget, otherwise the behavior will be unpredictable.
   const ClampingWithOverscrollPhysics({
     super.parent,
     required ClampingWithOverscrollPhysicsState state,
@@ -96,7 +99,7 @@ class ClampingWithOverscrollPhysics extends ClampingScrollPhysics {
         position.minScrollExtent < position.pixels) {
       // Hit top edge.
       final delta = value - position.minScrollExtent;
-      _state._addOverscroll(delta);
+      _state._addOverscroll(delta.abs());
       return delta;
     }
     if (position.pixels < position.maxScrollExtent &&

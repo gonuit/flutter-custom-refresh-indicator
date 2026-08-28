@@ -1,74 +1,10 @@
-import 'dart:async';
-
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Manipulates the refresh indicator state
-class FakeRefresh {
-  var _completer = Completer<void>();
-
-  bool _called = false;
-  bool get called => _called;
-
-  Future<void> refresh() async {
-    _called = true;
-    return _completer.future;
-  }
-
-  Future<void> instantRefresh() async {
-    _called = true;
-    _completer.complete();
-  }
-
-  void complete() {
-    _completer.complete();
-  }
-
-  void reset() {
-    _called = false;
-    _completer = Completer<void>();
-  }
-}
-
-// The simplest indicator implementation without any visual feedback (only logic)
-Widget buildWithoutIndicator(
-  BuildContext context,
-  Widget child,
-  IndicatorController controller,
-) =>
-    child;
-
-class DefaultList extends StatelessWidget {
-  final int itemsCount;
-  final bool reverse;
-  final ScrollController? controller;
-  final ScrollPhysics physics;
-
-  const DefaultList({
-    super.key,
-    required this.itemsCount,
-    this.reverse = false,
-    this.controller,
-    this.physics = const AlwaysScrollableScrollPhysics(),
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: controller,
-      physics: physics,
-      itemCount: itemsCount,
-      reverse: reverse,
-      itemBuilder: (context, index) => SizedBox(
-        height: 200,
-        child: Text((index + 1).toString()),
-      ),
-    );
-  }
-}
+import '../utils/test_utils.dart';
 
 void main() {
   final fakeRefresh = FakeRefresh();
@@ -1257,5 +1193,300 @@ void main() {
     /// Builder methos is called only on state changes
     expect(rebuildsCount, equals(states.length));
     expect(indicatorChangesCount, greaterThan(rebuildsCount));
+  });
+
+  testWidgets('CustomRefreshIndicator - show - throws when not idle',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    final state = tester.state<CustomRefreshIndicatorState>(
+        find.byType(CustomRefreshIndicator));
+
+    state.show();
+    // finish the show animation
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.loading);
+    expect(
+      () => state.show(),
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          allOf(
+            contains('Controller must be in the idle state'),
+            contains(IndicatorState.loading.name),
+          ),
+        ),
+      ),
+    );
+
+    state.hide();
+    await tester.pump();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - disallows indicator - opposite edge while dragged',
+      (WidgetTester tester) async {
+    bool glowAccepted = true;
+    ScrollNotification? lastNotification;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData.light(useMaterial3: false),
+        home: CustomRefreshIndicator(
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: Builder(builder: (BuildContext context) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                if (notification is OverscrollNotification &&
+                    lastNotification is! OverscrollNotification) {
+                  final OverscrollIndicatorNotification
+                      confirmationNotification =
+                      OverscrollIndicatorNotification(leading: false);
+                  confirmationNotification.dispatch(context);
+                  glowAccepted = confirmationNotification.accepted;
+                }
+                lastNotification = notification;
+                return false;
+              },
+              child: const DefaultList(itemsCount: 6),
+            );
+          }),
+        ),
+      ),
+    );
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(glowAccepted, isFalse);
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - allows indicator - dragged edge stays visible',
+      (WidgetTester tester) async {
+    bool glowAccepted = false;
+    ScrollNotification? lastNotification;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData.light(useMaterial3: false),
+        home: CustomRefreshIndicator(
+          leadingScrollIndicatorVisible: true,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: Builder(builder: (BuildContext context) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                if (notification is OverscrollNotification &&
+                    lastNotification is! OverscrollNotification) {
+                  final OverscrollIndicatorNotification
+                      confirmationNotification =
+                      OverscrollIndicatorNotification(leading: true);
+                  confirmationNotification.dispatch(context);
+                  glowAccepted = confirmationNotification.accepted;
+                }
+                lastNotification = notification;
+                return false;
+              },
+              child: const DefaultList(itemsCount: 6),
+            );
+          }),
+        ),
+      ),
+    );
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(glowAccepted, isTrue);
+  });
+
+  testWidgets('CustomRefreshIndicator - stops driving a detached controller',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    Widget build({IndicatorController? controller}) => MaterialApp(
+          home: CustomRefreshIndicator(
+            controller: controller,
+            builder: buildWithoutIndicator,
+            onRefresh: fakeRefresh.refresh,
+            child: const DefaultList(itemsCount: 6),
+          ),
+        );
+
+    await tester.pumpWidget(build(controller: indicatorController));
+    await tester.pumpWidget(build());
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(indicatorController.state, IndicatorState.idle);
+    expect(indicatorController.value, 0.0);
+
+    fakeRefresh.complete();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('CustomRefreshIndicator - hide - before onRefresh completes',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.loading);
+
+    tester
+        .state<CustomRefreshIndicatorState>(find.byType(CustomRefreshIndicator))
+        .hide();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.idle);
+
+    fakeRefresh.complete();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(tester.takeException(), isNull);
+    expect(indicatorController.state, IndicatorState.idle);
+  });
+
+  testWidgets('CustomRefreshIndicator - stopDrag - hides the indicator',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(tester.getCenter(find.text('1')));
+    await gesture.moveBy(const Offset(0.0, 50.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.dragging);
+
+    indicatorController.stopDrag();
+    expect(indicatorController.shouldStopDrag, isTrue);
+
+    await gesture.moveBy(const Offset(0.0, 20.0));
+    await tester.pump();
+
+    expect(indicatorController.shouldStopDrag, isFalse);
+
+    await gesture.moveBy(const Offset(0.0, 20.0));
+    await tester.pump();
+    await gesture.up();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(indicatorController.state, IndicatorState.idle);
+    expect(indicatorController.shouldStopDrag, isFalse);
+    expect(fakeRefresh.called, isFalse);
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - dragging back below the threshold disarms',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(
+            itemsCount: 6,
+            physics: BouncingScrollPhysics(),
+          ),
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(tester.getCenter(find.text('1')));
+    await gesture.moveBy(const Offset(0.0, 140.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.armed);
+    expect(
+      indicatorController.value,
+      greaterThanOrEqualTo(CustomRefreshIndicator.armedFromValue),
+    );
+
+    await gesture.moveBy(const Offset(0.0, -120.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.dragging);
+    expect(
+      indicatorController.value,
+      lessThan(CustomRefreshIndicator.armedFromValue),
+    );
+
+    await gesture.up();
+    // finish the indicator hide animation
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isFalse);
+    expect(indicatorController.state, IndicatorState.idle);
   });
 }

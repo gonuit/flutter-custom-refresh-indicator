@@ -222,15 +222,50 @@ class CustomMaterialIndicator extends StatefulWidget {
   static const defaultIndicatorSize = Size(41, 41);
 
   @override
-  State<CustomMaterialIndicator> createState() =>
-      _CustomMaterialIndicatorState();
+  CustomMaterialIndicatorState createState() => CustomMaterialIndicatorState();
 }
 
-class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
+class CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
+  final _indicatorKey = GlobalKey<CustomRefreshIndicatorState>();
+  CustomRefreshIndicatorState get _indicator => _indicatorKey.currentState!;
+
   IndicatorController? _internalIndicatorController;
   IndicatorController get controller =>
       widget.controller ??
       (_internalIndicatorController ??= IndicatorController());
+
+  /// Shows the indicator programmatically.
+  ///
+  /// See [CustomRefreshIndicatorState.show].
+  Future<void> show({
+    Duration draggingDuration = const Duration(milliseconds: 300),
+    Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
+  }) =>
+      _indicator.show(
+        draggingDuration: draggingDuration,
+        draggingCurve: draggingCurve,
+        edge: edge,
+      );
+
+  /// Shows the indicator and triggers the *onRefresh* callback.
+  ///
+  /// See [CustomRefreshIndicatorState.refresh].
+  Future<void> refresh({
+    Duration draggingDuration = const Duration(milliseconds: 300),
+    Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
+  }) =>
+      _indicator.refresh(
+        draggingDuration: draggingDuration,
+        draggingCurve: draggingCurve,
+        edge: edge,
+      );
+
+  /// Hides the indicator.
+  ///
+  /// See [CustomRefreshIndicatorState.hide].
+  Future<void> hide() => _indicator.hide();
 
   @override
   void didUpdateWidget(covariant CustomMaterialIndicator oldWidget) {
@@ -315,9 +350,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
     _indicatorColor = _getIndicatorColor();
     final Color color = _indicatorColor;
     final Color transparentColor = color.withAlpha(0);
-    // Equal only when the color is already fully transparent. A [ColorSwatch]
-    // never is (it compares its runtime type), so it always takes the tween
-    // below, which emits the very same color when its alpha is zero.
+    // Equal only when the color is already fully transparent
     if (color == transparentColor) {
       // Set an always stopped animation instead of a driven tween.
       _colorAnimation = AlwaysStoppedAnimation<Color>(color);
@@ -361,6 +394,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
             : _defaultCupertinoIndicatorBuilder);
 
     return CustomRefreshIndicator(
+      key: _indicatorKey,
       autoRebuild: false,
       notificationPredicate: widget.notificationPredicate,
       onRefresh: widget.onRefresh,
@@ -379,11 +413,11 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
               )
             : indicatorBuilder(context, controller);
 
-        /// If indicatorBuilder is not provided
+        // The default indicator comes with its own material container
         if (widget.indicatorBuilder != null) {
           indicator = Container(
-            width: 41,
-            height: 41,
+            width: widget.indicatorSize.width,
+            height: widget.indicatorSize.height,
             margin: const EdgeInsets.all(4.0),
             child: useMaterial && widget.useMaterialContainer
                 ? Material(
