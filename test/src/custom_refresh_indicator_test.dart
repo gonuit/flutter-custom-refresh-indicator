@@ -1241,6 +1241,93 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   });
 
+  testWidgets(
+      'CustomRefreshIndicator - disallows indicator - opposite edge while dragged',
+      (WidgetTester tester) async {
+    bool glowAccepted = true;
+    ScrollNotification? lastNotification;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData.light(useMaterial3: false),
+        home: CustomRefreshIndicator(
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: Builder(builder: (BuildContext context) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                if (notification is OverscrollNotification &&
+                    lastNotification is! OverscrollNotification) {
+                  final OverscrollIndicatorNotification
+                      confirmationNotification =
+                      OverscrollIndicatorNotification(leading: false);
+                  confirmationNotification.dispatch(context);
+                  glowAccepted = confirmationNotification.accepted;
+                }
+                lastNotification = notification;
+                return false;
+              },
+              child: const DefaultList(itemsCount: 6),
+            );
+          }),
+        ),
+      ),
+    );
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(glowAccepted, isFalse);
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - allows indicator - dragged edge stays visible',
+      (WidgetTester tester) async {
+    bool glowAccepted = false;
+    ScrollNotification? lastNotification;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData.light(useMaterial3: false),
+        home: CustomRefreshIndicator(
+          leadingScrollIndicatorVisible: true,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: Builder(builder: (BuildContext context) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification notification) {
+                if (notification is OverscrollNotification &&
+                    lastNotification is! OverscrollNotification) {
+                  final OverscrollIndicatorNotification
+                      confirmationNotification =
+                      OverscrollIndicatorNotification(leading: true);
+                  confirmationNotification.dispatch(context);
+                  glowAccepted = confirmationNotification.accepted;
+                }
+                lastNotification = notification;
+                return false;
+              },
+              child: const DefaultList(itemsCount: 6),
+            );
+          }),
+        ),
+      ),
+    );
+
+    await tester.fling(find.text('1'), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(glowAccepted, isTrue);
+  });
+
   testWidgets('CustomRefreshIndicator - hide - before onRefresh completes',
       (WidgetTester tester) async {
     final indicatorController = IndicatorController();

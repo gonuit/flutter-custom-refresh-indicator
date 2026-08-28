@@ -263,6 +263,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     OverscrollIndicatorNotification notification,
   ) {
     if (notification.depth != 0) return false;
+
+    final edge = controller.edge;
+    if (edge != null &&
+        canHandleNotifications(controller) &&
+        notification.leading != edge.isLeading) {
+      notification.disallowIndicator();
+      return true;
+    }
+
     if (notification.leading) {
       if (!widget.leadingScrollIndicatorVisible) {
         notification.disallowIndicator();
