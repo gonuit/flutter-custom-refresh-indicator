@@ -812,6 +812,136 @@ void main() {
     await finishRefresh(tester);
   });
 
+  testWidgets('CustomMaterialIndicator - refresh - runs the whole cycle',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      buildIndicator(
+        controller: controller,
+        child: const DefaultList(itemsCount: 6),
+      ),
+    );
+
+    tester
+        .state<CustomMaterialIndicatorState>(
+          find.byType(CustomMaterialIndicator),
+        )
+        .refresh();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(controller.state, IndicatorState.loading);
+    expect(find.byType(RefreshProgressIndicator), findsOneWidget);
+
+    await finishRefresh(tester);
+
+    expect(controller.state, IndicatorState.idle);
+    expect(find.byType(RefreshProgressIndicator), findsNothing);
+  });
+
+  testWidgets('CustomMaterialIndicator - show and hide',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      buildIndicator(
+        controller: controller,
+        child: const DefaultList(itemsCount: 6),
+      ),
+    );
+
+    final state = tester.state<CustomMaterialIndicatorState>(
+      find.byType(CustomMaterialIndicator),
+    );
+
+    state.show();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(controller.state, IndicatorState.loading);
+    expect(find.byType(RefreshProgressIndicator), findsOneWidget);
+    expect(fakeRefresh.called, isFalse);
+
+    state.hide();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(controller.state, IndicatorState.idle);
+    expect(find.byType(RefreshProgressIndicator), findsNothing);
+  });
+
+  testWidgets('CustomMaterialIndicator - show - respects the given edge',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      buildIndicator(
+        controller: controller,
+        child: const DefaultList(itemsCount: 6),
+      ),
+    );
+
+    final state = tester.state<CustomMaterialIndicatorState>(
+      find.byType(CustomMaterialIndicator),
+    );
+
+    state.show(edge: IndicatorEdge.trailing);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(controller.edge, IndicatorEdge.trailing);
+    expect(controller.side, IndicatorSide.bottom);
+
+    state.hide();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    state.show();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(controller.edge, IndicatorEdge.leading);
+    expect(controller.side, IndicatorSide.top);
+
+    state.hide();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('CustomMaterialIndicator - refresh - through a GlobalKey',
+      (WidgetTester tester) async {
+    final indicatorKey = GlobalKey<CustomMaterialIndicatorState>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomMaterialIndicator(
+          key: indicatorKey,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    expect(indicatorKey.currentState, isNotNull);
+
+    indicatorKey.currentState?.refresh();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isTrue);
+    expect(find.byType(RefreshProgressIndicator), findsOneWidget);
+
+    await finishRefresh(tester);
+  });
+
   testWidgets('CustomMaterialIndicator - does not crash at zero area',
       (WidgetTester tester) async {
     await tester.pumpWidget(

@@ -15,6 +15,17 @@ typedef IndicatorBuilder = Widget Function(
 typedef OnStateChanged = void Function(IndicatorStateChange change);
 
 extension on IndicatorTrigger {
+  /// The edge used when it cannot be derived from a gesture.
+  IndicatorEdge get defaultEdge {
+    switch (this) {
+      case IndicatorTrigger.leadingEdge:
+      case IndicatorTrigger.bothEdges:
+        return IndicatorEdge.leading;
+      case IndicatorTrigger.trailingEdge:
+        return IndicatorEdge.trailing;
+    }
+  }
+
   IndicatorEdge? getDerivedEdge(
     ScrollNotification notification,
   ) {
@@ -423,9 +434,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// This method is only responsible for the visual part, if you want
   /// to do the whole process with a [CustomRefreshIndicator.onRefresh] call, use the [refresh]
   /// method instead.
+  ///
+  /// The [edge] defines the side from which the indicator is shown.
+  /// When omitted, it is derived from [CustomRefreshIndicator.trigger] and
+  /// defaults to [IndicatorEdge.leading] for [IndicatorTrigger.bothEdges].
   Future<void> show({
     Duration draggingDuration = const Duration(milliseconds: 300),
     Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
   }) async {
     if (!controller.state.isIdle) {
       throw StateError(
@@ -434,6 +450,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         "Current state: ${controller.state.name}.",
       );
     }
+    controller.setIndicatorEdge(edge ?? widget.trigger.defaultEdge);
     setIndicatorState(IndicatorState.dragging);
     await _animationController.animateTo(
       1.0,
@@ -445,9 +462,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     setIndicatorState(IndicatorState.loading);
   }
 
+  /// Shows the indicator and calls [CustomRefreshIndicator.onRefresh].
+  ///
+  /// The [edge] defines the side from which the indicator is shown.
+  /// When omitted, it is derived from [CustomRefreshIndicator.trigger] and
+  /// defaults to [IndicatorEdge.leading] for [IndicatorTrigger.bothEdges].
   Future<void> refresh({
     Duration draggingDuration = const Duration(milliseconds: 300),
     Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
   }) async {
     if (!controller.state.isIdle) {
       throw StateError(
@@ -460,6 +483,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     await show(
       draggingDuration: draggingDuration,
       draggingCurve: draggingCurve,
+      edge: edge,
     );
     try {
       await widget.onRefresh();

@@ -222,15 +222,50 @@ class CustomMaterialIndicator extends StatefulWidget {
   static const defaultIndicatorSize = Size(41, 41);
 
   @override
-  State<CustomMaterialIndicator> createState() =>
-      _CustomMaterialIndicatorState();
+  CustomMaterialIndicatorState createState() => CustomMaterialIndicatorState();
 }
 
-class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
+class CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
+  final _indicatorKey = GlobalKey<CustomRefreshIndicatorState>();
+  CustomRefreshIndicatorState get _indicator => _indicatorKey.currentState!;
+
   IndicatorController? _internalIndicatorController;
   IndicatorController get controller =>
       widget.controller ??
       (_internalIndicatorController ??= IndicatorController());
+
+  /// Shows the indicator programmatically.
+  ///
+  /// See [CustomRefreshIndicatorState.show].
+  Future<void> show({
+    Duration draggingDuration = const Duration(milliseconds: 300),
+    Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
+  }) =>
+      _indicator.show(
+        draggingDuration: draggingDuration,
+        draggingCurve: draggingCurve,
+        edge: edge,
+      );
+
+  /// Shows the indicator and triggers the *onRefresh* callback.
+  ///
+  /// See [CustomRefreshIndicatorState.refresh].
+  Future<void> refresh({
+    Duration draggingDuration = const Duration(milliseconds: 300),
+    Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
+  }) =>
+      _indicator.refresh(
+        draggingDuration: draggingDuration,
+        draggingCurve: draggingCurve,
+        edge: edge,
+      );
+
+  /// Hides the indicator.
+  ///
+  /// See [CustomRefreshIndicatorState.hide].
+  Future<void> hide() => _indicator.hide();
 
   @override
   void didUpdateWidget(covariant CustomMaterialIndicator oldWidget) {
@@ -359,6 +394,7 @@ class _CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
             : _defaultCupertinoIndicatorBuilder);
 
     return CustomRefreshIndicator(
+      key: _indicatorKey,
       autoRebuild: false,
       notificationPredicate: widget.notificationPredicate,
       onRefresh: widget.onRefresh,
