@@ -1,6 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 typedef IndicatorBuilder = Widget Function(
   BuildContext context,
@@ -205,6 +205,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// When true, user is not able to perform any action.
   bool _isStoppingDrag = false;
 
+  /// The [CustomRefreshIndicator.onRefresh] call that owns the indicator.
+  Object? _activeRefresh;
+
+  /// The axis direction reported by the scrollable, used when the indicator
+  /// is shown programmatically.
+  AxisDirection? _axisDirection;
+
   late double _dragOffset;
 
   late AnimationController _animationController;
@@ -235,13 +242,24 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   @override
   void didUpdateWidget(covariant CustomRefreshIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // When a new controller is provided externally.
-    if (oldWidget.controller != widget.controller &&
-        widget.controller != null) {
-      // Dispose and remove the current internal controller, if it exists
-      _internalIndicatorController?.dispose();
-      _internalIndicatorController = null;
+    if (oldWidget.controller == widget.controller) return;
+
+    final internalController = _internalIndicatorController;
+    final previous = oldWidget.controller ?? internalController;
+    if (widget.controller != null) _internalIndicatorController = null;
+    final current = controller;
+
+    if (previous != null && !identical(previous, current)) {
+      current.takeOver(previous);
+      // Listeners cannot be notified during the build phase.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        previous.notifyChanged();
+        current.notifyChanged();
+      });
     }
+
+    // External controllers should be disposed by the user.
+    if (widget.controller != null) internalController?.dispose();
   }
 
   /// Triggers a rebuild of the indicator widget
@@ -455,6 +473,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         "Current state: ${controller.state.name}.",
       );
     }
+    final direction = _axisDirection;
+    if (direction != null) controller.setAxisDirection(direction);
     controller.setIndicatorEdge(edge ?? widget.trigger.defaultEdge);
     setIndicatorState(IndicatorState.dragging);
     await _animationController.animateTo(
@@ -490,12 +510,13 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       draggingCurve: draggingCurve,
       edge: edge,
     );
+    final refresh = _activeRefresh = Object();
     try {
       await widget.onRefresh();
     } finally {
-      /// If the user has programmatically hidden the pointer
-      /// so it is not in "loading" state, then nothing needs to be done.
-      if (controller.state.isLoading) {
+      /// If the user has programmatically hidden the pointer,
+      /// then nothing needs to be done.
+      if (identical(_activeRefresh, refresh) && controller.state.isLoading) {
         await hide();
       }
     }
@@ -605,7 +626,30 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     return false;
   }
 
+  bool _handleScrollMetricsNotification(
+    ScrollMetricsNotification notification,
+  ) {
+    final matchesPredicate = widget.notificationPredicate(
+      ScrollUpdateNotification(
+        metrics: notification.metrics,
+        context: notification.context,
+        depth: notification.depth,
+      ),
+    );
+    if (!matchesPredicate) return false;
+
+    final isFirst = _axisDirection == null;
+    final direction = _axisDirection = notification.metrics.axisDirection;
+    // The indicator was shown before the scrollable was laid out.
+    if (isFirst && !controller.state.isIdle) {
+      controller.setAxisDirection(direction);
+      _update();
+    }
+    return false;
+  }
+
   void _start() async {
+    final refresh = _activeRefresh = Object();
     try {
       _dragOffset = 0;
 
@@ -618,7 +662,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       setIndicatorState(IndicatorState.loading);
       await widget.onRefresh();
     } finally {
-      if (controller.state.isLoading) {
+      if (identical(_activeRefresh, refresh) && controller.state.isLoading) {
         await _hideAfterRefresh();
       }
     }
@@ -627,6 +671,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// Hides an indicator after the `onRefresh` function.
   Future<void> _hideAfterRefresh() async {
     assert(controller.state.isLoading);
+    _activeRefresh = null;
 
     if (!mounted) return;
 
@@ -664,11 +709,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final child = NotificationListener<ScrollNotification>(
-      onNotification: _handleScrollNotification,
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: _handleScrollIndicatorNotification,
-        child: widget.child,
+    final child = NotificationListener<ScrollMetricsNotification>(
+      onNotification: _handleScrollMetricsNotification,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: _handleScrollIndicatorNotification,
+          child: widget.child,
+        ),
       ),
     );
 
@@ -685,7 +733,18 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   void dispose() {
+    _activeRefresh = null;
     _animationController.dispose();
+
+    final externalController = widget.controller;
+    if (externalController != null && !externalController.state.isIdle) {
+      externalController.reset();
+      // Listeners cannot be notified while the widget tree is locked.
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => externalController.notifyChanged(),
+      );
+    }
+
     // External controller should be disposed by the user.
     // Dispose the internal controller, if it exists.
     _internalIndicatorController?.dispose();

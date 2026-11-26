@@ -968,4 +968,102 @@ void main() {
 
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+      'CustomMaterialIndicator - keeps the refresh when the controller changes',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+
+    CustomMaterialIndicatorState getState() =>
+        tester.state<CustomMaterialIndicatorState>(
+          find.byType(CustomMaterialIndicator),
+        );
+
+    await tester.pumpWidget(
+      buildIndicator(
+        controller: controller,
+        child: const DefaultList(itemsCount: 6),
+      ),
+    );
+    await flingToLoading(tester);
+    expect(controller.state, IndicatorState.loading);
+
+    // external -> internal
+    await tester.pumpWidget(
+      buildIndicator(child: const DefaultList(itemsCount: 6)),
+    );
+    expect(tester.takeException(), isNull);
+    expect(controller.state, IndicatorState.idle);
+    expect(getState().controller.state, IndicatorState.loading);
+    expect(find.byType(RefreshProgressIndicator), findsOneWidget);
+
+    // internal -> external
+    await tester.pumpWidget(
+      buildIndicator(
+        controller: controller,
+        child: const DefaultList(itemsCount: 6),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(controller.state, IndicatorState.loading);
+    expect(find.byType(RefreshProgressIndicator), findsOneWidget);
+
+    await finishRefresh(tester);
+    expect(controller.state, IndicatorState.idle);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+      'CustomMaterialIndicator - releases the controller when removed during a refresh',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      buildIndicator(
+        controller: controller,
+        child: const DefaultList(itemsCount: 6),
+      ),
+    );
+    await flingToLoading(tester);
+    expect(controller.state, IndicatorState.loading);
+
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    expect(controller.state, IndicatorState.idle);
+    expect(controller.value, 0.0);
+
+    await finishRefresh(tester);
+    expect(tester.takeException(), isNull);
+    expect(controller.state, IndicatorState.idle);
+  });
+
+  testWidgets('CustomMaterialIndicator - show - uses the list axis direction',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+    final indicatorKey = GlobalKey<CustomMaterialIndicatorState>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomMaterialIndicator(
+          key: indicatorKey,
+          controller: controller,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6, reverse: true),
+        ),
+      ),
+    );
+
+    indicatorKey.currentState!.show();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(controller.side, IndicatorSide.bottom);
+
+    indicatorKey.currentState!.hide();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+  });
 }

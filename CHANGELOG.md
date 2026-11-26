@@ -2,9 +2,12 @@
 - **CustomRefreshIndicator**:
   - Fixed a crash when the indicator was hidden before the *onRefresh* callback completed. Reported by [@KubrickRubrik](https://github.com/KubrickRubrik) in [#60](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/60).
   - Fixed the scroll indicator being shown on the opposite edge while the indicator was dragged.
-  - The *show* and *refresh* methods now set the indicator edge, so the indicator is visible when triggered programmatically.
+  - The *show* and *refresh* methods now set the indicator edge and use the scroll direction of the list, so the indicator is visible on the correct side when triggered programmatically.
   - The *IndicatorController* methods used internally by the widget are now marked as internal.
   - Fixed the widget still driving an externally provided controller after it was replaced with null.
+  - Fixed the indicator state being left on the previous controller when the controller was changed during a refresh. The new controller now takes over the indicator state.
+  - Fixed an externally provided controller being left in the loading state when the widget was removed during a refresh.
+  - Fixed the indicator being hidden by an outdated *onRefresh* call that completed after the indicator was hidden manually and a new refresh was started.
 - **CustomMaterialIndicator**:
   - Added the *show*, *hide* and *refresh* methods, available through a `GlobalKey<CustomMaterialIndicatorState>`. Reported by [@MrLi2000](https://github.com/MrLi2000) in [#70](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/70).
   - Fixed the *indicatorSize* argument, which had no effect.
