@@ -59,8 +59,8 @@ void main() {
   Positioned getPositioned(WidgetTester tester) =>
       tester.widget<Positioned>(find.byType(Positioned));
 
-  Align getOuterAlign(WidgetTester tester) =>
-      tester.widget<Align>(find.byType(Align).first);
+  SizeTransition getSizeTransition(WidgetTester tester) =>
+      tester.widget<SizeTransition>(find.byType(SizeTransition));
 
   Align getInnerAlign(WidgetTester tester) =>
       tester.widget<Align>(find.byType(Align).last);
@@ -112,10 +112,8 @@ void main() {
     expect(positioned.left, 0);
     expect(positioned.right, 0);
 
-    expect(getOuterAlign(tester).heightFactor, 0.0);
-    expect(getOuterAlign(tester).widthFactor, isNull);
-    expect(
-        getOuterAlign(tester).alignment, const AlignmentDirectional(-1.0, 1.0));
+    expect(getSizeTransition(tester).axis, Axis.vertical);
+    expect(getSizeTransition(tester).axisAlignment, 1.0);
     expect(getInnerAlign(tester).alignment, Alignment.topCenter);
     expect(getPadding(tester), const EdgeInsets.only(top: 40.0));
   });
@@ -138,12 +136,8 @@ void main() {
     expect(positioned.left, 0);
     expect(positioned.right, 0);
 
-    expect(getOuterAlign(tester).heightFactor, 0.0);
-    expect(getOuterAlign(tester).widthFactor, isNull);
-    expect(
-      getOuterAlign(tester).alignment,
-      const AlignmentDirectional(-1.0, -1.0),
-    );
+    expect(getSizeTransition(tester).axis, Axis.vertical);
+    expect(getSizeTransition(tester).axisAlignment, -1.0);
     expect(getInnerAlign(tester).alignment, Alignment.bottomCenter);
     expect(getPadding(tester), const EdgeInsets.only(bottom: 40.0));
   });
@@ -166,12 +160,8 @@ void main() {
     expect(positioned.left, 12.0);
     expect(positioned.right, isNull);
 
-    expect(getOuterAlign(tester).widthFactor, 0.0);
-    expect(getOuterAlign(tester).heightFactor, isNull);
-    expect(
-      getOuterAlign(tester).alignment,
-      const AlignmentDirectional(1.0, -1.0),
-    );
+    expect(getSizeTransition(tester).axis, Axis.horizontal);
+    expect(getSizeTransition(tester).axisAlignment, 1.0);
     expect(getInnerAlign(tester).alignment, Alignment.centerLeft);
     expect(getPadding(tester), const EdgeInsets.only(left: 40.0));
   });
@@ -194,12 +184,8 @@ void main() {
     expect(positioned.left, isNull);
     expect(positioned.right, 12.0);
 
-    expect(getOuterAlign(tester).widthFactor, 0.0);
-    expect(getOuterAlign(tester).heightFactor, isNull);
-    expect(
-      getOuterAlign(tester).alignment,
-      const AlignmentDirectional(-1.0, -1.0),
-    );
+    expect(getSizeTransition(tester).axis, Axis.horizontal);
+    expect(getSizeTransition(tester).axisAlignment, -1.0);
     expect(getInnerAlign(tester).alignment, Alignment.centerRight);
     expect(getPadding(tester), const EdgeInsets.only(right: 40.0));
   });
@@ -361,10 +347,7 @@ void main() {
     );
 
     expect(controller.side, IndicatorSide.left);
-    expect(
-      getChildRect(tester).left - getParentRect(tester).left,
-      lessThan(_parentSize.width / 2),
-    );
+    expect(getChildRect(tester).left - getParentRect(tester).left, 40.0);
   });
 
   testWidgets('PositionedIndicatorContainer - right side stays right in RTL',
@@ -383,9 +366,47 @@ void main() {
     );
 
     expect(controller.side, IndicatorSide.right);
-    expect(
-      getParentRect(tester).right - getChildRect(tester).right,
-      lessThan(_parentSize.width / 2),
-    );
+    expect(getParentRect(tester).right - getChildRect(tester).right, 40.0);
+  });
+
+  testWidgets('PositionedIndicatorContainer - clips the child at the edge',
+      (WidgetTester tester) async {
+    for (final direction in AxisDirection.values) {
+      for (final textDirection in TextDirection.values) {
+        final controller = buildController(
+          direction: direction,
+          edge: IndicatorEdge.leading,
+          state: IndicatorState.dragging,
+        );
+
+        await pumpContainer(
+          tester,
+          controller: controller,
+          edgeOffset: 100.0,
+          textDirection: textDirection,
+        );
+
+        Rect getClipRect() => tester.getRect(find.byType(ClipRect));
+        final reason = '$direction, $textDirection';
+
+        expect(getClipRect().shortestSide, 0.0, reason: reason);
+
+        controller.setValue(0.5);
+        await tester.pump();
+        expect(getClipRect().shortestSide, 40.0, reason: reason);
+        expect(
+          getClipRect().intersect(getChildRect(tester)),
+          getChildRect(tester),
+          reason: reason,
+        );
+
+        controller.setValue(1.0);
+        await tester.pump();
+        expect(getClipRect().shortestSide, 80.0, reason: reason);
+
+        await tester.pumpWidget(const SizedBox());
+        controller.dispose();
+      }
+    }
   });
 }

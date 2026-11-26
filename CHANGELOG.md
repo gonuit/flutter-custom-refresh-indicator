@@ -11,6 +11,8 @@
 - **CustomMaterialIndicator**:
   - Added the *show*, *hide* and *refresh* methods, available through a `GlobalKey<CustomMaterialIndicatorState>`. Reported by [@MrLi2000](https://github.com/MrLi2000) in [#70](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/70).
   - Fixed the *indicatorSize* argument, which had no effect.
+  - Fixed the indicator being visible above the *edgeOffset* as soon as the list was touched. The indicator is now clipped at the edge, like the built-in *RefreshIndicator*. Reported by [@MrTadeu](https://github.com/MrTadeu) in [#62](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/62).
+  - Fixed the position of the indicator of horizontal lists with the right-to-left text direction.
   - Fixed a misleading comment. Reported by [@raymondmakz](https://github.com/raymondmakz) in [#68](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/68).
 - **ClampingWithOverscrollPhysics**:
   - Fixed overscroll not being registered when the list was scrolled past its leading edge.

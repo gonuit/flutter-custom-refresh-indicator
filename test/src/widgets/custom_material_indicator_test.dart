@@ -1038,6 +1038,40 @@ void main() {
     expect(controller.state, IndicatorState.idle);
   });
 
+  testWidgets('CustomMaterialIndicator - is clipped at the edge offset',
+      (WidgetTester tester) async {
+    final controller = IndicatorController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomMaterialIndicator(
+          controller: controller,
+          edgeOffset: 120.0,
+          onRefresh: fakeRefresh.refresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    final gesture = await tester.startGesture(tester.getCenter(find.text('1')));
+    await gesture.moveBy(const Offset(0.0, 21.0));
+    await tester.pump();
+
+    expect(controller.state, IndicatorState.dragging);
+
+    final visibleArea = tester.getRect(find.byType(SizeTransition));
+    final indicator = tester.getRect(find.byType(RefreshProgressIndicator));
+    expect(visibleArea.top, 120.0);
+    expect(visibleArea.bottom, indicator.bottom);
+    expect(indicator.top, lessThan(visibleArea.top));
+
+    await gesture.up();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(fakeRefresh.called, isFalse);
+  });
+
   testWidgets('CustomMaterialIndicator - show - uses the list axis direction',
       (WidgetTester tester) async {
     final controller = IndicatorController();

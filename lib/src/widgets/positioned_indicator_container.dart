@@ -57,18 +57,14 @@ class PositionedIndicatorContainer extends StatelessWidget {
     final isVerticalAxis = side.isTop || side.isBottom;
     final isHorizontalAxis = side.isLeft || side.isRight;
 
-    final AlignmentDirectional alignment = isVerticalAxis
-        ? AlignmentDirectional(-1.0, side.isTop ? 1.0 : -1.0)
-        : AlignmentDirectional(side.isLeft ? 1.0 : -1.0, -1.0);
+    // The horizontal alignment of the [SizeTransition] is directional.
+    final isRtl =
+        isHorizontalAxis && Directionality.of(context) == TextDirection.rtl;
+    final axisAlignment = (side.isTop || side.isLeft) != isRtl ? 1.0 : -1.0;
 
-    final endOffset = isVerticalAxis
-        ? Offset(0.0, side.isTop ? 1.0 : -1.0)
-        : Offset(side.isLeft ? 1.0 : -1.0, 0.0);
-
-    final animation = controller.isFinalizing
-        ? AlwaysStoppedAnimation(endOffset)
-        : Tween(begin: const Offset(0.0, 0.0), end: endOffset)
-            .animate(controller);
+    final Animation<double> sizeFactor = controller.isFinalizing
+        ? const AlwaysStoppedAnimation(1.0)
+        : controller;
 
     return Positioned(
       top: isHorizontalAxis
@@ -91,18 +87,15 @@ class PositionedIndicatorContainer extends StatelessWidget {
           : side.isRight
               ? edgeOffset
               : null,
-      child: Align(
-        alignment: alignment,
-        heightFactor: isVerticalAxis ? 0.0 : null,
-        widthFactor: isHorizontalAxis ? 0.0 : null,
-        child: SlideTransition(
-          position: animation,
-          child: Padding(
-            padding: _getEdgeInsets(side),
-            child: Align(
-              alignment: _getAlignment(side),
-              child: child,
-            ),
+      child: SizeTransition(
+        axis: isVerticalAxis ? Axis.vertical : Axis.horizontal,
+        axisAlignment: axisAlignment,
+        sizeFactor: sizeFactor,
+        child: Padding(
+          padding: _getEdgeInsets(side),
+          child: Align(
+            alignment: _getAlignment(side),
+            child: child,
           ),
         ),
       ),
