@@ -1,4 +1,4 @@
-## 4.1.0-dev.2
+## 4.1.0
 - **CustomRefreshIndicator**:
   - Fixed a crash when the indicator was hidden before the *onRefresh* callback completed. Reported by [@KubrickRubrik](https://github.com/KubrickRubrik) in [#60](https://github.com/gonuit/flutter-custom-refresh-indicator/issues/60).
   - Fixed the scroll indicator being shown on the opposite edge while the indicator was dragged.

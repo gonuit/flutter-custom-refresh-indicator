@@ -1,4 +1,4 @@
-![Cover image](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/cover.png)
+![Cover image](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/cover.png)
 
 # Custom Refresh Indicator
 
@@ -45,7 +45,7 @@ CustomMaterialIndicator(
 
 <div align="center">
 <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/simple_indicator.gif" alt="Simple indicator example" >
+<img width="200px" src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/simple_indicator.gif" alt="Simple indicator example" >
 </a>
 </div>
 
@@ -81,18 +81,18 @@ All these examples are available in the example application.
 
 | Plane indicator | Ice cream | Warp |
 | :-: | :-: | :-: |
-| ![plane_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/plane_indicator.gif) | ![ice_cream_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/ice_cream_indicator.gif) | ![warp_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/warp_indicator.gif) |
-| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/plane_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/ice_cream_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/warp_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
+| ![plane_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/plane_indicator.gif) | ![ice_cream_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/ice_cream_indicator.gif) | ![warp_indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/warp_indicator.gif) |
+| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/plane_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/plane)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/ice_cream_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/ice-cream)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/warp_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/warp)] |
 
 | With complete state | Pull to fetch more | Envelope |
 | :-: | :-: | :-: |
-| ![complete_state](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/complete_state.gif) | ![fetch_more](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/fetch_more.gif) | ![Envelope indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/envelope_indicator.gif) |
-| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/check_mark_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/fetch_more_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/envelope_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
+| ![complete_state](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/complete_state.gif) | ![fetch_more](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/fetch_more.gif) | ![Envelope indicator](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/envelope_indicator.gif) |
+| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/check_mark_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/check-mark)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/fetch_more_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/fetch-more)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/envelope_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/envelope)] |
 
 | Controlled | Based on drag details | Your indicator |
 | :-: | :-: | :-: |
-| ![programmatically_controlled](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/programmatically_controlled.gif) | ![drag_details](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/drag_details.gif) | Have you created a fancy refresh indicator? This place is for you. |
-| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/screens/programmatically_controlled_indicator_screen.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.0.2/example/lib/indicators/ball_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/drag-details)] | [[OPEN PULL REQUEST](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls)] |
+| ![programmatically_controlled](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/programmatically_controlled.gif) | ![drag_details](https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/drag_details.gif) | Have you created a fancy refresh indicator? This place is for you. |
+| [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/screens/programmatically_controlled_indicator_screen.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/programmatically-controlled)] | [[SOURCE](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/indicators/ball_indicator.dart)] [[DEMO](https://custom-refresh-indicator.klyta.it/#/drag-details)] | [[OPEN PULL REQUEST](https://github.com/gonuit/flutter-custom-refresh-indicator/pulls)] |
 
 ---
 
@@ -102,6 +102,7 @@ All these examples are available in the example application.
 - [Indicator States](#indicator-states)
 - [Handling State Changes](#handling-state-changes)
 - [Trigger Modes](#trigger-modes)
+- [Programmatic Control](#programmatic-control)
 - [IndicatorController Properties](#indicatorcontroller-properties)
 - [IndicatorController Showcase](#indicatorcontroller-showcase)
 - [Support](#support)
@@ -154,6 +155,7 @@ CustomRefreshIndicator manages various states to provide feedback on the refresh
 | `dragging` | `0.0` to `1.0` | The user is pulling down, but hasn't yet reached the threshold to trigger a refresh. |
 | `armed` | At or above `1.0` | Pull-down has passed the threshold. Releasing now will trigger the _onRefresh_ callback. |
 | `canceling` | Animates back to `0.0` | Pull-down stopped before the threshold; no refresh is triggered, and the indicator retracts. |
+| `settling` | Animates to `1.0` | The indicator was released in the armed state and settles at its target value before the _onRefresh_ callback is called. |
 | `loading` | Steady at `1.0` | The _onRefresh_ callback is active, indicating an ongoing refresh operation. |
 | `complete` | Steady at `1.0` | Refresh is complete, and the indicator stays fully visible if _completeDuration_ is set. |
 | `finalizing` | `1.0` to `0.0` | The refresh operation has finished, and the indicator is animating back to its initial state. |
@@ -212,6 +214,42 @@ By default, _triggerMode_ is set to _onEdge_, which means that the refresh actio
 
 These modes provide developers with control over the user's interaction with the refresh mechanism, ensuring a smooth and intuitive user experience that fits the context of the app's functionality.
 
+## Programmatic Control
+
+The indicator can be shown and hidden without a pull gesture. Assign a _GlobalKey_ to the widget and call the methods of its state.
+
+```dart
+final indicatorKey = GlobalKey<CustomRefreshIndicatorState>();
+
+CustomRefreshIndicator(
+  key: indicatorKey,
+  onRefresh: onRefresh,
+  builder: builder,
+  child: child,
+)
+
+// Shows the indicator, calls onRefresh and hides the indicator when it completes.
+indicatorKey.currentState?.refresh();
+```
+
+The same methods are available for the _CustomMaterialIndicator_ widget through a `GlobalKey<CustomMaterialIndicatorState>`.
+
+| Method | Description |
+| - | - |
+| `refresh()` | Shows the indicator, calls the _onRefresh_ callback and hides the indicator when the callback completes. |
+| `show()` | Shows the indicator without calling the _onRefresh_ callback. The indicator stays visible until _hide_ is called. |
+| `hide()` | Hides the indicator. |
+
+The _refresh_ and _show_ methods can be called only in the _idle_ state, and the _hide_ method only in the _loading_ state. Otherwise a _StateError_ is thrown.
+
+Both _refresh_ and _show_ accept an optional _edge_ argument that defines the side from which the indicator is shown. By default, it is derived from the _trigger_ argument, and the leading edge is used for _bothEdges_.
+
+```dart
+indicatorKey.currentState?.refresh(edge: IndicatorEdge.trailing);
+```
+
+A complete example can be found in the [example application](https://github.com/gonuit/flutter-custom-refresh-indicator/blob/v4.1.0/example/lib/screens/programmatically_controlled_indicator_screen.dart).
+
 ## IndicatorController Properties
 
 The _CustomRefreshIndicator_ widget is equipped with a controller that gives you access to the current state and behavior of the refresh indicator. Below is an in-depth look at the controller's properties.
@@ -228,8 +266,8 @@ This property indicates from which end of the list the pull-to-refresh gesture w
 
 | Value | Description |
 | - | - |
-| `start` | The gesture started from the beginning of the list (usually the top). |
-| `end` | The gesture started from the end of the list (usually the bottom). |
+| `leading` | The gesture started from the beginning of the list (usually the top). |
+| `trailing` | The gesture started from the end of the list (usually the bottom). |
 
 The _edge_ property is particularly useful when the _trigger_ is set to _bothEdges_, allowing the gesture to be recognized from either the start or end of the list.
 
@@ -273,7 +311,7 @@ Please visit the following live demo to see the _CustomRefreshIndicator_ in acti
 
 <div align="center">
 <a href="https://custom-refresh-indicator.klyta.it/#/presentation" target="_blank">
-<img src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.0.2/readme/controller_data.gif" alt="Controller data example" >
+<img src="https://raw.githubusercontent.com/gonuit/flutter-custom-refresh-indicator/v4.1.0/readme/controller_data.gif" alt="Controller data example" >
 </a>
 </div>
 
