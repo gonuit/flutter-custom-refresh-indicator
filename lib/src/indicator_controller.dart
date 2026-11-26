@@ -1,4 +1,7 @@
-part of 'custom_refresh_indicator.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/rendering.dart';
+import 'package:meta/meta.dart';
 
 class IndicatorController extends Animation<double>
     with
@@ -37,16 +40,14 @@ class IndicatorController extends Animation<double>
         _isRefreshEnabled = refreshEnabled ?? true,
         _shouldStopDrag = false;
 
-  @protected
-  @visibleForTesting
+  @internal
   void setValue(double value) {
     _value = value;
     notifyListeners();
   }
 
   ScrollDirection _scrollingDirection;
-  @protected
-  @visibleForTesting
+  @internal
   void setScrollingDirection(ScrollDirection userScrollDirection) {
     _scrollingDirection = userScrollDirection;
   }
@@ -66,8 +67,7 @@ class IndicatorController extends Animation<double>
   AxisDirection _direction;
 
   /// Sets the direction in which list scrolls
-  @protected
-  @visibleForTesting
+  @internal
   void setAxisDirection(AxisDirection direction) {
     _direction = direction;
   }
@@ -91,14 +91,12 @@ class IndicatorController extends Animation<double>
   DragUpdateDetails? get dragDetails => _dragDetails;
   DragUpdateDetails? _dragDetails;
 
-  @protected
-  @visibleForTesting
+  @internal
   void setIndicatorDragDetails(DragUpdateDetails? dragDetails) {
     _dragDetails = dragDetails;
   }
 
-  @protected
-  @visibleForTesting
+  @internal
   void setIndicatorEdge(IndicatorEdge? edge) {
     _edge = edge;
   }
@@ -146,8 +144,7 @@ class IndicatorController extends Animation<double>
   IndicatorState _currentState;
 
   /// sets indicator state and notifies listeners
-  @protected
-  @visibleForTesting
+  @internal
   void setIndicatorState(IndicatorState newState) {
     _currentState = newState;
 
@@ -199,6 +196,49 @@ class IndicatorController extends Animation<double>
         "drag or armed indicator state.",
       );
     }
+  }
+
+  @internal
+  void resetStopDrag() {
+    _shouldStopDrag = false;
+  }
+
+  /// Takes over the indicator state of the [other] controller and resets it.
+  /// Does not notify listeners, see [notifyChanged].
+  @internal
+  void takeOver(IndicatorController other) {
+    _value = other._value;
+    _currentState = other._currentState;
+    _edge = other._edge;
+    _direction = other._direction;
+    _scrollingDirection = other._scrollingDirection;
+    _dragDetails = other._dragDetails;
+    _shouldStopDrag = other._shouldStopDrag;
+
+    other.reset();
+  }
+
+  /// Resets the indicator state to idle.
+  /// Does not notify listeners, see [notifyChanged].
+  @internal
+  void reset() {
+    _value = minValue;
+    _currentState = IndicatorState.idle;
+    _edge = null;
+    _scrollingDirection = ScrollDirection.idle;
+    _dragDetails = null;
+    _shouldStopDrag = false;
+    clearPhysicsState();
+  }
+
+  @internal
+  void notifyChanged() => notifyListeners();
+
+  @override
+  void dispose() {
+    clearStatusListeners();
+    clearListeners();
+    super.dispose();
   }
 
   /// Disables list pull to refresh

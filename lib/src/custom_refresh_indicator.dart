@@ -1,10 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:meta/meta.dart';
-
-part 'indicator_controller.dart';
+import 'package:flutter/widgets.dart';
 
 typedef IndicatorBuilder = Widget Function(
   BuildContext context,
@@ -15,6 +11,17 @@ typedef IndicatorBuilder = Widget Function(
 typedef OnStateChanged = void Function(IndicatorStateChange change);
 
 extension on IndicatorTrigger {
+  /// The edge used when it cannot be derived from a gesture.
+  IndicatorEdge get defaultEdge {
+    switch (this) {
+      case IndicatorTrigger.leadingEdge:
+      case IndicatorTrigger.bothEdges:
+        return IndicatorEdge.leading;
+      case IndicatorTrigger.trailingEdge:
+        return IndicatorEdge.trailing;
+    }
+  }
+
   IndicatorEdge? getDerivedEdge(
     ScrollNotification notification,
   ) {
@@ -186,7 +193,7 @@ class CustomRefreshIndicator extends StatefulWidget {
 }
 
 class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   /// Whether custom refresh indicator can change
   /// [IndicatorState] from `idle` to `dragging`
   ///
@@ -196,7 +203,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   /// Indicating that indicator is currently stopping drag.
   /// When true, user is not able to perform any action.
-  bool _isStopingDrag = false;
+  bool _isStoppingDrag = false;
+
+  /// The [CustomRefreshIndicator.onRefresh] call that owns the indicator.
+  Object? _activeRefresh;
+
+  /// The axis direction reported by the scrollable, used when the indicator
+  /// is shown programmatically.
+  AxisDirection? _axisDirection;
 
   late double _dragOffset;
 
@@ -213,9 +227,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   void initState() {
-    _dragOffset = 0;
+    super.initState();
 
-    _internalIndicatorController = widget.controller ?? IndicatorController._();
+    _dragOffset = 0;
 
     _animationController = AnimationController(
       vsync: this,
@@ -223,20 +237,29 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       lowerBound: _kInitialValue,
       value: _kInitialValue,
     )..addListener(_updateCustomRefreshIndicatorValue);
-
-    super.initState();
   }
 
   @override
   void didUpdateWidget(covariant CustomRefreshIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // When a new controller is provided externally.
-    if (oldWidget.controller != widget.controller &&
-        widget.controller != null) {
-      // Dispose and remove the current internal controller, if it exists
-      _internalIndicatorController?.dispose();
-      _internalIndicatorController = null;
+    if (oldWidget.controller == widget.controller) return;
+
+    final internalController = _internalIndicatorController;
+    final previous = oldWidget.controller ?? internalController;
+    if (widget.controller != null) _internalIndicatorController = null;
+    final current = controller;
+
+    if (previous != null && !identical(previous, current)) {
+      current.takeOver(previous);
+      // Listeners cannot be notified during the build phase.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        previous.notifyChanged();
+        current.notifyChanged();
+      });
     }
+
+    // External controllers should be disposed by the user.
+    if (widget.controller != null) internalController?.dispose();
   }
 
   /// Triggers a rebuild of the indicator widget
@@ -244,6 +267,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @visibleForTesting
   @protected
+  @internal
   void setIndicatorState(IndicatorState newState) {
     final onStateChanged = widget.onStateChanged;
     if (onStateChanged != null && controller.state != newState) {
@@ -263,6 +287,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     OverscrollIndicatorNotification notification,
   ) {
     if (notification.depth != 0) return false;
+
+    final edge = controller.edge;
+    if (edge != null &&
+        canHandleNotifications(controller) &&
+        notification.leading != edge.isLeading) {
+      notification.disallowIndicator();
+      return true;
+    }
+
     if (notification.leading) {
       if (!widget.leadingScrollIndicatorVisible) {
         notification.disallowIndicator();
@@ -316,6 +349,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollUpdateNotification(ScrollUpdateNotification notification) {
+    if (controller.state.isIdle) {
+      _checkCanStart(notification);
+      return false;
+    }
+    if (!canHandleNotifications(controller)) return false;
+
     // Calculate the edge if not defined and possible.
     // This may apply to two-way lists on the iOS platform with bouncing physics.
     if (!controller.hasEdge && notification.scrollDelta != null) {
@@ -376,6 +415,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleOverscrollNotification(OverscrollNotification notification) {
+    if (!canHandleNotifications(controller)) return false;
+
     controller.setIndicatorDragDetails(notification.dragDetails);
 
     if (!controller.hasEdge) {
@@ -398,9 +439,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleScrollEndNotification(ScrollEndNotification notification) {
-    controller
-      ..setIndicatorDragDetails(null)
-      ..clearPhysicsState();
+    if (!canHandleNotifications(controller)) return false;
+
+    controller.setIndicatorDragDetails(null);
 
     if (controller.state.isArmed) {
       _start();
@@ -416,9 +457,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   /// This method is only responsible for the visual part, if you want
   /// to do the whole process with a [CustomRefreshIndicator.onRefresh] call, use the [refresh]
   /// method instead.
+  ///
+  /// The [edge] defines the side from which the indicator is shown.
+  /// When omitted, it is derived from [CustomRefreshIndicator.trigger] and
+  /// defaults to [IndicatorEdge.leading] for [IndicatorTrigger.bothEdges].
   Future<void> show({
     Duration draggingDuration = const Duration(milliseconds: 300),
     Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
   }) async {
     if (!controller.state.isIdle) {
       throw StateError(
@@ -427,6 +473,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         "Current state: ${controller.state.name}.",
       );
     }
+    final direction = _axisDirection;
+    if (direction != null) controller.setAxisDirection(direction);
+    controller.setIndicatorEdge(edge ?? widget.trigger.defaultEdge);
     setIndicatorState(IndicatorState.dragging);
     await _animationController.animateTo(
       1.0,
@@ -438,9 +487,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     setIndicatorState(IndicatorState.loading);
   }
 
+  /// Shows the indicator and calls [CustomRefreshIndicator.onRefresh].
+  ///
+  /// The [edge] defines the side from which the indicator is shown.
+  /// When omitted, it is derived from [CustomRefreshIndicator.trigger] and
+  /// defaults to [IndicatorEdge.leading] for [IndicatorTrigger.bothEdges].
   Future<void> refresh({
     Duration draggingDuration = const Duration(milliseconds: 300),
     Curve draggingCurve = Curves.linear,
+    IndicatorEdge? edge,
   }) async {
     if (!controller.state.isIdle) {
       throw StateError(
@@ -453,13 +508,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     await show(
       draggingDuration: draggingDuration,
       draggingCurve: draggingCurve,
+      edge: edge,
     );
+    final refresh = _activeRefresh = Object();
     try {
       await widget.onRefresh();
     } finally {
-      /// If the user has programmatically hidden the pointer
-      /// so it is not in "loading" state, then nothing needs to be done.
-      if (controller.state.isLoading) {
+      /// If the user has programmatically hidden the pointer,
+      /// then nothing needs to be done.
+      if (identical(_activeRefresh, refresh) && controller.state.isLoading) {
         await hide();
       }
     }
@@ -477,6 +534,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   bool _handleUserScrollNotification(UserScrollNotification notification) {
+    if (!canHandleNotifications(controller)) return false;
+
     controller.setScrollingDirection(notification.direction);
     return false;
   }
@@ -516,34 +575,37 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   }
 
   /// Notifications can only be handled in the "dragging" and "armed" state.
+  @internal
   bool canHandleNotifications(IndicatorController controller) =>
       controller.state.isDragging || controller.state.isArmed;
+
+  bool _consumeStopDragNotification() {
+    if (_isStoppingDrag) {
+      controller.resetStopDrag();
+      return true;
+    }
+    if (controller.shouldStopDrag) {
+      controller.resetStopDrag();
+      _isStoppingDrag = true;
+      _hide().whenComplete(() => _isStoppingDrag = false);
+      return true;
+    }
+    return false;
+  }
 
   bool _handleScrollNotification(ScrollNotification notification) {
     /// if notification predicate is not matched then notification
     /// will not be handled by this widget
     if (!widget.notificationPredicate(notification)) return false;
 
-    if (_isStopingDrag) {
-      controller._shouldStopDrag = false;
-      return false;
-    } else if (controller._shouldStopDrag) {
-      controller._shouldStopDrag = false;
-      _isStopingDrag = true;
-
-      _hide().whenComplete(() {
-        _isStopingDrag = false;
-      });
-      return false;
-    }
-
-    if (controller.state.isIdle) {
-      _checkCanStart(notification);
-      return false;
-    }
+    if (_consumeStopDragNotification()) return false;
 
     if (!canHandleNotifications(controller)) {
-      return false;
+      controller.clearPhysicsState();
+    }
+
+    if (notification is ScrollStartNotification) {
+      return _handleScrollStartNotification(notification);
     } else if (notification is ScrollUpdateNotification) {
       return _handleScrollUpdateNotification(notification);
     } else if (notification is OverscrollNotification) {
@@ -557,7 +619,37 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     return false;
   }
 
+  bool _handleScrollStartNotification(ScrollStartNotification notification) {
+    if (controller.state.isIdle) {
+      _checkCanStart(notification);
+    }
+    return false;
+  }
+
+  bool _handleScrollMetricsNotification(
+    ScrollMetricsNotification notification,
+  ) {
+    final matchesPredicate = widget.notificationPredicate(
+      ScrollUpdateNotification(
+        metrics: notification.metrics,
+        context: notification.context,
+        depth: notification.depth,
+      ),
+    );
+    if (!matchesPredicate) return false;
+
+    final isFirst = _axisDirection == null;
+    final direction = _axisDirection = notification.metrics.axisDirection;
+    // The indicator was shown before the scrollable was laid out.
+    if (isFirst && !controller.state.isIdle) {
+      controller.setAxisDirection(direction);
+      _update();
+    }
+    return false;
+  }
+
   void _start() async {
+    final refresh = _activeRefresh = Object();
     try {
       _dragOffset = 0;
 
@@ -570,13 +662,16 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       setIndicatorState(IndicatorState.loading);
       await widget.onRefresh();
     } finally {
-      await _hideAfterRefresh();
+      if (identical(_activeRefresh, refresh) && controller.state.isLoading) {
+        await _hideAfterRefresh();
+      }
     }
   }
 
   /// Hides an indicator after the `onRefresh` function.
   Future<void> _hideAfterRefresh() async {
     assert(controller.state.isLoading);
+    _activeRefresh = null;
 
     if (!mounted) return;
 
@@ -614,11 +709,14 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final child = NotificationListener<ScrollNotification>(
-      onNotification: _handleScrollNotification,
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: _handleScrollIndicatorNotification,
-        child: widget.child,
+    final child = NotificationListener<ScrollMetricsNotification>(
+      onNotification: _handleScrollMetricsNotification,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: _handleScrollIndicatorNotification,
+          child: widget.child,
+        ),
       ),
     );
 
@@ -635,7 +733,18 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   @override
   void dispose() {
+    _activeRefresh = null;
     _animationController.dispose();
+
+    final externalController = widget.controller;
+    if (externalController != null && !externalController.state.isIdle) {
+      externalController.reset();
+      // Listeners cannot be notified while the widget tree is locked.
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => externalController.notifyChanged(),
+      );
+    }
+
     // External controller should be disposed by the user.
     // Dispose the internal controller, if it exists.
     _internalIndicatorController?.dispose();

@@ -2,6 +2,7 @@
 // ignore_for_file: experimental_member_use
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:example/utils/format_offset.dart';
 import 'package:example/widgets/example_app_bar.dart';
 import 'package:example/widgets/example_list.dart';
 import 'package:flutter/material.dart';
@@ -130,16 +131,16 @@ class _PresentationScreenState extends State<PresentationScreen> {
                                         TableRow(
                                           children: [
                                             const Text("dragDetails.delta:"),
-                                            Text(
-                                                '${_controller.dragDetails?.delta}'),
+                                            Text(formatOffset(_controller
+                                                .dragDetails?.delta)),
                                           ],
                                         ),
                                         TableRow(
                                           children: [
                                             const Text(
                                                 "dragDetails.localPosition:"),
-                                            Text(
-                                                '${_controller.dragDetails?.localPosition}'),
+                                            Text(formatOffset(_controller
+                                                .dragDetails?.localPosition)),
                                           ],
                                         ),
                                         TableRow(

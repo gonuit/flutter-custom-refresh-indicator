@@ -319,4 +319,11 @@ void main() {
       ..setIndicatorState(IndicatorState.finalizing);
     expect(() => controller.stopDrag(), throwsA(isA<StateError>()));
   });
+
+  test('IndicatorController - does not notify listeners after dispose', () {
+    controller.dispose();
+    controller.notifyChanged();
+
+    expect(listener.called, 0);
+  });
 }
