@@ -1,1 +1,8 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    # TODO: Remove in 5.0.0, after the migration to material_ui and cupertino_ui.
+    deprecated_member_use: ignore
+  exclude:
+    - build/**
