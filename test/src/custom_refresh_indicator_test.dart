@@ -1492,6 +1492,118 @@ void main() {
     expect(indicatorController.state, IndicatorState.idle);
   });
 
+  testWidgets(
+      'CustomRefreshIndicator - disallows indicator - trailing - while idle',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          leadingScrollIndicatorVisible: true,
+          trailingScrollIndicatorVisible: false,
+          builder: buildWithoutIndicator,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: const DefaultList(itemsCount: 6),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(DefaultList));
+
+    final trailing = OverscrollIndicatorNotification(leading: false)
+      ..dispatch(context);
+    expect(trailing.accepted, isFalse);
+
+    final leading = OverscrollIndicatorNotification(leading: true)
+      ..dispatch(context);
+    expect(leading.accepted, isTrue);
+  });
+
+  testWidgets('CustomRefreshIndicator - show - uses the edge of the trigger',
+      (WidgetTester tester) async {
+    Future<IndicatorEdge?> showWith(IndicatorTrigger trigger) async {
+      final indicatorController = IndicatorController();
+      addTearDown(indicatorController.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CustomRefreshIndicator(
+            key: ValueKey(trigger),
+            controller: indicatorController,
+            trigger: trigger,
+            builder: buildWithoutIndicator,
+            onRefresh: fakeRefresh.instantRefresh,
+            child: const DefaultList(itemsCount: 6),
+          ),
+        ),
+      );
+
+      final state = tester.state<CustomRefreshIndicatorState>(
+        find.byType(CustomRefreshIndicator),
+      );
+      state.show();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      final edge = indicatorController.edge;
+
+      state.hide();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
+      return edge;
+    }
+
+    expect(await showWith(IndicatorTrigger.leadingEdge), IndicatorEdge.leading);
+    expect(
+      await showWith(IndicatorTrigger.trailingEdge),
+      IndicatorEdge.trailing,
+    );
+    expect(await showWith(IndicatorTrigger.bothEdges), IndicatorEdge.leading);
+  });
+
+  testWidgets(
+      'CustomRefreshIndicator - trigger - end edge - hides when the list is dragged back',
+      (WidgetTester tester) async {
+    final indicatorController = IndicatorController();
+    addTearDown(indicatorController.dispose);
+    final scrollController = ScrollController();
+    addTearDown(scrollController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CustomRefreshIndicator(
+          controller: indicatorController,
+          builder: buildWithoutIndicator,
+          trigger: IndicatorTrigger.trailingEdge,
+          onRefresh: fakeRefresh.instantRefresh,
+          child: DefaultList(itemsCount: 6, controller: scrollController),
+        ),
+      ),
+    );
+
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    await tester.pump();
+
+    final gesture = await tester.startGesture(tester.getCenter(find.text('6')));
+    await gesture.moveBy(const Offset(0.0, -50.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.dragging);
+    expect(indicatorController.edge, IndicatorEdge.trailing);
+    expect(indicatorController.value, greaterThan(0.0));
+
+    await gesture.moveBy(const Offset(0.0, 100.0));
+    await tester.pump();
+
+    expect(indicatorController.state, IndicatorState.canceling);
+
+    await gesture.up();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(fakeRefresh.called, isFalse);
+    expect(indicatorController.state, IndicatorState.idle);
+  });
+
   group('CustomRefreshIndicator - overlapping refresh cycles', () {
     late List<Completer<void>> refreshes;
 
