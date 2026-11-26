@@ -9,6 +9,12 @@ class PositionedIndicatorContainer extends StatelessWidget {
   final Widget child;
   final double edgeOffset;
 
+  /// Whether the child is clipped at the edge from which it slides in,
+  /// like the indicator of the built-in [RefreshIndicator] widget.
+  ///
+  /// Defaults to [Clip.none].
+  final Clip clipBehavior;
+
   /// Position child widget in a similar way
   /// to the built-in [RefreshIndicator] widget.
   const PositionedIndicatorContainer({
@@ -17,6 +23,7 @@ class PositionedIndicatorContainer extends StatelessWidget {
     required this.controller,
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
+    this.clipBehavior = Clip.none,
   });
 
   Alignment _getAlignment(IndicatorSide side) {
@@ -57,14 +64,14 @@ class PositionedIndicatorContainer extends StatelessWidget {
     final isVerticalAxis = side.isTop || side.isBottom;
     final isHorizontalAxis = side.isLeft || side.isRight;
 
-    // The horizontal alignment of the [SizeTransition] is directional.
-    final isRtl =
-        isHorizontalAxis && Directionality.of(context) == TextDirection.rtl;
-    final axisAlignment = (side.isTop || side.isLeft) != isRtl ? 1.0 : -1.0;
+    // The offset of the hidden child, which is placed behind the edge.
+    final hiddenOffset = isVerticalAxis
+        ? Offset(0.0, side.isTop ? -1.0 : 1.0)
+        : Offset(side.isLeft ? -1.0 : 1.0, 0.0);
 
-    final Animation<double> sizeFactor = controller.isFinalizing
-        ? const AlwaysStoppedAnimation(1.0)
-        : controller;
+    final Animation<Offset> position = controller.isFinalizing
+        ? const AlwaysStoppedAnimation(Offset.zero)
+        : Tween(begin: hiddenOffset, end: Offset.zero).animate(controller);
 
     return Positioned(
       top: isHorizontalAxis
@@ -87,15 +94,21 @@ class PositionedIndicatorContainer extends StatelessWidget {
           : side.isRight
               ? edgeOffset
               : null,
-      child: SizeTransition(
-        axis: isVerticalAxis ? Axis.vertical : Axis.horizontal,
-        axisAlignment: axisAlignment,
-        sizeFactor: sizeFactor,
-        child: Padding(
-          padding: _getEdgeInsets(side),
-          child: Align(
-            alignment: _getAlignment(side),
-            child: child,
+      child: ClipRect(
+        clipBehavior: clipBehavior,
+        child: Align(
+          alignment: _getAlignment(side),
+          heightFactor: isVerticalAxis ? IndicatorController.maxValue : null,
+          widthFactor: isHorizontalAxis ? IndicatorController.maxValue : null,
+          child: SlideTransition(
+            position: position,
+            child: Padding(
+              padding: _getEdgeInsets(side),
+              child: Align(
+                alignment: _getAlignment(side),
+                child: child,
+              ),
+            ),
           ),
         ),
       ),

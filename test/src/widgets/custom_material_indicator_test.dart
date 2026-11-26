@@ -1060,11 +1060,17 @@ void main() {
 
     expect(controller.state, IndicatorState.dragging);
 
-    final visibleArea = tester.getRect(find.byType(SizeTransition));
+    final clip = find.descendant(
+      of: find.byType(PositionedIndicatorContainer),
+      matching: find.byType(ClipRect),
+    );
+    expect(tester.widget<ClipRect>(clip).clipBehavior, Clip.hardEdge);
+
+    final visibleArea = tester.getRect(clip);
     final indicator = tester.getRect(find.byType(RefreshProgressIndicator));
     expect(visibleArea.top, 120.0);
-    expect(visibleArea.bottom, indicator.bottom);
     expect(indicator.top, lessThan(visibleArea.top));
+    expect(indicator.bottom, greaterThan(visibleArea.top));
 
     await gesture.up();
     await tester.pump();

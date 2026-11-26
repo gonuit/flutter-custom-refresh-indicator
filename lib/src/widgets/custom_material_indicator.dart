@@ -437,6 +437,7 @@ class CustomMaterialIndicatorState extends State<CustomMaterialIndicator> {
             PositionedIndicatorContainer(
               edgeOffset: widget.edgeOffset,
               displacement: widget.displacement,
+              clipBehavior: Clip.hardEdge,
               controller: controller,
               child: ScaleTransition(
                 scale: controller.isFinalizing

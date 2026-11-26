@@ -27,6 +27,7 @@ void main() {
     required IndicatorController controller,
     double displacement = 40.0,
     double edgeOffset = 0.0,
+    Clip clipBehavior = Clip.none,
     TextDirection textDirection = TextDirection.ltr,
   }) {
     return tester.pumpWidget(
@@ -42,6 +43,7 @@ void main() {
                   controller: controller,
                   displacement: displacement,
                   edgeOffset: edgeOffset,
+                  clipBehavior: clipBehavior,
                   child: const SizedBox(
                     key: _childKey,
                     width: _childWidth,
@@ -59,8 +61,8 @@ void main() {
   Positioned getPositioned(WidgetTester tester) =>
       tester.widget<Positioned>(find.byType(Positioned));
 
-  SizeTransition getSizeTransition(WidgetTester tester) =>
-      tester.widget<SizeTransition>(find.byType(SizeTransition));
+  Align getOuterAlign(WidgetTester tester) =>
+      tester.widget<Align>(find.byType(Align).first);
 
   Align getInnerAlign(WidgetTester tester) =>
       tester.widget<Align>(find.byType(Align).last);
@@ -112,8 +114,9 @@ void main() {
     expect(positioned.left, 0);
     expect(positioned.right, 0);
 
-    expect(getSizeTransition(tester).axis, Axis.vertical);
-    expect(getSizeTransition(tester).axisAlignment, 1.0);
+    expect(getOuterAlign(tester).alignment, Alignment.topCenter);
+    expect(getOuterAlign(tester).heightFactor, 1.5);
+    expect(getOuterAlign(tester).widthFactor, isNull);
     expect(getInnerAlign(tester).alignment, Alignment.topCenter);
     expect(getPadding(tester), const EdgeInsets.only(top: 40.0));
   });
@@ -136,8 +139,9 @@ void main() {
     expect(positioned.left, 0);
     expect(positioned.right, 0);
 
-    expect(getSizeTransition(tester).axis, Axis.vertical);
-    expect(getSizeTransition(tester).axisAlignment, -1.0);
+    expect(getOuterAlign(tester).alignment, Alignment.bottomCenter);
+    expect(getOuterAlign(tester).heightFactor, 1.5);
+    expect(getOuterAlign(tester).widthFactor, isNull);
     expect(getInnerAlign(tester).alignment, Alignment.bottomCenter);
     expect(getPadding(tester), const EdgeInsets.only(bottom: 40.0));
   });
@@ -160,8 +164,9 @@ void main() {
     expect(positioned.left, 12.0);
     expect(positioned.right, isNull);
 
-    expect(getSizeTransition(tester).axis, Axis.horizontal);
-    expect(getSizeTransition(tester).axisAlignment, 1.0);
+    expect(getOuterAlign(tester).alignment, Alignment.centerLeft);
+    expect(getOuterAlign(tester).widthFactor, 1.5);
+    expect(getOuterAlign(tester).heightFactor, isNull);
     expect(getInnerAlign(tester).alignment, Alignment.centerLeft);
     expect(getPadding(tester), const EdgeInsets.only(left: 40.0));
   });
@@ -184,8 +189,9 @@ void main() {
     expect(positioned.left, isNull);
     expect(positioned.right, 12.0);
 
-    expect(getSizeTransition(tester).axis, Axis.horizontal);
-    expect(getSizeTransition(tester).axisAlignment, -1.0);
+    expect(getOuterAlign(tester).alignment, Alignment.centerRight);
+    expect(getOuterAlign(tester).widthFactor, 1.5);
+    expect(getOuterAlign(tester).heightFactor, isNull);
     expect(getInnerAlign(tester).alignment, Alignment.centerRight);
     expect(getPadding(tester), const EdgeInsets.only(right: 40.0));
   });
@@ -383,30 +389,48 @@ void main() {
           tester,
           controller: controller,
           edgeOffset: 100.0,
+          clipBehavior: Clip.hardEdge,
           textDirection: textDirection,
         );
 
         Rect getClipRect() => tester.getRect(find.byType(ClipRect));
         final reason = '$direction, $textDirection';
 
-        expect(getClipRect().shortestSide, 0.0, reason: reason);
-
-        controller.setValue(0.5);
-        await tester.pump();
-        expect(getClipRect().shortestSide, 40.0, reason: reason);
         expect(
-          getClipRect().intersect(getChildRect(tester)),
-          getChildRect(tester),
+          getClipRect().overlaps(getChildRect(tester)),
+          isFalse,
           reason: reason,
         );
 
-        controller.setValue(1.0);
-        await tester.pump();
-        expect(getClipRect().shortestSide, 80.0, reason: reason);
+        for (final value in [0.5, 1.0, 1.5]) {
+          controller.setValue(value);
+          await tester.pump();
+          expect(
+            getClipRect().intersect(getChildRect(tester)),
+            getChildRect(tester),
+            reason: '$reason, $value',
+          );
+        }
 
         await tester.pumpWidget(const SizedBox());
         controller.dispose();
       }
     }
+  });
+
+  testWidgets('PositionedIndicatorContainer - does not clip by default',
+      (WidgetTester tester) async {
+    final controller = buildController(
+      edge: IndicatorEdge.leading,
+      state: IndicatorState.dragging,
+    );
+    addTearDown(controller.dispose);
+
+    await pumpContainer(tester, controller: controller);
+
+    expect(
+      tester.widget<ClipRect>(find.byType(ClipRect)).clipBehavior,
+      Clip.none,
+    );
   });
 }
