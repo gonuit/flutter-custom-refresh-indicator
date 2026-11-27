@@ -6,8 +6,17 @@ on:
 
 jobs:
   checks:
-    name: Analyzer and unit tests
+    name: Analyzer and unit tests (${{ matrix.package }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - custom_refresh_indicator
+          - custom_refresh_indicator_material
+    defaults:
+      run:
+        working-directory: packages/${{ matrix.package }}
     steps:
       - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
