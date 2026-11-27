@@ -1,0 +1,34 @@
+name: custom_refresh_indicator_material
+description: Material Design pull to refresh indicator with a customizable content, built with the custom_refresh_indicator package.
+version: 1.0.0-dev.1
+publish_to: none
+repository: https://github.com/gonuit/flutter-custom-refresh-indicator/tree/master/packages/custom_refresh_indicator_material
+issue_tracker: https://github.com/gonuit/flutter-custom-refresh-indicator/issues
+homepage: https://github.com/gonuit/flutter-custom-refresh-indicator
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  cupertino_ui: ^1.0.0
+  custom_refresh_indicator: ^5.0.0-dev.1
+  flutter:
+    sdk: flutter
+  material_ui: ^1.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+funding:
+- https://www.paypal.com/donate/?hosted_button_id=Z82R98MAR4URE
+- https://www.buymeacoffee.com/kamilklyta
+
+topics:
+ - widgets
+ - material
+ - pull-to-refresh
+ - refresh-indicator
+ - p2r

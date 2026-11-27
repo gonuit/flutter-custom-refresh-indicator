@@ -1,0 +1,3 @@
+dependency_overrides:
+  custom_refresh_indicator:
+    path: ../custom_refresh_indicator
